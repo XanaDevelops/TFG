@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.6.1/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/super-hands@^3.0.4/dist/super-hands.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@^5.0.0/dist/aframe-event-set-component.min.js"></script>
+  </head>
+  <body>
+    <a-scene stats>
+      <a-assets>
+        <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
+      </a-assets>
+
+      <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0">
+        <a-entity id="camera" camera look-controls position="0 1.6 0"></a-entity>
+
+        <a-entity id="leftHand" hand-controls="hand: left; color: #ffcccc" sphere-collider="objects: a-box" super-hands></a-entity>
+        <a-entity id="rightHand" hand-controls="hand: right; color: #ffcccc" sphere-collider="objects: a-box" super-hands></a-entity>
+      </a-entity>
+        
+
+        <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
+        <a-box position="-0.5 1 0" hoverable grabbable stretchable draggable droppable color="red" event-set__hoveron="_event: hover-start; material.opacity: 0.7; transparent: true" event-set__hoveroff="_event: hover-end; material.opacity: 1; transparent: false"></a-box>
+
+
+        
+        <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+  </body>
+</html>
