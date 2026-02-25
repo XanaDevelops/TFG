@@ -11,22 +11,9 @@
       delete AFRAME.components["grabbable"];
     </script>
     <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
-    <script>
-      AFRAME.registerComponent('phase-shift', {
-        init: function () {
-          var el = this.el
-          el.addEventListener('gripdown', function () {
-            el.setAttribute('ammo-body', { disableCollision: false })
-          })
-          el.addEventListener('gripup', function () {
-            el.setAttribute('ammo-body', { disableCollision: true })
-          })
-        }
-      })
-    </script>
   </head>
   <body>
-    <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1">
+    <a-scene stats environment="preset: contact" physics="debug: true">
       <a-assets>
         <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
       </a-assets>
@@ -35,18 +22,18 @@
         <a-entity id="camera" camera look-controls position="0 1.6 0"></a-entity>
 
         <a-entity id="leftHand" 
-          sphere-collider="objects: a-box" super-hands="colliderEvent: collidestart; colliderEventProperty: targetEl; colliderEndEvent: collideend; colliderEndEventProperty: targetEl"
-          hand-controls="hand: left; color: #ffcccc" phase-shift ammo-body="type: kinematic; emitCollisionEvents: true; disableCollision: true; collisionFilterGroup: 2; collisionFilterMask: 1" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05"></a-entity>
+          sphere-collider="objects: a-box" super-hands
+          hand-controls="hand: left; color: #ffcccc" static-body="shape: sphere; sphereRadius: 0.05; collisionForces: false"></a-entity>
         <a-entity id="rightHand" 
-          sphere-collider="objects: a-box" super-hands="colliderEvent: collidestart; colliderEventProperty: targetEl; colliderEndEvent: collideend; colliderEndEventProperty: targetEl"
-          hand-controls="hand: right; color: #ffcccc" phase-shift ammo-body="type: kinematic; emitCollisionEvents: true; disableCollision: true; collisionFilterGroup: 2; collisionFilterMask: 1" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05"></a-entity>
+          sphere-collider="objects: a-box" super-hands
+          hand-controls="hand: right; color: #ffcccc" static-body="shape: sphere; sphereRadius: 0.05; collisionForces: false"></a-entity>
       </a-entity>
         
-      <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" visible="false" ammo-body="type: static; collisionFilterGroup: 1; collisionFilterMask: 3" ammo-shape="type: box"></a-plane>
+      <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" visible="false" static-body></a-plane>
       <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
       <a-box id="testCubo" scale="0.5 0.5 0.5" position="-0.5 1 0"
-        hoverable grabbable="constraintComponentName: ammo-constraint" stretchable draggable droppable
-        color="red" ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 3" ammo-shape="type: box">
+        hoverable grabbable stretchable draggable droppable
+        color="red" dynamic-body>
       </a-box>
 
 
