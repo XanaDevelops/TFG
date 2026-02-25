@@ -11,9 +11,95 @@
       delete AFRAME.components["grabbable"];
     </script>
     <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
+    <script>
+      AFRAME.registerComponent('manual-grab', {
+        init: function () {
+          this.targetEl = null;
+          this.grabbedEl = null;
+          this.activeConstraintId = null;
+          
+          // Escuchar cuando la mano entra en contacto con un objeto (usando sphere-collider)
+          this.el.addEventListener('hit', (e) => {
+            const hitEl = e.detail.el;
+            console.log(`[manual-grab] HIT detectado en ${this.el.id} con objeto:`, hitEl ? hitEl.id : 'desconocido');
+            if (!this.targetEl && !this.grabbedEl) {
+              this.targetEl = hitEl;
+              console.log(`[manual-grab] targetEl asignado a:`, this.targetEl.id);
+            }
+          });
+
+          // Escuchar cuando la mano sale del objeto
+          this.el.addEventListener('hitend', (e) => {
+            const hitEl = e.detail.el;
+            console.log(`[manual-grab] HITEND detectado en ${this.el.id} con objeto:`, hitEl ? hitEl.id : 'desconocido');
+            if (this.targetEl === hitEl) {
+              this.targetEl = null;
+              console.log(`[manual-grab] targetEl liberado`);
+            }
+          });
+
+          // Al presionar el gatillo, crear el constraint si hay un objetivo
+          const onGrab = () => {
+            console.log(`[manual-grab] GRAB intentado en ${this.el.id}. targetEl actual:`, this.targetEl ? this.targetEl.id : 'null');
+            if (this.targetEl && !this.grabbedEl) {
+              this.grabbedEl = this.targetEl;
+              
+              // IMPORTANTE: Ammo.js desactiva los constraints si el objeto dinámico entra en reposo (sleeping).
+              // Forzamos que no se desactive mientras lo tenemos agarrado.
+              if (this.grabbedEl.components['ammo-body']) {
+                 console.log(`[manual-grab] Despertando objeto físico ${this.grabbedEl.id} y evitando que duerma`);
+                 this.grabbedEl.setAttribute('ammo-body', 'activationState', 'disableDeactivation');
+              }
+
+              // Crear un ID único para el constraint
+              this.activeConstraintId = 'ammo-constraint__' + Math.random().toString(36).substr(2, 9);
+              console.log(`[manual-grab] Creando constraint ${this.activeConstraintId} en ${this.grabbedEl.id} apuntando a #${this.el.id}`);
+              
+              this.grabbedEl.setAttribute(this.activeConstraintId, {
+                target: '#' + this.el.id,
+                type: 'lock'
+              });
+
+              // Verificar que el constraint se ha creado correctamente
+              setTimeout(() => {
+                const constraintComp = this.grabbedEl.components[this.activeConstraintId];
+                console.log(`[manual-grab] Verificación del constraint:`, constraintComp ? 'Componente existe' : 'Fallo al crear componente');
+                if (constraintComp && constraintComp.constraint) {
+                  console.log(`[manual-grab] Constraint de Ammo.js inyectado correctamente en el mundo físico.`);
+                } else {
+                  console.warn(`[manual-grab] ADVERTENCIA: El constraint de Ammo.js no se inicializó.`);
+                }
+              }, 100);
+            }
+          };
+
+          // Al soltar el gatillo, eliminar el constraint
+          const onRelease = () => {
+            console.log(`[manual-grab] RELEASE intentado en ${this.el.id}. grabbedEl:`, this.grabbedEl ? this.grabbedEl.id : 'null');
+            if (this.grabbedEl && this.activeConstraintId) {
+              console.log(`[manual-grab] Eliminando constraint ${this.activeConstraintId} de ${this.grabbedEl.id}`);
+              this.grabbedEl.removeAttribute(this.activeConstraintId);
+              
+              // Restaurar el estado de activación normal para que pueda volver a dormir si cae al suelo
+              if (this.grabbedEl.components['ammo-body']) {
+                 this.grabbedEl.setAttribute('ammo-body', 'activationState', 'active');
+              }
+
+              this.grabbedEl = null;
+              this.activeConstraintId = null;
+            }
+          };
+
+          this.el.addEventListener('gripdown', onGrab);
+          this.el.addEventListener('triggerdown', onGrab);
+          this.el.addEventListener('gripup', onRelease);
+          this.el.addEventListener('triggerup', onRelease);
+        }
+      });
+    </script>
   </head>
   <body>
-    <a-scene stats environment="preset: contact" physics="debug: true">
+    <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1">
       <a-assets>
         <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
       </a-assets>
@@ -22,18 +108,17 @@
         <a-entity id="camera" camera look-controls position="0 1.6 0"></a-entity>
 
         <a-entity id="leftHand" 
-          sphere-collider="objects: a-box" super-hands
-          hand-controls="hand: left; color: #ffcccc" static-body="shape: sphere; sphereRadius: 0.05; collisionForces: false"></a-entity>
+          sphere-collider="objects: a-box" manual-grab
+          hand-controls="hand: left; color: #ffcccc" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05"></a-entity>
         <a-entity id="rightHand" 
-          sphere-collider="objects: a-box" super-hands
-          hand-controls="hand: right; color: #ffcccc" static-body="shape: sphere; sphereRadius: 0.05; collisionForces: false"></a-entity>
+          sphere-collider="objects: a-box" manual-grab
+          hand-controls="hand: right; color: #ffcccc" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05"></a-entity>
       </a-entity>
         
-      <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" visible="false" static-body></a-plane>
+      <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" visible="false" ammo-body="type: static" ammo-shape="type: box"></a-plane>
       <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
       <a-box id="testCubo" scale="0.5 0.5 0.5" position="-0.5 1 0"
-        hoverable grabbable stretchable draggable droppable
-        color="red" dynamic-body>
+        color="red" ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1" ammo-shape="type: box">
       </a-box>
 
 
