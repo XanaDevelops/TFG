@@ -101,7 +101,18 @@
   <body>
     <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1">
       <a-assets>
+        <!-- import meshes -->
+        <a-asset-item id="buttonMtl" src="files/button.mtl"></a-asset-item>
+        <a-asset-item id="buttonObj" src="files/button.obj"></a-asset-item>
+        <a-asset-item id="foratCercle" src="files/forat_cercle.glb"></a-asset-item>
+        <a-asset-item id="foratEquilater" src="files/forat_equilater.glb"></a-asset-item>
+        <a-asset-item id="foratIsosceles" src="files/forat_isosceles.glb"></a-asset-item>
+        <a-asset-item id="foratQuadrat" src="files/forat_quadrat.glb"></a-asset-item>
+        <a-asset-item id="foratRectangle" src="files/forat_rectangle.glb"></a-asset-item>
+        <a-asset-item id="foratRectangule" src="files/forat_rectangule.glb"></a-asset-item>
+        <a-asset-item id="foratSemicercle" src="files/forat_semicercle.glb"></a-asset-item>
         <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
+        <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
       </a-assets>
 
       <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0">
