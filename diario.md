@@ -17,3 +17,13 @@ Se ha conseguido utilizar ammo.js para las fisicas, con algo de ayuda de IA a la
 - entorno de testing
 
 ### 04/03
+Se ha refactorizado codigo
+Ahora solo agarras con "grip" (el de abajo)
+El raycast detecta correctamente elementos .grababble
+
+TODO:
+- agarrar y atraer a la posición
+- Feedback visual
+- Diferencias elementos solo agarrables de atraibles (tambien)
+TOFIX:
+- Hitbox de agarre
