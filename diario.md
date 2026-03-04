@@ -15,3 +15,5 @@ Se ha conseguido utilizar ammo.js para las fisicas, con algo de ayuda de IA a la
 - efectos visuales
 - refactorizar codigo
 - entorno de testing
+
+### 04/03
