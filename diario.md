@@ -29,3 +29,6 @@ TOFIX:
 - Hitbox de agarre
 
 ### 06/03
+agarrar distancia
+TOFIX:
+atravesar suelo si lo fuerzas
