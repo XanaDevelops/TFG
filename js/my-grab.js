@@ -3,6 +3,43 @@ AFRAME.registerComponent('my-grab', {
 
     },
 
+    setConstraint: function () {
+        this.grabbedEl = this.targetEl;
+
+        // IMPORTANTE: Ammo.js desactiva los constraints si el objeto dinámico entra en reposo (sleeping).
+        // Forzamos que no se desactive mientras lo tenemos agarrado.
+        if (this.grabbedEl.components['ammo-body']) {
+            //console.log(`[manual-grab] Despertando objeto físico ${this.grabbedEl.id} y evitando que duerma`);
+            this.grabbedEl.setAttribute('ammo-body', 'activationState', 'disableDeactivation');
+        }
+
+        // Crear un ID único para el constraint
+        this.activeConstraintId = 'ammo-constraint__' + Math.random().toString(36).substr(2, 9);
+
+        this.grabbedEl.setAttribute(this.activeConstraintId, {
+            target: '#' + this.el.id,
+            type: 'lock'
+        });
+
+        console.log(`[my-grab:${this.id}] grab -> ${this.grabbedEl.id} ${this.activeConstraintId}`);
+
+    },
+
+    delConstraint: function () {
+        this.grabbedEl.removeAttribute(this.activeConstraintId);
+
+        // Restaurar el estado de activación normal para que pueda volver a dormir si cae al suelo
+        if (this.grabbedEl.components['ammo-body']) {
+            //this.grabbedEl.setAttribute('ammo-body', 'activationState', 'active');
+        }
+
+        console.log(`[my-grab:${this.id}] UNgrab -> ${this.grabbedEl.id} ${this.activeConstraintId}`);
+
+
+        this.grabbedEl = null;
+        this.activeConstraintId = null;
+    },
+
     init: function () {
         this.targetEl = null;
         this.grabbedEl = null;
@@ -16,7 +53,7 @@ AFRAME.registerComponent('my-grab', {
             const hitEl = e.detail.el;
             if (!this.targetEl && !this.grabbedEl) {
                 this.targetEl = hitEl;
-                console.log(`[my-grab:${this.id}] targetEl -> `, this.targetEl.id);
+                console.log(`[my-grab:${this.el.id}] targetEl -> `, this.targetEl.id);
             }
         });
 
@@ -24,59 +61,55 @@ AFRAME.registerComponent('my-grab', {
             const hitEl = e.detail.el;
             if (this.targetEl === hitEl) {
                 this.targetEl = null;
-                console.log(`[my-grab:${this.id}] targetEl -> NULL`);
+                console.log(`[my-grab:${this.el.id}] targetEl -> NULL`);
             }
+        });
+
+        this.el.addEventListener('raycaster-intersection', (e) => {
+            const hitEl = e.detail.els[0];
+            if (!this.targetEl && !this.grabbedEl) {
+                this.targetEl = hitEl;
+                console.log(`[my-grab:${this.el.id}] RAY: targetEl -> `, this.targetEl.id);
+            }
+        });
+
+        this.el.addEventListener('raycaster-intersection-cleared', (e) => {
+            console.log(e.detail)
+            //FIXME: e.detail.clearedEls no tiene el cubo, que en teoria deberia estar
+            //const hitEl = e.detail.els[0];
+            //if (this.targetEl === hitEl) {
+                
+            //}
+            this.targetEl = null;
+                console.log(`[my-grab:${this.id}] RAY: targetEl -> NULL`);
         });
 
         this.el.addEventListener('gripdown', () => {
             if (this.targetEl && !this.grabbedEl) {
                 //grab
-                this.grabbedEl = this.targetEl;
-
-                // IMPORTANTE: Ammo.js desactiva los constraints si el objeto dinámico entra en reposo (sleeping).
-                // Forzamos que no se desactive mientras lo tenemos agarrado.
-                if (this.grabbedEl.components['ammo-body']) {
-                    //console.log(`[manual-grab] Despertando objeto físico ${this.grabbedEl.id} y evitando que duerma`);
-                    this.grabbedEl.setAttribute('ammo-body', 'activationState', 'disableDeactivation');
-                }
-
-                // Crear un ID único para el constraint
-                this.activeConstraintId = 'ammo-constraint__' + Math.random().toString(36).substr(2, 9);
-
-                this.grabbedEl.setAttribute(this.activeConstraintId, {
-                    target: '#' + this.el.id,
-                    type: 'lock'
-                });
-
-                console.log(`[my-grab:${this.id}] grab -> ${this.grabbedEl.id} ${this.activeConstraintId}`);
+                this.setConstraint()
             }
             if (!this.targetEl) {
                 //track
+                /*
                 console.log(this.el.components)
                 const els = this.el.components.raycaster.intersectedEls;
                 for (const el of els) {
+                    //en teoria solo es uno
                     console.log(`[my-grab:${this.el.id}] raycast track -> ${el.id}`)
+                    this.targetEl = el;
+                    this.setConstraint()
                 }
-                if(!els)
+                if (!els)
                     console.log(`[my-grab:${this.el.id}] raycast EMPTY`)
+                */
 
             }
         });
         //this.el.addEventListener('triggerdown', onGrab);
         this.el.addEventListener('gripup', () => {
             if (this.grabbedEl && this.activeConstraintId) {
-                this.grabbedEl.removeAttribute(this.activeConstraintId);
-
-                // Restaurar el estado de activación normal para que pueda volver a dormir si cae al suelo
-                if (this.grabbedEl.components['ammo-body']) {
-                    //this.grabbedEl.setAttribute('ammo-body', 'activationState', 'active');
-                }
-
-                console.log(`[my-grab:${this.id}] UNgrab -> ${this.grabbedEl.id} ${this.activeConstraintId}`);
-
-
-                this.grabbedEl = null;
-                this.activeConstraintId = null;
+                this.delConstraint()
             }
         });
         //this.el.addEventListener('triggerup', onRelease);

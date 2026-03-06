@@ -27,3 +27,5 @@ TODO:
 - Diferencias elementos solo agarrables de atraibles (tambien)
 TOFIX:
 - Hitbox de agarre
+
+### 06/03
