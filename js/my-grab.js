@@ -33,7 +33,7 @@ AFRAME.registerComponent('my-grab', {
             //this.grabbedEl.setAttribute('ammo-body', 'activationState', 'active');
         }
 
-        console.log(`[my-grab:${this.id}] UNgrab -> ${this.grabbedEl.id} ${this.activeConstraintId}`);
+        console.log(`[my-grab:${this.el.id}] UNgrab -> ${this.grabbedEl.id} ${this.activeConstraintId}`);
 
 
         this.grabbedEl = null;
@@ -81,7 +81,7 @@ AFRAME.registerComponent('my-grab', {
                 
             //}
             this.targetEl = null;
-                console.log(`[my-grab:${this.id}] RAY: targetEl -> NULL`);
+                console.log(`[my-grab:${this.el.id}] RAY: targetEl -> NULL`);
         });
 
         this.el.addEventListener('gripdown', () => {
@@ -114,15 +114,49 @@ AFRAME.registerComponent('my-grab', {
         });
         //this.el.addEventListener('triggerup', onRelease);
 
-        this.el.addEventListener('raycaster-intersection', (e) => {
-            const els = e.detail.els;
-            console.log(els)
-            if (!els) return;
+        this.el.addEventListener('triggerdown', () => {
+            if (this.grabbedEl){
+                const gEl = this.grabbedEl;
+                this.delConstraint();
+                
+                // Forzar que targetEl sea gEl por si el raycast lo ha perdido (targetEl = null)
+                this.targetEl = gEl;
+                
+                // Obtener el tamaño del objeto para colocarlo justo delante sin solaparse
+                const box = new THREE.Box3().setFromObject(gEl.object3D);
+                const size = new THREE.Vector3();
+                box.getSize(size);
+                
+                // Offset
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const distance = (maxDim / 2) + 0.0; 
 
-            for (const el of els) {
-                console.log(`[my-grab:${this.el.id}] raycast -> ${el.id}`)
+                // Creamos el vector de posición en el espacio LOCAL de la mano apuntando hacia "adelante"
+                const targetWorldPos = new THREE.Vector3(0, -distance, 0); 
+                
+                // Lo convertimos a coordenadas GLOBALES (resolviendo la posición + orientación de la mano)
+                this.el.object3D.localToWorld(targetWorldPos);
+
+                // Si el objeto agarrado está anidado (lo normal en A-Frame es que el root sea la scene), 
+                // pasamos la posición mundial a local respecto a su padre.
+                if (gEl.object3D.parent) {
+                    gEl.object3D.parent.worldToLocal(targetWorldPos);
+                }
+                
+                gEl.setAttribute('position', {x: targetWorldPos.x, y: targetWorldPos.y, z: targetWorldPos.z});
+                
+                // Y si es ammo-body, forzamos un teletransporte (a veces necesario en A-Frame Ammo)
+                if (gEl.components['ammo-body']) {
+                    gEl.components['ammo-body'].syncToPhysics();
+                }
+
+                this.setConstraint();
+                console.log(`[my-grab:${this.el.id}]: grabbedEL tracked:`);
+                console.log(this.el.getAttribute('position'));
+                console.log(gEl.getAttribute('position'));
             }
-        })
+        });
+
 
     },
 

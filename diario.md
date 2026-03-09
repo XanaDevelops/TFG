@@ -32,3 +32,5 @@ TOFIX:
 agarrar distancia
 TOFIX:
 atravesar suelo si lo fuerzas
+
+### 09/03
