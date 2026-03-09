@@ -34,3 +34,16 @@ TOFIX:
 atravesar suelo si lo fuerzas
 
 ### 09/03
+Al agarrar objetos a distancia, se puede atraer a la posición de la mano, por ahora es un tp.
+Uso de IA para resolver un bug respecto a la actualización de posiciones respecto a la fisica de AMMOjs i metodos de THREEjs
+
+Se ha, usando Anime.js, a traves de AFRAME.ANIME, animar la atracción del elemento, pero por razones ni la IA puede arreglar que la primera atracción se desacople malla y collider, por lo que de alguna manera se tiene que parchear.
+
+TODO:
+- Feedback visual
+- Diferencias elementos solo agarrables de atraibles
+TOFIX:
+- Hitbox de agarre
+- Respawn barrier
+- Bug animación
+- Si mueves la mano durante la animación queda raro

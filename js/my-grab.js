@@ -26,6 +26,8 @@ AFRAME.registerComponent('my-grab', {
     },
 
     delConstraint: function () {
+        if (!this.grabbedEl || !this.activeConstraintId) return;
+
         this.grabbedEl.removeAttribute(this.activeConstraintId);
 
         // Restaurar el estado de activación normal para que pueda volver a dormir si cae al suelo
@@ -143,14 +145,50 @@ AFRAME.registerComponent('my-grab', {
                     gEl.object3D.parent.worldToLocal(targetWorldPos);
                 }
                 
-                gEl.setAttribute('position', {x: targetWorldPos.x, y: targetWorldPos.y, z: targetWorldPos.z});
-                
-                // Y si es ammo-body, forzamos un teletransporte (a veces necesario en A-Frame Ammo)
+                const startPos = gEl.getAttribute('position');
+                const animPos = { x: startPos.x, y: startPos.y, z: startPos.z }; // Clonamos las coordenadas para no mutar la referencia original
+
+                const startAnimation = () => {
+                    this.delConstraint(); // 1. Soltamos el objeto (ahora ya es kinemático y no se caerá)
+                    
+                    const self = this;
+                    AFRAME.ANIME({
+                        targets: animPos,
+                        x: targetWorldPos.x, y: targetWorldPos.y, z: targetWorldPos.z,
+                        duration: 800, 
+                        easing: 'easeOutExpo', // Aceleración inicial fuerte que frena tipo fricción
+                        update: () => {
+                            gEl.setAttribute('position', {x: animPos.x, y: animPos.y, z: animPos.z});
+                            // Asegurar que forzamos la posición en las físicas si el nuevo cuerpo ya existe
+                            if (gEl.components['ammo-body'] && gEl.components['ammo-body'].body) {
+                                gEl.components['ammo-body'].syncToPhysics();
+                            }
+                        },
+                        complete: () => {
+                            // 2. Al acabar, devolvemos las físicas a la normalidad
+                            if (gEl.components['ammo-body']) {
+                                gEl.setAttribute('ammo-body', 'type', 'dynamic');
+                            }
+                            
+                            // 3. Esperamos un frame (50ms) a que Ammo.js reconstruya el cuerpo dinámico antes de atarlo a la mano
+                            setTimeout(() => {
+                                self.setConstraint();
+                            }, 50);
+                        }
+                    });
+                };
+
+                // Desactivamos la gravedad temporalmente cambiando el tipo a "kinematic"
                 if (gEl.components['ammo-body']) {
-                    gEl.components['ammo-body'].syncToPhysics();
+                    gEl.setAttribute('ammo-body', 'type', 'kinematic');
+                    // TRUCO: Esperar 50ms antes de soltar el cubo para dar tiempo a que el framework
+                    // destruya el cuerpo dinámico y cree el kinemático de ammo.js. Así evitamos la caída libre
+                    // de la primera vez.
+                    setTimeout(startAnimation, 50);
+                } else {
+                    startAnimation();
                 }
 
-                this.setConstraint();
                 console.log(`[my-grab:${this.el.id}]: grabbedEL tracked:`);
                 console.log(this.el.getAttribute('position'));
                 console.log(gEl.getAttribute('position'));
