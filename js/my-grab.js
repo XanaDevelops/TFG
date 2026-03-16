@@ -160,7 +160,7 @@ AFRAME.registerComponent('my-grab', {
         const currentPos = gEl.object3D.position;
 
         // Interpolar entre la posición actual y la posición objetivo
-        const lerpFactor = 0.05; // Factor de interpolación (ajustable para controlar la velocidad)
+        const lerpFactor = 0.15; // Factor de interpolación (ajustable para controlar la velocidad)
         currentPos.lerp(targetWorldPos, lerpFactor);
 
         // Actualizar la posición del target
@@ -183,80 +183,6 @@ AFRAME.registerComponent('my-grab', {
         console.log(`[manualAnim] Moviendo target ${gEl.id} progresivamente hacia la mano con offset.`);
     },
 
-    animAnim: function () {
-        const gEl = this.grabbedEl;
-        
-
-        // Forzar que targetEl sea gEl por si el raycast lo ha perdido (targetEl = null)
-        this.targetEl = gEl;
-
-        // Obtener el tamaño del objeto para colocarlo justo delante sin solaparse
-        const box = new THREE.Box3().setFromObject(gEl.object3D);
-        const size = new THREE.Vector3();
-        box.getSize(size);
-
-        // Offset
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const distance = (maxDim / 2) + 0.0;
-
-        // Creamos el vector de posición en el espacio LOCAL de la mano apuntando hacia "adelante"
-        const targetWorldPos = new THREE.Vector3(0, -distance, 0);
-
-        // Lo convertimos a coordenadas GLOBALES (resolviendo la posición + orientación de la mano)
-        this.el.object3D.localToWorld(targetWorldPos);
-
-        // Si el objeto agarrado está anidado (lo normal en A-Frame es que el root sea la scene), 
-        // pasamos la posición mundial a local respecto a su padre.
-        if (gEl.object3D.parent) {
-            gEl.object3D.parent.worldToLocal(targetWorldPos);
-        }
-
-        const startPos = gEl.getAttribute('position');
-        const animPos = { x: startPos.x, y: startPos.y, z: startPos.z }; // Clonamos las coordenadas para no mutar la referencia original
-
-        const startAnimation = () => {
-            this.delConstraint(); // 1. Soltamos el objeto (ahora ya es kinemático y no se caerá)
-
-            const self = this;
-            AFRAME.ANIME({
-                targets: animPos,
-                x: targetWorldPos.x, y: targetWorldPos.y, z: targetWorldPos.z,
-                duration: 800,
-                easing: 'easeOutExpo', // Aceleración inicial fuerte que frena tipo fricción
-                update: () => {
-                    gEl.setAttribute('position', { x: animPos.x, y: animPos.y, z: animPos.z });
-                    // Asegurar que forzamos la posición en las físicas si el nuevo cuerpo ya existe
-                    if (gEl.components['ammo-body'] && gEl.components['ammo-body'].body) {
-                        gEl.components['ammo-body'].syncToPhysics();
-                    }
-                },
-                complete: () => {
-                    // 2. Al acabar, devolvemos las físicas a la normalidad
-                    if (gEl.components['ammo-body']) {
-                        gEl.setAttribute('ammo-body', 'type', 'dynamic');
-                    }
-
-                    // 3. Esperamos un frame (50ms) a que Ammo.js reconstruya el cuerpo dinámico antes de atarlo a la mano
-                    setTimeout(() => {
-                        self.setConstraint();
-                    }, 50);
-                }
-            });
-        };
-
-        // Desactivamos la gravedad temporalmente cambiando el tipo a "kinematic"
-        if (gEl.components['ammo-body']) {
-            gEl.setAttribute('ammo-body', 'type', 'kinematic');
-            // TRUCO: Esperar 50ms antes de soltar el cubo para dar tiempo a que el framework
-            // destruya el cuerpo dinámico y cree el kinemático de ammo.js. Así evitamos la caída libre
-            // de la primera vez.
-            setTimeout(startAnimation, 50);
-        } else {
-            startAnimation();
-        }
-
-    },
-
     update: function () {
         // Do something when component's data is updated.
     },
@@ -270,13 +196,11 @@ AFRAME.registerComponent('my-grab', {
         if (this.activeTrack){
             this.manualAnim(timeDelta);
         }
-
-        
-
-
     }
 });
 
+
+//Just works
 AFRAME.registerComponent('grab-fix', {
     schema: {
         
@@ -286,25 +210,18 @@ AFRAME.registerComponent('grab-fix', {
         const el = this.el;
         const ammo_body = el.components['ammo-body'];
 
+        this.fixed = false;
+
         // Guardar el color original establecido en el HTML
         this.originalColor = el.getAttribute('material').color;
 
-        el.setAttribute('ammo-body', 'type', 'kinematic');
-        ammo_body.update();
-        ammo_body.tick(0, 0);
-        ammo_body.syncToPhysics();
-        el.setAttribute('ammo-body', 'type', 'dynamic');
-        ammo_body.update();
-        ammo_body.tick(0, 0);
-        ammo_body.syncToPhysics();
-    },
+        setTimeout(() => {
+            el.setAttribute('ammo-body', 'type', 'kinematic');
 
-    update: function () {
-      // Do something when component's data is updated.
-    },
-
-    remove: function () {
-      // Do something the component or its entity is detached.
+            console.log("start fix");
+        }, 500);
+        
+        
     },
 
     tick: function (time, timeDelta) {
@@ -320,6 +237,15 @@ AFRAME.registerComponent('grab-fix', {
         } else if (bodyType === 'kinematic') {
             el.setAttribute('material', 'color', 'yellow'); // Cambiar a amarillo
         }
+        
+        if (time > 500 && !this.fixed){
+            el.setAttribute('ammo-body', 'type', 'dynamic');
+            ammoBody.syncToPhysics()
+            this.fixed = true
+            console.log(this.fixed);
+            
+        }
+        
     }
 });
 
