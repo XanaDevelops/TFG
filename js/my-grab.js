@@ -210,3 +210,39 @@ AFRAME.registerComponent('my-grab', {
         // Do something on every scene tick or frame.
     }
 });
+
+AFRAME.registerComponent('grab-fix', {
+    schema: {
+        
+    },
+    
+    init: function () {
+        const el =this.el;
+        
+      // Probar de arreglar el bug del primer agarre creando un constraint a si mismo
+      if (this.el.components['ammo-body']) {
+            //console.log(`[manual-grab] Despertando objeto físico ${this.grabbedEl.id} y evitando que duerma`);
+            this.el.setAttribute('ammo-body', 'activationState', 'disableDeactivation');
+        }
+
+        // Crear un ID único para el constraint
+        this.activeConstraintId = 'ammo-constraint__' + Math.random().toString(36).substr(2, 9);
+
+        this.el.setAttribute(this.activeConstraintId, {
+            target: '#' + this.el.id,
+            type: 'lock'
+        });
+
+        console.log(`[grab-fix:${this.el.id}] grab -> ${this.el.id} ${this.activeConstraintId}`);
+
+        el.setAttribute('ammo-body', 'type', 'kinematic');
+
+        this.el.components['ammo-body'].syncToPhysics();
+        setTimeout(() => {
+            this.el.removeAttribute(this.activeConstraintId);
+            el.setAttribute('ammo-body', 'type', 'dynamic');
+        }, 0);
+
+    },
+});
+

@@ -47,3 +47,5 @@ TOFIX:
 - Respawn barrier
 - Bug animación
 - Si mueves la mano durante la animación queda raro
+
+16/3
