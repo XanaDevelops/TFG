@@ -42,10 +42,24 @@ Se ha, usando Anime.js, a traves de AFRAME.ANIME, animar la atracción del eleme
 TODO:
 - Feedback visual
 - Diferencias elementos solo agarrables de atraibles
+- Respawn barrier
+
 TOFIX:
 - Hitbox de agarre
-- Respawn barrier
 - Bug animación
 - Si mueves la mano durante la animación queda raro
 
 16/3
+Arreglado el bug del primer agarre, la solución (chpauza) pasa por pasar a kinematic y despues a dynamic con intervalos, suficientes para que arranque el motor de fisicas y detecte el cambio
+Se ha añadido un debug para ver el estado del ammo-body
+Se ha añadido el codigo de la death barrier, aunque no está del todo configurado
+Se ha usado un metodo manual de interpolación para que el cubo vaya a la posición actual de la mano, no estrictamente la posición inicial de cuando se agarra.
+
+TODO:
+- Feedback visual
+- Diferenciar objetos agarrables, tambien de los atraibles
+- Respawn barrier
+- QoL agarre
+
+TOFIX:
+- hitbox de agarre
