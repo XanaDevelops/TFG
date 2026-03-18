@@ -29,6 +29,11 @@ AFRAME.registerComponent('death-barrier', {
                     // Sumar posición global y offset
                     randomOffset.add(worldPos);
                     console.log(`[death-barrier${id}]: newPos -> {${randomOffset.x}, ${randomOffset.y}, ${randomOffset.z}}`)
+
+                    //antes eliminar posibles constraints
+                    const attributeName = hitEl.getAttributeNames().find((x) => x.includes("ammo-constraint"))
+                    if(attributeName) hitEl.getAttribute(attributeName).target.components['my-grab'].delConstraint()
+
                     hitEl.setAttribute("position", {x: randomOffset.x, y: randomOffset.y, z: randomOffset.z});
                     if(hitEl.components['ammo-body']){
                         hitEl.components['ammo-body'].syncToPhysics();

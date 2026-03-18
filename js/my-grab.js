@@ -111,9 +111,12 @@ AFRAME.registerComponent('my-grab', {
         });
         //this.el.addEventListener('triggerdown', onGrab);
         this.el.addEventListener('gripup', () => {
+            if(this.activeTrack){  //FIXME: hacer esto hace que el cubo salga despedido, lol
+                this.activeTrack.setAttribute('ammo-body', 'type', 'dynamic');
+                this.activeTrack = null;
+            }
             if (this.grabbedEl && this.activeConstraintId) {
                 this.delConstraint()
-                this.activeTrack = null;
             }
         });
         //this.el.addEventListener('triggerup', onRelease);
@@ -193,7 +196,7 @@ AFRAME.registerComponent('my-grab', {
 
     tick: function (time, timeDelta) {
         // Do something on every scene tick or frame.
-        if (this.activeTrack){
+        if (this.activeTrack != null){
             this.manualAnim(timeDelta);
         }
     }
