@@ -66,3 +66,25 @@ TOFIX:
 
 
 18/03
+Se ha creado el componente de death-barrier.
+Se ha usado IA para ayuda en la resolución de bugs (aunque la mitad de estos era no haber importado el archivo del componente...)
+Se ha creado Mixins para las manos y objetos agarrables
+
+Se ha detectado que objetos muy rapidos atraviesan la death barrier, se puede:
+- Hacer que los objetos vayan en fisicas continuas (ahora son discretas)
+- Aprovechar grab-fix para mirar si el objeto esta en el subsuelo y < -algo
+
+Por ahora se han aumentado parametros de rendimiento sin mejora aparente en este aspecto
+
+A veces el fix no funciona a la primera, hay que recargar la pagina (no se si esto es por el live server o en un entorno desplegado pasará igual...)
+
+Tambien se ha añadido el objeto de "tap"
+TODO:
+- Feedback visual
+- QoL agarre
+- Diferenciar objetos
+- Componente trigger para ammo.js
+
+TOFIX:
+- hitbox de agarre
+- objetos muy rapidos 

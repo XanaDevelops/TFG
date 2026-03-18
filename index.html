@@ -21,17 +21,18 @@
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
-  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1; maxSubSteps: 8; iterations: 20; fixedTimeStep: 0.01111">
+  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;">
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
       ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05" sphere-collider="objects: .grabbable" my-grab>
     </a-mixin>
     <a-mixin id="grabbable-mixin"
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
-      ammo-shape="type: hull" grab-fix>
+      ammo-shape="type: vhacd" grab-fix>
     </a-mixin>
     <a-assets>
       <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
       <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
+      <a-asset-item id="foratSemicercle" src="files/forat_semicercle.glb"></a-asset-item>
     </a-assets>
 
     <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0">
@@ -60,6 +61,9 @@
 
     <a-entity id="eTap" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
       position="-0.5 3 -5"></a-entity>
+
+      <a-entity id="eForatSemiC" gltf-model="#foratSemicercle" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
+      position="-1.5 3 -5"></a-entity>
 
     <a-box id="deathCubeTest" scale="0.3 0.3 0.3" position="-1.5 1 -3" color="black"
       ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
