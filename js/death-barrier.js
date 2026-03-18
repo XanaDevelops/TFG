@@ -5,7 +5,6 @@ AFRAME.registerComponent('death-barrier', {
 
     init: function () {
 
-        const player = document.querySelector("#player")
 
         console.log("death cube");
         
@@ -15,22 +14,22 @@ AFRAME.registerComponent('death-barrier', {
         const listener = (e) => {
             const hitEl = e.detail.targetEl;
             console.log(`[death-barrier:${id}]: ${this.data.mode} -> ${hitEl.id}`);
-            
+            var player = document.querySelector("#respawnPoint")
             switch (this.data.mode) {
                 case "kill":
                     
                     break;
             
                 default: //respawn
-                    const playerPos = player.getAttribute("position");
-                    console.warn(playerPos);
-                    
-                    const randomOffset = new THREE.Vector3(Math.random()-0.5, 10,  Math.random()-0.5)
-                    console.warn(randomOffset)
-                    randomOffset.add(playerPos);
-                    console.warn(randomOffset)
+
+                    const worldPos = new THREE.Vector3();
+                    player.object3D.getWorldPosition(worldPos);
+                    // Offset aleatorio
+                    const randomOffset = new THREE.Vector3(Math.random()-0.5, 10, Math.random()-0.5);
+                    // Sumar posición global y offset
+                    randomOffset.add(worldPos);
                     console.log(`[death-barrier${id}]: newPos -> {${randomOffset.x}, ${randomOffset.y}, ${randomOffset.z}}`)
-                    hitEl.setAttribute("position", {x: randomOffset.x, y: randomOffset.y, z: randomOffset.z})
+                    hitEl.setAttribute("position", {x: randomOffset.x, y: randomOffset.y, z: randomOffset.z});
                     if(hitEl.components['ammo-body']){
                         hitEl.components['ammo-body'].syncToPhysics();
                     }
