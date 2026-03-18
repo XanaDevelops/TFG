@@ -13,8 +13,6 @@ AFRAME.registerComponent('death-barrier', {
         const id = this.el.id;
 
         const listener = (e) => {
-            console.warn(e.detail);
-            console.warn(e.detail.targetEl)
             const hitEl = e.detail.targetEl;
             console.log(`[death-barrier:${id}]: ${this.data.mode} -> ${hitEl.id}`);
             
@@ -25,9 +23,14 @@ AFRAME.registerComponent('death-barrier', {
             
                 default: //respawn
                     const playerPos = player.getAttribute("position");
-                    const randomOffset = new THREE.Vector3(Math.random()-0.5, Math.random()-0.5, 4)
-                    const newPos = playerPos + randomOffset;
-                    hitEl.setAttribute("position", {x: newPos.x, y: newPos.y, z: newPos.z})
+                    console.warn(playerPos);
+                    
+                    const randomOffset = new THREE.Vector3(Math.random()-0.5, 10,  Math.random()-0.5)
+                    console.warn(randomOffset)
+                    randomOffset.add(playerPos);
+                    console.warn(randomOffset)
+                    console.log(`[death-barrier${id}]: newPos -> {${randomOffset.x}, ${randomOffset.y}, ${randomOffset.z}}`)
+                    hitEl.setAttribute("position", {x: randomOffset.x, y: randomOffset.y, z: randomOffset.z})
                     if(hitEl.components['ammo-body']){
                         hitEl.components['ammo-body'].syncToPhysics();
                     }
