@@ -216,7 +216,7 @@ AFRAME.registerComponent('grab-fix', {
         this.fixed = false;
 
         // Guardar el color original establecido en el HTML
-        this.originalColor = el.getAttribute('material').color;
+        //this.originalColor = el.getAttribute('material').color;
 
         setTimeout(() => {
             el.setAttribute('ammo-body', 'type', 'kinematic');
@@ -228,6 +228,7 @@ AFRAME.registerComponent('grab-fix', {
     },
 
     tick: function (time, timeDelta) {
+
         const el = this.el;
         const ammoBody = el.components['ammo-body'];
 
@@ -235,12 +236,12 @@ AFRAME.registerComponent('grab-fix', {
 
         // Verificar el tipo de cuerpo y cambiar el color
         const bodyType = el.getAttribute('ammo-body').type;
-        if (bodyType === 'dynamic') {
+        /*if (bodyType === 'dynamic') {
             el.setAttribute('material', 'color', this.originalColor); // Restaurar el color original
         } else if (bodyType === 'kinematic') {
             el.setAttribute('material', 'color', 'yellow'); // Cambiar a amarillo
         }
-        
+        */
         if (time > 500 && !this.fixed){
             el.setAttribute('ammo-body', 'type', 'dynamic');
             ammoBody.syncToPhysics()
