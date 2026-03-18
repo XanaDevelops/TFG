@@ -63,3 +63,6 @@ TODO:
 
 TOFIX:
 - hitbox de agarre
+
+
+18/03

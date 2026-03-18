@@ -16,6 +16,7 @@
 
   <script src="./js/my-grab.js"></script>
   <script src="./js/hand-event-log.js"></script>
+  <script src="./js/death-barrier.js"></script>
 </head>
 
 <body>
@@ -48,7 +49,9 @@
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation" ammo-shape="type: box" grab-fix>
     </a-box> <!-- hacer MIXIN estas características-->
 
-    <a-box id="deathCubeTest" scale="0.3 0.3 0.3" position="-1.5 1 -3" color="black" death-barrier cube-collider>
+    <a-box id="deathCubeTest" scale="0.3 0.3 0.3" position="-1.5 1 -3" color="black"
+        ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
+        ammo-shape="type: box" death-barrier>
 
     </a-box>
 

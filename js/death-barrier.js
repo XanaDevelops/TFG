@@ -7,9 +7,16 @@ AFRAME.registerComponent('death-barrier', {
 
         const player = document.querySelector("#player")
 
-        this.el.addEventListener('hit', (e) => {
-            const hitEl = e.detail.el;
-            console.log(`[death-barrier:${this.el.id}]: ${this.data.mode} -> ${hitEl.id}`);
+        console.log("death cube");
+        
+
+        const id = this.el.id;
+
+        const listener = (e) => {
+            console.warn(e.detail);
+            console.warn(e.detail.targetEl)
+            const hitEl = e.detail.targetEl;
+            console.log(`[death-barrier:${id}]: ${this.data.mode} -> ${hitEl.id}`);
             
             switch (this.data.mode) {
                 case "kill":
@@ -22,11 +29,14 @@ AFRAME.registerComponent('death-barrier', {
                     const newPos = playerPos + randomOffset;
                     hitEl.setAttribute("position", {x: newPos.x, y: newPos.y, z: newPos.z})
                     if(hitEl.components['ammo-body']){
-                        hitEl.components['ammo-body'].syncToPhisics();
+                        hitEl.components['ammo-body'].syncToPhysics();
                     }
                     break;
             }
-        });
+        };
+
+        this.el.addEventListener('hit', listener);
+        this.el.addEventListener('collidestart', listener)
     },
 
     update: function () {
