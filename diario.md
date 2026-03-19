@@ -93,3 +93,20 @@ TODO:
 TOFIX:
 - hitbox de agarre
 - objetos muy rapidos 
+
+19/03
+
+Resulta que con hadc funciona bien
+Añadido mixin de deathBarrier y envuelto el entorno en paredes de este tipo
+(para esto ultimo se ha usado IA para hacer de copia pega mejorado)
+
+
+TODO:
+- Feedback visual
+- QoL agarre
+- Diferenciar objetos
+- Componente trigger para ammo.js
+
+TOFIX:
+- hitbox de agarre
+- objetos muy rapidos (arreglado)

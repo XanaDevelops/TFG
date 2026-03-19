@@ -210,7 +210,7 @@ AFRAME.registerComponent('grab-fix', {
     },
 
     init: function () {
-        return
+        
         const el = this.el;
         const ammo_body = el.components['ammo-body'];
 
@@ -226,12 +226,17 @@ AFRAME.registerComponent('grab-fix', {
 
             console.log("start fix");
         }, 500);
+
+        this.el.addEventListener('body-loaded', (e) => {
+            console.log("body loaded " + this.fixed);
+            
+        })
         
         
     },
 
     tick: function (time, timeDelta) {
-        return
+        
         const el = this.el;
         const ammoBody = el.components['ammo-body'];
 
@@ -245,7 +250,7 @@ AFRAME.registerComponent('grab-fix', {
             el.setAttribute('material', 'color', 'yellow'); // Cambiar a amarillo
         }
         */
-        if (time > 500 && !this.fixed){
+        if (time > 1000 && !this.fixed){
             el.setAttribute('ammo-body', 'type', 'dynamic');
             ammoBody.syncToPhysics()
             this.fixed = true

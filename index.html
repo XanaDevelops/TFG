@@ -32,6 +32,14 @@
     <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull"></a-mixin>
     <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd"></a-mixin>
 
+    <!-- Mixin para death barriers -->
+    <a-mixin id="death-barrier-mixin"
+      visible="false"
+      ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
+      ammo-shape="type: box"
+      death-barrier>
+    </a-mixin>
+
     <a-assets>
       <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
       <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
@@ -47,12 +55,23 @@
       <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc"></a-entity>
     </a-entity>
 
-    <a-box position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false" ammo-body="type: static"
+    <a-box id="suelo" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false" ammo-body="type: static"
       ammo-shape="type: box"></a-box>
 
-    <a-plane position="0 -20 0" rotation="-90 0 0" width="10000" height="10000" visible="false"
-      ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
-      ammo-shape="type: box" death-barrier></a-plane>
+    <a-entity id="deathBarriers" position="0 0 0">
+      <!-- Suelo -->
+      <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -50 0" rotation="-90 0 0" width="100" height="100" depth="20"></a-box>
+      <!-- Techo -->
+      <a-box id="topDeathBarrier" mixin="death-barrier-mixin" position="0 50 0" rotation="90 0 0" width="100" height="100" depth="20"></a-box>
+      <!-- Pared trasera (z positiva) -->
+      <a-box id="backDeathBarrier" mixin="death-barrier-mixin" position="0 0 50" rotation="0 0 0" width="100" height="100" depth="20"></a-box>
+      <!-- Pared delantera (z negativa) -->
+      <a-box id="frontDeathBarrier" mixin="death-barrier-mixin" position="0 0 -50" rotation="0 180 0" width="100" height="100" depth="20"></a-box>
+      <!-- Pared izquierda (x negativa) -->
+      <a-box id="leftDeathBarrier" mixin="death-barrier-mixin" position="-50 0 0" rotation="0 90 0" width="100" height="100" depth="20"></a-box>
+      <!-- Pared derecha (x positiva) -->
+      <a-box id="rightDeathBarrier" mixin="death-barrier-mixin" position="50 0 0" rotation="0 -90 0" width="100" height="100" depth="20"></a-box>
+    </a-entity>
     <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
 
     <a-box id="testCubo1" class="grabbable" mixin="grabbable-mixin" scale="0.5 0.5 0.5" position="-0.5 1 -1"
