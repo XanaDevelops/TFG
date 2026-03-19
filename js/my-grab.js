@@ -210,8 +210,11 @@ AFRAME.registerComponent('grab-fix', {
     },
 
     init: function () {
+        return
         const el = this.el;
         const ammo_body = el.components['ammo-body'];
+
+        if (ammo_body.type === "static") return
 
         this.fixed = false;
 
@@ -228,7 +231,7 @@ AFRAME.registerComponent('grab-fix', {
     },
 
     tick: function (time, timeDelta) {
-
+        return
         const el = this.el;
         const ammoBody = el.components['ammo-body'];
 

@@ -82,6 +82,8 @@ Por ahora se han aumentado parametros de rendimiento sin mejora aparente en este
 A veces el fix no funciona a la primera, hay que recargar la pagina (no se si esto es por el live server o en un entorno desplegado pasará igual...)
 
 Tambien se ha añadido el objeto de "tap"
+
+Se tiene que investigar los ammo-shapes, hull por defecto, hadc y vhadc para figuras no estaticas con agujeros (que interese pasar cosas por ahí)
 TODO:
 - Feedback visual
 - QoL agarre
