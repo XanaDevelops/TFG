@@ -18,3 +18,76 @@ Se ha conseguido utilizar ammo.js para las fisicas, con algo de ayuda de IA a la
 
 ## 28/02
 Se ha importado el resto de modelos 3D
+
+### 04/03
+Se ha refactorizado codigo
+Ahora solo agarras con "grip" (el de abajo)
+El raycast detecta correctamente elementos .grababble
+
+TODO:
+- agarrar y atraer a la posición
+- Feedback visual
+- Diferencias elementos solo agarrables de atraibles (tambien)
+TOFIX:
+- Hitbox de agarre
+
+### 06/03
+agarrar distancia
+TOFIX:
+atravesar suelo si lo fuerzas
+
+### 09/03
+Al agarrar objetos a distancia, se puede atraer a la posición de la mano, por ahora es un tp.
+Uso de IA para resolver un bug respecto a la actualización de posiciones respecto a la fisica de AMMOjs i metodos de THREEjs
+
+Se ha, usando Anime.js, a traves de AFRAME.ANIME, animar la atracción del elemento, pero por razones ni la IA puede arreglar que la primera atracción se desacople malla y collider, por lo que de alguna manera se tiene que parchear.
+
+TODO:
+- Feedback visual
+- Diferencias elementos solo agarrables de atraibles
+- Respawn barrier
+
+TOFIX:
+- Hitbox de agarre
+- Bug animación
+- Si mueves la mano durante la animación queda raro
+
+16/3
+Arreglado el bug del primer agarre, la solución (chpauza) pasa por pasar a kinematic y despues a dynamic con intervalos, suficientes para que arranque el motor de fisicas y detecte el cambio
+Se ha añadido un debug para ver el estado del ammo-body
+Se ha añadido el codigo de la death barrier, aunque no está del todo configurado
+Se ha usado un metodo manual de interpolación para que el cubo vaya a la posición actual de la mano, no estrictamente la posición inicial de cuando se agarra.
+
+TODO:
+- Feedback visual
+- Diferenciar objetos agarrables, tambien de los atraibles
+- Respawn barrier
+- QoL agarre
+
+TOFIX:
+- hitbox de agarre
+
+
+18/03
+Se ha creado el componente de death-barrier.
+Se ha usado IA para ayuda en la resolución de bugs (aunque la mitad de estos era no haber importado el archivo del componente...)
+Se ha creado Mixins para las manos y objetos agarrables
+
+Se ha detectado que objetos muy rapidos atraviesan la death barrier, se puede:
+- Hacer que los objetos vayan en fisicas continuas (ahora son discretas)
+- Aprovechar grab-fix para mirar si el objeto esta en el subsuelo y < -algo
+
+Por ahora se han aumentado parametros de rendimiento sin mejora aparente en este aspecto
+
+A veces el fix no funciona a la primera, hay que recargar la pagina (no se si esto es por el live server o en un entorno desplegado pasará igual...)
+
+Tambien se ha añadido el objeto de "tap"
+TODO:
+- Feedback visual
+- QoL agarre
+- Diferenciar objetos
+- Componente trigger para ammo.js
+
+TOFIX:
+- hitbox de agarre
+- objetos muy rapidos 

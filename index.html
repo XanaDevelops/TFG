@@ -1,140 +1,80 @@
 <html>
-  <head>
-    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.6.1/dist/aframe-extras.min.js"></script>
-    <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/gh/MozillaReality/ammo.js@8bbc0ea/builds/ammo.wasm.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.4/dist/aframe-physics-system.min.js"></script>
+<head>
+  <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.6.1/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script>
 
-    <script>
-      delete AFRAME.components["grabbable"];
-    </script>
-    <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
-    <script>
-      AFRAME.registerComponent('manual-grab', {
-        init: function () {
-          this.targetEl = null;
-          this.grabbedEl = null;
-          this.activeConstraintId = null;
-          
-          // Escuchar cuando la mano entra en contacto con un objeto (usando sphere-collider)
-          this.el.addEventListener('hit', (e) => {
-            const hitEl = e.detail.el;
-            console.log(`[manual-grab] HIT detectado en ${this.el.id} con objeto:`, hitEl ? hitEl.id : 'desconocido');
-            if (!this.targetEl && !this.grabbedEl) {
-              this.targetEl = hitEl;
-              console.log(`[manual-grab] targetEl asignado a:`, this.targetEl.id);
-            }
-          });
+  <script src="https://cdn.jsdelivr.net/gh/MozillaReality/ammo.js@8bbc0ea/builds/ammo.wasm.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.4/dist/aframe-physics-system.min.js"></script>
 
-          // Escuchar cuando la mano sale del objeto
-          this.el.addEventListener('hitend', (e) => {
-            const hitEl = e.detail.el;
-            console.log(`[manual-grab] HITEND detectado en ${this.el.id} con objeto:`, hitEl ? hitEl.id : 'desconocido');
-            if (this.targetEl === hitEl) {
-              this.targetEl = null;
-              console.log(`[manual-grab] targetEl liberado`);
-            }
-          });
+  <script>
+    delete AFRAME.components["grabbable"];
+  </script>
+  <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
 
-          // Al presionar el gatillo, crear el constraint si hay un objetivo
-          const onGrab = () => {
-            console.log(`[manual-grab] GRAB intentado en ${this.el.id}. targetEl actual:`, this.targetEl ? this.targetEl.id : 'null');
-            if (this.targetEl && !this.grabbedEl) {
-              this.grabbedEl = this.targetEl;
-              
-              // IMPORTANTE: Ammo.js desactiva los constraints si el objeto dinámico entra en reposo (sleeping).
-              // Forzamos que no se desactive mientras lo tenemos agarrado.
-              if (this.grabbedEl.components['ammo-body']) {
-                 console.log(`[manual-grab] Despertando objeto físico ${this.grabbedEl.id} y evitando que duerma`);
-                 this.grabbedEl.setAttribute('ammo-body', 'activationState', 'disableDeactivation');
-              }
+  <script src="./js/my-grab.js"></script>
+  <script src="./js/hand-event-log.js"></script>
+  <script src="./js/death-barrier.js"></script>
+</head>
 
-              // Crear un ID único para el constraint
-              this.activeConstraintId = 'ammo-constraint__' + Math.random().toString(36).substr(2, 9);
-              console.log(`[manual-grab] Creando constraint ${this.activeConstraintId} en ${this.grabbedEl.id} apuntando a #${this.el.id}`);
-              
-              this.grabbedEl.setAttribute(this.activeConstraintId, {
-                target: '#' + this.el.id,
-                type: 'lock'
-              });
+<body>
+  <!-- Note To Self: si el rendimiento peta es aqui-->
+  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;">
+    <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
+      ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05" sphere-collider="objects: .grabbable" my-grab>
+    </a-mixin>
+    <a-mixin id="grabbable-mixin"
+      ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
+      ammo-shape="type: vhacd" grab-fix>
+    </a-mixin>
+    <a-assets>
+      <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
+      <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
+      <a-asset-item id="foratSemicercle" src="files/forat_semicercle2.glb"></a-asset-item>
+    </a-assets>
 
-              // Verificar que el constraint se ha creado correctamente
-              setTimeout(() => {
-                const constraintComp = this.grabbedEl.components[this.activeConstraintId];
-                console.log(`[manual-grab] Verificación del constraint:`, constraintComp ? 'Componente existe' : 'Fallo al crear componente');
-                if (constraintComp && constraintComp.constraint) {
-                  console.log(`[manual-grab] Constraint de Ammo.js inyectado correctamente en el mundo físico.`);
-                } else {
-                  console.warn(`[manual-grab] ADVERTENCIA: El constraint de Ammo.js no se inicializó.`);
-                }
-              }, 100);
-            }
-          };
-
-          // Al soltar el gatillo, eliminar el constraint
-          const onRelease = () => {
-            console.log(`[manual-grab] RELEASE intentado en ${this.el.id}. grabbedEl:`, this.grabbedEl ? this.grabbedEl.id : 'null');
-            if (this.grabbedEl && this.activeConstraintId) {
-              console.log(`[manual-grab] Eliminando constraint ${this.activeConstraintId} de ${this.grabbedEl.id}`);
-              this.grabbedEl.removeAttribute(this.activeConstraintId);
-              
-              // Restaurar el estado de activación normal para que pueda volver a dormir si cae al suelo
-              if (this.grabbedEl.components['ammo-body']) {
-                 this.grabbedEl.setAttribute('ammo-body', 'activationState', 'active');
-              }
-
-              this.grabbedEl = null;
-              this.activeConstraintId = null;
-            }
-          };
-
-          this.el.addEventListener('gripdown', onGrab);
-          this.el.addEventListener('triggerdown', onGrab);
-          this.el.addEventListener('gripup', onRelease);
-          this.el.addEventListener('triggerup', onRelease);
-        }
-      });
-    </script>
-  </head>
-  <body>
-    <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1">
-      <a-assets>
-        <!-- import meshes -->
-        <a-asset-item id="buttonMtl" src="files/button.mtl"></a-asset-item>
-        <a-asset-item id="buttonObj" src="files/button.obj"></a-asset-item>
-        <a-asset-item id="foratCercle" src="files/forat_cercle.glb"></a-asset-item>
-        <a-asset-item id="foratEquilater" src="files/forat_equilater.glb"></a-asset-item>
-        <a-asset-item id="foratIsosceles" src="files/forat_isosceles.glb"></a-asset-item>
-        <a-asset-item id="foratQuadrat" src="files/forat_quadrat.glb"></a-asset-item>
-        <a-asset-item id="foratRectangle" src="files/forat_rectangle.glb"></a-asset-item>
-        <a-asset-item id="foratRectangule" src="files/forat_rectangule.glb"></a-asset-item>
-        <a-asset-item id="foratSemicercle" src="files/forat_semicercle.glb"></a-asset-item>
-        <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
-        <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
-      </a-assets>
-
-      <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0">
-        <a-entity id="camera" camera look-controls position="0 1.6 0"></a-entity>
-
-        <a-entity id="leftHand" 
-          sphere-collider="objects: a-box" manual-grab
-          hand-controls="hand: left; color: #ffcccc" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05"></a-entity>
-        <a-entity id="rightHand" 
-          sphere-collider="objects: a-box" manual-grab
-          hand-controls="hand: right; color: #ffcccc" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05"></a-entity>
+    <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0">
+      <a-entity id="camera" camera look-controls position="0 1.6 0">
+        <a-entity id="respawnPoint" position="0 0 -0.5"></a-entity>
       </a-entity>
-        
-      <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" visible="false" ammo-body="type: static" ammo-shape="type: box"></a-plane>
-      <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
-      <a-box id="testCubo" scale="0.5 0.5 0.5" position="-0.5 1 0"
-        color="red" ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1" ammo-shape="type: box">
-      </a-box>
+
+      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc"></a-entity>
+      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc"></a-entity>
+    </a-entity>
+
+    <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" visible="false" ammo-body="type: static"
+      ammo-shape="type: box"></a-plane>
+
+    <a-plane position="0 -20 0" rotation="-90 0 0" width="10000" height="10000" visible="false"
+    ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
+    ammo-shape="type: box" death-barrier></a-plane>
+    <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
+    <a-box id="testCubo1" class="grabbable" mixin="grabbable-mixin" scale="0.5 0.5 0.5" position="-0.5 1 -1"
+      color="red"></a-box>
+    <a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.4 0.4 0.4" position="-0.5 1 -3"
+      color="green"></a-box>
+    <a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3" position="-0.5 1 -5"
+      color="blue"></a-box>
 
 
-        
-        <a-sky color="#ECECEC"></a-sky>
-    </a-scene>
-  </body>
+    <a-entity id="eTap" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
+      position="-0.5 3 -5"></a-entity>
+
+      <a-entity id="eForatSemiC" gltf-model="#foratSemicercle" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
+      position="-1.5 3 -5"></a-entity>
+
+    <a-box id="deathCubeTest" scale="0.3 0.3 0.3" position="-1.5 1 -3" color="black"
+      ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
+      ammo-shape="type: box" death-barrier>
+
+    </a-box>
+
+
+
+    <a-sky color="#ECECEC"></a-sky>
+  </a-scene>
+</body>
+
 </html>
