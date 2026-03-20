@@ -48,6 +48,15 @@ AFRAME.registerComponent('my-grab', {
         this.activeConstraintId = null;
         this.activeTrack = null;
 
+        // Handler para abuttondown: alternar visibilidad de #debugHud
+        this.el.addEventListener('abuttondown', () => {
+            const hud = document.querySelector('#debugHud');
+            if (hud) {
+                const isVisible = hud.getAttribute('visible');
+                hud.setAttribute('visible', !isVisible);
+            }
+        });
+
         this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
         this.el.setAttribute('line', { color: 'white' });
 
@@ -147,7 +156,7 @@ AFRAME.registerComponent('my-grab', {
         box.getSize(size);
 
         // Offset basado en el tamaño del objeto
-        const maxDim = Math.max(size.x, size.y, size.z);
+        const maxDim = (size.x + size.y + size.z) / 3.0;
         const distance = (maxDim / 2) + 0.0;
 
         // Crear la posición objetivo con offset respecto a la mano

@@ -110,3 +110,17 @@ TODO:
 TOFIX:
 - hitbox de agarre
 - objetos muy rapidos (arreglado)
+
+## 20/03
+añadido debug-hud para mostrar los logs por consola en el entorno de VR, ayudará para el debug
+
+
+TODO:
+- Feedback visual
+- QoL agarre
+- Diferenciar objetos
+- Componente trigger para ammo.js
+
+TOFIX:
+- hitbox de agarre
+- objetos muy rapidos (arreglado)
