@@ -6,15 +6,8 @@ AFRAME.registerComponent('debug-hud', {
       const el = this.el;
       // Buscar el texto y el fondo
       const textEntity = el.querySelector('#debugHudText');
-      const bgEntity = el.querySelector('#debugHudBg');
       const MAX_LINES = 15;
 
-      // Fondo detrás
-      const bgMesh = bgEntity.getObject3D('mesh');
-      // No es necesario modificar depthTest ni renderOrder
-
-      // Texto delante
-      // No es necesario modificar depthTest ni renderOrder
 
       const myLog = (...data) => {
         oldLog(...data);
