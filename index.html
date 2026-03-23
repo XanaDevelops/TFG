@@ -24,7 +24,7 @@
   <!-- Note To Self: si el rendimiento peta es aqui-->
   <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;">
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
-      ammo-shape="type: sphere; fit: manual; sphereRadius: 0.05" sphere-collider="objects: .grabbable" my-grab>
+      ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" sphere-collider="objects: .grabbable; radius: -0.25" my-grab> <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
     <a-mixin id="grabbable-base"
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
