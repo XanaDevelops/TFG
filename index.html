@@ -24,7 +24,7 @@
   <!-- Note To Self: si el rendimiento peta es aqui-->
   <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;">
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
-      ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" sphere-collider="objects: .grabbable; radius: -0.25" my-grab> <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
+      ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab> <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
     <a-mixin id="grabbable-base"
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
@@ -56,8 +56,12 @@
         </a-entity>
       </a-entity>
 
-      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc"></a-entity>
-      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc"></a-entity>
+      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc">
+        <a-entity class="hand-collider" grab-hand-fix sphere-collider="objects: .grabbable; radius: 0.01" position="0 0 0.0"></a-entity>
+      </a-entity>
+      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc">
+        <a-entity class="hand-collider" grab-hand-fix sphere-collider="objects: .grabbable; radius: 0.01" position="0 0 0.0"></a-entity>
+      </a-entity>
     </a-entity>
 
     <a-box id="suelo" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false" ammo-body="type: static"

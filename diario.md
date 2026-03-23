@@ -124,3 +124,13 @@ TODO:
 TOFIX:
 - hitbox de agarre
 - objetos muy rapidos (arreglado)
+
+## 23/03
+Reunión con Juanmi y Toni, me pasará descripciones de las diferentes escenas a hacer
+
+~~Arreglado~~ distancia agarre
+
+**IMPORTANTE** dos hacd si colisionan se pegan entre si. Se puede mirar de usar ccd para colisiones criticas (parece que existe)
+vhacd no es viable porque tarda mucho en generar el collider y despues no es preciso...
+
+Se esta mirando de ajustar la distancia de agarre de los objetos, a lo mejor al tener la escala general de lo que se puede agarrar se puede 

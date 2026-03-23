@@ -225,6 +225,31 @@ AFRAME.registerComponent('grab-fix', {
 
         this.fixed = false;
 
+        // Flag para indicar si el body soporta CCD (solo comprobación, no lo activamos)
+        this.ccdAvailable = false;
+
+        const checkCCD = () => {
+            const comp = el.components && el.components['ammo-body'];
+            if (!comp || !comp.body) return false;
+            const body = comp.body;
+            let avail = false;
+            try {
+                // Comprobaciones típicas de API de Ammo para CCD
+                if (typeof body.setCcdMotionThreshold === 'function' || typeof body.setCcdSweptSphereRadius === 'function' || typeof body.getCcdSweptSphereRadius === 'function') {
+                    avail = true;
+                }
+            } catch (e) {
+                // Si la introspección falla, asumimos no disponible
+                avail = false;
+            }
+            this.ccdAvailable = avail;
+            console.log(`[grab-fix:${el.id}] CCD disponible: ${this.ccdAvailable}`);
+            return avail;
+        };
+
+        // Intento inicial de comprobación (si el body ya está cargado)
+        checkCCD();
+
         // Guardar el color original establecido en el HTML
         //this.originalColor = el.getAttribute('material').color;
 
@@ -236,6 +261,8 @@ AFRAME.registerComponent('grab-fix', {
 
         this.el.addEventListener('body-loaded', (e) => {
             console.log("body loaded " + this.fixed);
+            // Volver a comprobar CCD cuando el body se haya cargado completamente
+            checkCCD();
             
         })
         
@@ -266,6 +293,50 @@ AFRAME.registerComponent('grab-fix', {
         }
         
     }
+});
+
+
+// Componente para reenviar eventos de colisión desde una entidad hija hacia la mano padre
+AFRAME.registerComponent('grab-hand-fix', {
+    schema: {},
+
+    init: function () {
+        // Reenvía 'hit' y 'hitend' al parent (la mano)
+        // Reemitir el evento tal cual (mismo tipo y mismo detalle), sin procesarlo
+        this.el.addEventListener('hit', (e) => {
+            if (this.el.parentEl) {
+                this.el.parentEl.emit(e.type, e.detail);
+            }
+        });
+
+        this.el.addEventListener('hitend', (e) => {
+            if (this.el.parentEl) {
+                this.el.parentEl.emit(e.type, e.detail);
+            }
+        });
+
+        // Asegurarse de que la entidad tenga una malla/geometry que algunos colliders requieren.
+        // Obtener radio declarado en sphere-collider si existe
+        let sc = this.el.getAttribute('sphere-collider');
+        let radius = 0.01;
+        if (sc && sc.radius !== undefined) {
+            const parsed = parseFloat(sc.radius);
+            if (!isNaN(parsed)) radius = parsed;
+        }
+
+        // Si no tiene geometry ni mesh, crear una primitiva esfera invisible en esta entidad
+        const hasMesh = !!this.el.getObject3D('mesh');
+        const hasGeometryAttr = !!this.el.getAttribute('geometry');
+          if (!hasMesh && !hasGeometryAttr) {
+              const meshRadius = radius * 0.5; // mesh más pequeña que el collider para exigir acercarse a la superficie
+              this.el.setAttribute('geometry', { primitive: 'sphere', radius: meshRadius });
+              // Para debug: hacer la esfera visible y semitransparente
+              this.el.setAttribute('material', { color: '#00ffcc', opacity: 0.25, transparent: true });
+              // Asegurar visibilidad del object3D durante depuración
+              this.el.object3D.visible = true;
+          }
+    }
+
 });
 
 
