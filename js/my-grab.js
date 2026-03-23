@@ -191,8 +191,6 @@ AFRAME.registerComponent('my-grab', {
             this.setConstraint();
             this.activeTrack = null; // Detener el movimiento
         }
-
-        console.log(`[manualAnim] Moviendo target ${gEl.id} progresivamente hacia la mano con offset.`);
     },
 
     update: function () {
