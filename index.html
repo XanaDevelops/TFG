@@ -57,10 +57,10 @@
       </a-entity>
 
       <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc">
-        <a-entity class="hand-collider" grab-hand-fix sphere-collider="objects: .grabbable; radius: 0.01" position="0 0 0.0"></a-entity>
+        <a-entity class="hand-collider" close-detect="objects: .grabbable; far: 10" position="0 0 0.0"></a-entity>
       </a-entity>
       <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc">
-        <a-entity class="hand-collider" grab-hand-fix sphere-collider="objects: .grabbable; radius: 0.01" position="0 0 0.0"></a-entity>
+        <a-entity class="hand-collider" close-detect="objects: .grabbable; far: 10" position="0 0 0.0"></a-entity>
       </a-entity>
     </a-entity>
 

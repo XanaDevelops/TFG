@@ -120,7 +120,7 @@ AFRAME.registerComponent('my-grab', {
         });
         //this.el.addEventListener('triggerdown', onGrab);
         this.el.addEventListener('gripup', () => {
-            if(this.activeTrack){  //FIXME: hacer esto hace que el cubo salga despedido, lol
+            if (this.activeTrack) {  //FIXME: hacer esto hace que el cubo salga despedido, lol
                 this.activeTrack.setAttribute('ammo-body', 'type', 'dynamic');
                 this.activeTrack = null;
             }
@@ -132,7 +132,7 @@ AFRAME.registerComponent('my-grab', {
 
         this.el.addEventListener('triggerdown', () => {
             if (this.grabbedEl) {
-                
+
                 //this.animAnim();
                 this.grabbedEl.setAttribute('ammo-body', 'type', 'kinematic');
                 this.activeTrack = this.grabbedEl;
@@ -203,7 +203,7 @@ AFRAME.registerComponent('my-grab', {
 
     tick: function (time, timeDelta) {
         // Do something on every scene tick or frame.
-        if (this.activeTrack != null){
+        if (this.activeTrack != null) {
             this.manualAnim(timeDelta);
         }
     }
@@ -213,11 +213,11 @@ AFRAME.registerComponent('my-grab', {
 //Just works
 AFRAME.registerComponent('grab-fix', {
     schema: {
-        
+
     },
 
     init: function () {
-        
+
         const el = this.el;
         const ammo_body = el.components['ammo-body'];
 
@@ -263,14 +263,14 @@ AFRAME.registerComponent('grab-fix', {
             console.log("body loaded " + this.fixed);
             // Volver a comprobar CCD cuando el body se haya cargado completamente
             checkCCD();
-            
+
         })
-        
-        
+
+
     },
 
     tick: function (time, timeDelta) {
-        
+
         const el = this.el;
         const ammoBody = el.components['ammo-body'];
 
@@ -284,59 +284,74 @@ AFRAME.registerComponent('grab-fix', {
             el.setAttribute('material', 'color', 'yellow'); // Cambiar a amarillo
         }
         */
-        if (time > 1000 && !this.fixed){
+        if (time > 1000 && !this.fixed) {
             el.setAttribute('ammo-body', 'type', 'dynamic');
             ammoBody.syncToPhysics()
             this.fixed = true
             console.log(this.fixed);
-            
+
         }
-        
+
     }
 });
 
 
-// Componente para reenviar eventos de colisión desde una entidad hija hacia la mano padre
-AFRAME.registerComponent('grab-hand-fix', {
-    schema: {},
+// Componente para detectar objetos cercanos usando múltiples `raycaster` de A-Frame
+AFRAME.registerComponent('close-detect', {
+    schema: {
+        objects: { type: 'string', default: '.grabbable' },
+        far: { type: 'number', default: 0.5 }
+    },
 
     init: function () {
-        // Reenvía 'hit' y 'hitend' al parent (la mano)
-        // Reemitir el evento tal cual (mismo tipo y mismo detalle), sin procesarlo
-        this.el.addEventListener('hit', (e) => {
-            if (this.el.parentEl) {
-                this.el.parentEl.emit(e.type, e.detail);
-            }
-        });
+        // Direcciones: 6 ejes + 8 esquinas (total 14)
+        this.directions = [
+            [1, 0, 0], [-1, 0, 0],
+            [0, 1, 0], [0, -1, 0],
+            [0, 0, 1], [0, 0, -1],
+            [1, 1, 1], [-1, 1, 1], [1, -1, 1], [1, 1, -1],
+            [-1, -1, 1], [-1, 1, -1], [1, -1, -1], [-1, -1, -1]
+        ];
 
-        this.el.addEventListener('hitend', (e) => {
-            if (this.el.parentEl) {
-                this.el.parentEl.emit(e.type, e.detail);
-            }
-        });
+        // Añadir múltiples instancias del componente `raycaster` usando la notación `raycaster__i`
+        for (let i = 0; i < this.directions.length; i++) {
+            const dir = this.directions[i];
+            // Usar las componentes tal cual (sin normalizar)
+            const ndx = dir[0];
+            const ndy = dir[1];
+            const ndz = dir[2];
+            // setAttribute usando objeto para asegurar propiedades compuestas
+            this.el.setAttribute(`raycaster__${i}`, {
+                objects: this.data.objects,
+                direction: `${ndx} ${ndy} ${ndz}`,
+                far: this.data.far,
+                showLine: true
+            });
 
-        // Asegurarse de que la entidad tenga una malla/geometry que algunos colliders requieren.
-        // Obtener radio declarado en sphere-collider si existe
-        let sc = this.el.getAttribute('sphere-collider');
-        let radius = 0.01;
-        if (sc && sc.radius !== undefined) {
-            const parsed = parseFloat(sc.radius);
-            if (!isNaN(parsed)) radius = parsed;
+            this.el.setAttribute(`line__${i}`, { color: "#00ff00" });
+            // mantener sólo la configuración; no añadir logs de depuración
         }
 
-        // Si no tiene geometry ni mesh, crear una primitiva esfera invisible en esta entidad
-        const hasMesh = !!this.el.getObject3D('mesh');
-        const hasGeometryAttr = !!this.el.getAttribute('geometry');
-          if (!hasMesh && !hasGeometryAttr) {
-              const meshRadius = radius * 0.5; // mesh más pequeña que el collider para exigir acercarse a la superficie
-              this.el.setAttribute('geometry', { primitive: 'sphere', radius: meshRadius });
-              // Para debug: hacer la esfera visible y semitransparente
-              this.el.setAttribute('material', { color: '#00ffcc', opacity: 0.25, transparent: true });
-              // Asegurar visibilidad del object3D durante depuración
-              this.el.object3D.visible = true;
-          }
-    }
+        // Reenviar eventos raycaster a formato esperado por my-grab: 'hit' y 'hitend' con {el}
+        this._onIntersect = (e) => {
+            const els = (e.detail && e.detail.els) || [];
+            for (let i = 0; i < els.length; i++) {
+                const hitEl = els[i];
+                if (this.el.parentEl) this.el.parentEl.emit('hit', { el: hitEl });
+            }
+        };
 
+        this._onCleared = (e) => {
+            const cleared = (e.detail && (e.detail.clearedEls || e.detail.els)) || [];
+            for (let i = 0; i < cleared.length; i++) {
+                const hitEl = cleared[i];
+                if (this.el.parentEl) this.el.parentEl.emit('hitend', { el: hitEl });
+            }
+        };
+
+        this.el.addEventListener('raycaster-intersection', this._onIntersect);
+        this.el.addEventListener('raycaster-intersection-cleared', this._onCleared);
+    },
 });
 
 
