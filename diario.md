@@ -134,3 +134,9 @@ Reunión con Juanmi y Toni, me pasará descripciones de las diferentes escenas a
 vhacd no es viable porque tarda mucho en generar el collider y despues no es preciso...
 
 Se esta mirando de ajustar la distancia de agarre de los objetos, a lo mejor al tener la escala general de lo que se puede agarrar se puede 
+
+## 25/03
+
+Comprobar raycasts correctamente parece que si mano dentro no lo pilla???
+Tiene sentido si comprueba colisión con malla, no volumen.
+

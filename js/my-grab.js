@@ -57,8 +57,8 @@ AFRAME.registerComponent('my-grab', {
             }
         });
 
-        this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
-        this.el.setAttribute('line', { color: 'white' });
+        //this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
+        //this.el.setAttribute('line', { color: 'white' });
 
         //detectar colisión
         this.el.addEventListener('hit', (e) => {
@@ -313,45 +313,70 @@ AFRAME.registerComponent('close-detect', {
             [-1, -1, 1], [-1, 1, -1], [1, -1, -1], [-1, -1, -1]
         ];
 
-        // Añadir múltiples instancias del componente `raycaster` usando la notación `raycaster__i`
+        // Guardar referencias a entidades hijas para limpieza
+        this._childRaycasters = [];
+
+        // Crear una entidad hija por cada dirección y reenviar sus eventos al propio elemento `this.el`
         for (let i = 0; i < this.directions.length; i++) {
             const dir = this.directions[i];
-            // Usar las componentes tal cual (sin normalizar)
-            const ndx = dir[0];
-            const ndy = dir[1];
-            const ndz = dir[2];
-            // setAttribute usando objeto para asegurar propiedades compuestas
-            this.el.setAttribute(`raycaster__${i}`, {
+            let vx = dir[0], vy = dir[1], vz = dir[2];
+            const len = Math.sqrt(vx * vx + vy * vy + vz * vz) || 1;
+            vx = vx / len; vy = vy / len; vz = vz / len;
+
+            const child = document.createElement('a-entity');
+            child.className = 'close-detect-ray';
+            child.setAttribute('position', '0 0 0');
+            child.setAttribute('raycaster', {
                 objects: this.data.objects,
-                direction: `${ndx} ${ndy} ${ndz}`,
+                direction: `${vx} ${vy} ${vz}`,
                 far: this.data.far,
                 showLine: true
             });
+            child.setAttribute('line', { color: '#00ff00' });
 
-            this.el.setAttribute(`line__${i}`, { color: "#00ff00" });
-            // mantener sólo la configuración; no añadir logs de depuración
+            // Handlers que reenviarán eventos a `this.el` (la mano que porta el componente)
+            const forwardIntersect = (ev) => {
+                const els = (ev.detail && ev.detail.els) || [];
+                for (let k = 0; k < els.length; k++) {
+                    const hitEl = els[k];
+                    this.el.emit('hit', { el: hitEl });
+                }
+            };
+            const forwardCleared = (ev) => {
+                const cleared = (ev.detail && (ev.detail.clearedEls || ev.detail.els)) || [];
+                for (let k = 0; k < cleared.length; k++) {
+                    const hitEl = cleared[k];
+                    this.el.emit('hitend', { el: hitEl });
+                }
+            };
+
+            child.addEventListener('raycaster-intersection', forwardIntersect);
+            child.addEventListener('raycaster-intersection-cleared', forwardCleared);
+
+            this._childRaycasters.push({ el: child, onIntersect: forwardIntersect, onCleared: forwardCleared });
+
+            // Adjuntar al elemento (la mano)
+            this.el.appendChild(child);
         }
 
-        // Reenviar eventos raycaster a formato esperado por my-grab: 'hit' y 'hitend' con {el}
-        this._onIntersect = (e) => {
-            const els = (e.detail && e.detail.els) || [];
-            for (let i = 0; i < els.length; i++) {
-                const hitEl = els[i];
-                if (this.el.parentEl) this.el.parentEl.emit('hit', { el: hitEl });
-            }
-        };
-
-        this._onCleared = (e) => {
-            const cleared = (e.detail && (e.detail.clearedEls || e.detail.els)) || [];
-            for (let i = 0; i < cleared.length; i++) {
-                const hitEl = cleared[i];
-                if (this.el.parentEl) this.el.parentEl.emit('hitend', { el: hitEl });
-            }
-        };
-
-        this.el.addEventListener('raycaster-intersection', this._onIntersect);
-        this.el.addEventListener('raycaster-intersection-cleared', this._onCleared);
+        console.log(`[close-detect:${this.el.id}] entidades hijas creadas: ${this._childRaycasters.length}`);
     },
+
+    remove: function () {
+        // Quitar listeners y entidades hijas
+        if (this._childRaycasters && this._childRaycasters.length) {
+            this._childRaycasters.forEach((entry) => {
+                try {
+                    entry.el.removeEventListener('raycaster-intersection', entry.onIntersect);
+                    entry.el.removeEventListener('raycaster-intersection-cleared', entry.onCleared);
+                    if (entry.el.parentNode) entry.el.parentNode.removeChild(entry.el);
+                } catch (e) {
+                    // no crítico
+                }
+            });
+        }
+        this._childRaycasters = [];
+    }
 });
 
 

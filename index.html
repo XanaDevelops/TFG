@@ -56,11 +56,11 @@
         </a-entity>
       </a-entity>
 
-      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc">
-        <a-entity class="hand-collider" close-detect="objects: .grabbable; far: 10" position="0 0 0.0"></a-entity>
+      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc" close-detect="objects: .grabbable; far: 0.1">
+        <a-entity class="hand-collider" position="0 0 0.0"></a-entity>
       </a-entity>
-      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc">
-        <a-entity class="hand-collider" close-detect="objects: .grabbable; far: 10" position="0 0 0.0"></a-entity>
+      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc" close-detect="objects: .grabbable; far: 0.1">
+        <a-entity class="hand-collider" position="0 0 0.0"></a-entity>
       </a-entity>
     </a-entity>
 
