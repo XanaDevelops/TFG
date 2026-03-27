@@ -140,3 +140,8 @@ Se esta mirando de ajustar la distancia de agarre de los objetos, a lo mejor al 
 Comprobar raycasts correctamente parece que si mano dentro no lo pilla???
 Tiene sentido si comprueba colisión con malla, no volumen.
 
+## 27/03
+
+Los raycast no funcionan si la mano está dentro, rollback a sphere collider.
+
+Se ha añadido reglas para el agente ya que para refactorizaciones simples la lia.
