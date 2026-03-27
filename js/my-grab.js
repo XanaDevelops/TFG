@@ -43,6 +43,8 @@ AFRAME.registerComponent('my-grab', {
     },
 
     init: function () {
+        // Flag para controlar prueba continua de raycaster
+        this._testContinuous = true;
         this.targetEl = null;
         this.grabbedEl = null;
         this.activeConstraintId = null;
@@ -76,7 +78,7 @@ AFRAME.registerComponent('my-grab', {
                 console.log(`[my-grab:${this.el.id}] targetEl -> NULL`);
             }
         });
-
+        /*
         this.el.addEventListener('raycaster-intersection', (e) => {
             const hitEl = e.detail.els[0];
             if (!this.targetEl && !this.grabbedEl) {
@@ -95,6 +97,7 @@ AFRAME.registerComponent('my-grab', {
             this.targetEl = null;
             console.log(`[my-grab:${this.el.id}] RAY: targetEl -> NULL`);
         });
+        */
 
         this.el.addEventListener('gripdown', () => {
             if (this.targetEl && !this.grabbedEl) {
@@ -206,6 +209,27 @@ AFRAME.registerComponent('my-grab', {
         if (this.activeTrack != null) {
             this.manualAnim(timeDelta);
         }
+
+        // Prueba continua opcional: verificar raycast manualmente cada frame contra #testCubo
+        if (this._testContinuous) {
+            try {
+                const child = document.querySelector('.close-detect-ray');
+                const target = document.querySelector('#testCubo');
+                if (child && target && target.object3D) {
+                    const origin = new THREE.Vector3();
+                    child.object3D.getWorldPosition(origin);
+                    const dir = new THREE.Vector3();
+                    child.object3D.getWorldDirection(dir).normalize();
+                    const maxFar = (this.data && this.data.far) || 10;
+                    const r = new THREE.Raycaster(origin, dir, 0, maxFar);
+                    const intersects = r.intersectObject(target.object3D, true);
+                    const box = new THREE.Box3().setFromObject(target.object3D);
+                    console.log('[close-detect:test] child', child.id, { origin, dir, intersects, insideAABB: box.containsPoint(origin) });
+                }
+            } catch (e) {
+                // no romper el tick
+            }
+        }
     }
 });
 
@@ -313,8 +337,11 @@ AFRAME.registerComponent('close-detect', {
             [-1, -1, 1], [-1, 1, -1], [1, -1, -1], [-1, -1, -1]
         ];
 
-        // Guardar referencias a entidades hijas para limpieza
-        this._childRaycasters = [];
+        // (no guardamos referencias a hijos; este componente no se desmontará)
+
+        // Map global que guarda el número de raycasts que actualmente ven cada elemento
+        // Key: elemento (DOM node), Value: contador (number)
+        this._detectedCounts = new Map();
 
         // Crear una entidad hija por cada dirección y reenviar sus eventos al propio elemento `this.el`
         for (let i = 0; i < this.directions.length; i++) {
@@ -324,6 +351,8 @@ AFRAME.registerComponent('close-detect', {
             vx = vx / len; vy = vy / len; vz = vz / len;
 
             const child = document.createElement('a-entity');
+            // Asignar un id reconocible al child: raychild_{handId}_{i}
+            child.id = `raychild_${this.el.id}_${i}`;
             child.className = 'close-detect-ray';
             child.setAttribute('position', '0 0 0');
             child.setAttribute('raycaster', {
@@ -334,49 +363,49 @@ AFRAME.registerComponent('close-detect', {
             });
             child.setAttribute('line', { color: '#00ff00' });
 
-            // Handlers que reenviarán eventos a `this.el` (la mano que porta el componente)
             const forwardIntersect = (ev) => {
-                const els = (ev.detail && ev.detail.els) || [];
-                for (let k = 0; k < els.length; k++) {
-                    const hitEl = els[k];
-                    this.el.emit('hit', { el: hitEl });
+                // Evitar intentar procesar si no hay detalles
+                const added = (ev.detail && (ev.detail.addedEls || ev.detail.els)) || [];
+                for (let k = 0; k < added.length; k++) {
+                    const hitEl = added[k];
+                    const prevCount = this._detectedCounts.get(hitEl) || 0;
+                    const nextCount = prevCount + 1;
+                    this._detectedCounts.set(hitEl, nextCount);
+                    if (prevCount === 0) {
+                        // Primera vez que cualquier rayo ve este elemento
+                        this.el.emit('hit', { el: hitEl });
+                    }
+                    // Log silenciado intencionadamente
                 }
             };
+
             const forwardCleared = (ev) => {
                 const cleared = (ev.detail && (ev.detail.clearedEls || ev.detail.els)) || [];
                 for (let k = 0; k < cleared.length; k++) {
                     const hitEl = cleared[k];
-                    this.el.emit('hitend', { el: hitEl });
+                    const prevCount = this._detectedCounts.get(hitEl) || 0;
+                    const nextCount = Math.max(0, prevCount - 1);
+                    if (nextCount === 0) {
+                        this._detectedCounts.delete(hitEl);
+                        this.el.emit('hitend', { el: hitEl });
+                    } else {
+                        this._detectedCounts.set(hitEl, nextCount);
+                    }
+                    // Log silenciado intencionadamente
                 }
             };
-
             child.addEventListener('raycaster-intersection', forwardIntersect);
             child.addEventListener('raycaster-intersection-cleared', forwardCleared);
 
-            this._childRaycasters.push({ el: child, onIntersect: forwardIntersect, onCleared: forwardCleared });
-
             // Adjuntar al elemento (la mano)
             this.el.appendChild(child);
+
+            // (prueba única eliminada; la prueba continua se realiza en tick)
         }
 
-        console.log(`[close-detect:${this.el.id}] entidades hijas creadas: ${this._childRaycasters.length}`);
+        // console.log(`[close-detect:${this.el.id}] entidades hijas creadas: ${this.directions.length}`);
     },
 
-    remove: function () {
-        // Quitar listeners y entidades hijas
-        if (this._childRaycasters && this._childRaycasters.length) {
-            this._childRaycasters.forEach((entry) => {
-                try {
-                    entry.el.removeEventListener('raycaster-intersection', entry.onIntersect);
-                    entry.el.removeEventListener('raycaster-intersection-cleared', entry.onCleared);
-                    if (entry.el.parentNode) entry.el.parentNode.removeChild(entry.el);
-                } catch (e) {
-                    // no crítico
-                }
-            });
-        }
-        this._childRaycasters = [];
-    }
 });
 
 
