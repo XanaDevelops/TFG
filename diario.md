@@ -145,3 +145,9 @@ Tiene sentido si comprueba colisión con malla, no volumen.
 Los raycast no funcionan si la mano está dentro, rollback a sphere collider.
 
 Se ha añadido reglas para el agente ya que para refactorizaciones simples la lia.
+
+## 30/03
+Ruidos obras por la tarde...
+Visualizando los "colliders" de sphere-collider, descargado, se puede ver el problema,
+pasar a colliders más precisos
+s
