@@ -57,8 +57,8 @@ AFRAME.registerComponent('my-grab', {
             }
         });
 
-        this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
-        this.el.setAttribute('line', { color: 'white' });
+       // this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
+        //this.el.setAttribute('line', { color: 'white' });
 
         //detectar colisión
         this.el.addEventListener('hit', (e) => {
@@ -293,31 +293,21 @@ AFRAME.registerComponent('close-detect', {
 
 
     init: function () {
-        const radius = this.data.far;
-
-        // crear una malla esfera invisible en esta entidad para que
-        // el componente `sphere-collider` pueda usarla como 'mesh'
-        const geom = new THREE.SphereGeometry(radius, 8, 8);
-        const mat = new THREE.MeshBasicMaterial({ visible: false });
-        const mesh = new THREE.Mesh(geom, mat);
-        this.el.setObject3D('mesh', mesh);
-
-        // aplicar sphere-collider directamente sobre esta entidad
-        this.el.setAttribute('sphere-collider', `objects: ${this.data.objects}; radius: ${radius}`);
-
-        const onHit = (e) => {
-            const hitEl = e && e.detail && e.detail.el;
+        // close-detect ahora escucha los eventos del componente `obb-collider`
+        // y reenvía la información a la entidad padre como `hit` / `hitend`.
+        const onObbStart = (e) => {
+            const hitEl = e && e.detail && e.detail.withEl;
             const parent = this.el.parentEl || this.el.parentNode;
             if (hitEl && parent) parent.emit('hit', { el: hitEl });
         };
-        const onHitEnd = (e) => {
-            const hitEl = e && e.detail && e.detail.el;
+        const onObbEnd = (e) => {
+            const hitEl = e && e.detail && e.detail.withEl;
             const parent = this.el.parentEl || this.el.parentNode;
             if (hitEl && parent) parent.emit('hitend', { el: hitEl });
         };
 
-        this.el.addEventListener('hit', onHit);
-        this.el.addEventListener('hitend', onHitEnd);
+        this.el.addEventListener('obbcollisionstarted', onObbStart);
+        this.el.addEventListener('obbcollisionended', onObbEnd);
     }
 
 

@@ -25,7 +25,7 @@
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
-  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;">
+  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;" obb-collider="showColliders: true">
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
       ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab> <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
@@ -60,10 +60,10 @@
       </a-entity>
 
       <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc">
-        <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; far: 0.0"></a-entity>
+        <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; far: 0.0" obb-collider></a-entity>
       </a-entity>
       <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc">
-        <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; far: 0.0"></a-entity>
+        <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; far: 0.0" obb-collider></a-entity>
       </a-entity>
     </a-entity>
 
@@ -87,11 +87,11 @@
     <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
 
     <a-box id="testCubo1" class="grabbable" mixin="grabbable-mixin" scale="0.5 0.5 0.5" position="-0.5 1 -1"
-      color="red"></a-box>
+      color="red" obb-collider></a-box>
     <a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.4 0.4 0.4" position="-0.5 1 -3"
-      color="green"></a-box>
+      color="green" obb-collider></a-box>
     <a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3" position="-0.5 1 -5"
-      color="blue"></a-box>
+      color="blue" obb-collider></a-box>
 
     <a-entity id="eTap" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
       position="-0.5 3 -5"></a-entity>
