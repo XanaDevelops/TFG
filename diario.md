@@ -157,3 +157,5 @@ se usa el componente por defecto de oob-collider
 Hay incompatibilidades con el raycast de las manos
 
 ## 17/04
+Se han arreglado incompatibilidades y solucionado un bug respecto al agarre.
+Se tiene que mirar de usar otro sistema que no sea obb para figuras convexas 
