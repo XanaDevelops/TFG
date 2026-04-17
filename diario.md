@@ -150,4 +150,10 @@ Se ha añadido reglas para el agente ya que para refactorizaciones simples la li
 Ruidos obras por la tarde...
 Visualizando los "colliders" de sphere-collider, descargado, se puede ver el problema,
 pasar a colliders más precisos
-s
+
+
+## 15/04
+se usa el componente por defecto de oob-collider
+Hay incompatibilidades con el raycast de las manos
+
+## 17/04

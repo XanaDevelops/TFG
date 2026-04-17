@@ -5,6 +5,9 @@ AFRAME.registerComponent('my-grab', {
 
     setConstraint: function () {
         this.grabbedEl = this.targetEl;
+        if (this.grabbedEl === null){
+            this.grabbedEl = this.targetEl_ray
+        }
 
         // IMPORTANTE: Ammo.js desactiva los constraints si el objeto dinámico entra en reposo (sleeping).
         // Forzamos que no se desactive mientras lo tenemos agarrado.
@@ -44,6 +47,7 @@ AFRAME.registerComponent('my-grab', {
 
     init: function () {
         this.targetEl = null;
+        this.targetEl_ray = null;
         this.grabbedEl = null;
         this.activeConstraintId = null;
         this.activeTrack = null;
@@ -57,9 +61,8 @@ AFRAME.registerComponent('my-grab', {
             }
         });
 
-       // this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
-        //this.el.setAttribute('line', { color: 'white' });
-
+        this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
+        this.el.setAttribute('line', { color: 'white' });
         //detectar colisión
         this.el.addEventListener('hit', (e) => {
             const hitEl = e.detail.el;
@@ -79,9 +82,9 @@ AFRAME.registerComponent('my-grab', {
         
         this.el.addEventListener('raycaster-intersection', (e) => {
             const hitEl = e.detail.els[0];
-            if (!this.targetEl && !this.grabbedEl) {
-                this.targetEl = hitEl;
-                console.log(`[my-grab:${this.el.id}] RAY: targetEl -> `, this.targetEl.id);
+            if (!this.targetEl_ray && !this.grabbedEl) {
+                this.targetEl_ray = hitEl;
+                console.log(`[my-grab:${this.el.id}] RAY: targetEl -> `, this.targetEl_ray.id);
             }
         });
 
@@ -92,13 +95,13 @@ AFRAME.registerComponent('my-grab', {
             //if (this.targetEl === hitEl) {
 
             //}
-            this.targetEl = null;
+            this.targetEl_ray = null;
             console.log(`[my-grab:${this.el.id}] RAY: targetEl -> NULL`);
         });
         
 
         this.el.addEventListener('gripdown', () => {
-            if (this.targetEl && !this.grabbedEl) {
+            if ((this.targetEl || this.targetEl_ray) && !this.grabbedEl) {
                 //grab
                 this.setConstraint()
             }
@@ -174,7 +177,7 @@ AFRAME.registerComponent('my-grab', {
         // Verificar si el objeto ha llegado a la posición objetivo
         if (currentPos.distanceTo(targetWorldPos) < 0.1) {
             console.log(`[manualAnim] El target ${gEl.id} ha llegado a la mano.`);
-            this.targetEl = gEl;
+            this.targetEl_ray = gEl;
             gEl.setAttribute('ammo-body', 'type', 'dynamic');
             this.setConstraint();
             this.activeTrack = null; // Detener el movimiento
@@ -308,6 +311,13 @@ AFRAME.registerComponent('close-detect', {
 
         this.el.addEventListener('obbcollisionstarted', onObbStart);
         this.el.addEventListener('obbcollisionended', onObbEnd);
+
+        // También escuchar eventos OBB en el padre (el mixin `hand-mixin` aplica obb-collider al mano)
+        const parentEl = this.el.parentEl || this.el.parentNode;
+        if (parentEl) {
+            parentEl.addEventListener('obbcollisionstarted', onObbStart);
+            parentEl.addEventListener('obbcollisionended', onObbEnd);
+        }
     }
 
 
