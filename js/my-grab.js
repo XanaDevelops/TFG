@@ -52,14 +52,7 @@ AFRAME.registerComponent('my-grab', {
         this.activeConstraintId = null;
         this.activeTrack = null;
 
-        // Handler para abuttondown: alternar visibilidad de #debugHud
-        this.el.addEventListener('abuttondown', () => {
-            const hud = document.querySelector('#debugHud');
-            if (hud) {
-                const isVisible = hud.getAttribute('visible');
-                hud.setAttribute('visible', !isVisible);
-            }
-        });
+        
 
         this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
         this.el.setAttribute('line', { color: 'white' });
