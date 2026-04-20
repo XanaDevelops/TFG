@@ -15,17 +15,20 @@
   </script>
   <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
 
+  <script src="./js/aframe-keyboard.min.js"></script>
+
   <script src="./js/my-grab.js"></script>
   <script src="./js/hand-event-log.js"></script>
   <script src="./js/death-barrier.js"></script>
   <script src="./js/debug-hud.js"></script>
   <script src="./js/debug-control.js"></script>
   <script src="./js/sphere-collider.js"></script>
+  <script src="./js/keyboard-text.js"></script>
 </head>
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
-  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;" obb-collider="showColliders: true">
+  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: false; debugDrawMode: 1;" obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false">
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
       ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab > <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
@@ -106,9 +109,28 @@
     </a-box>
 
 
+    <!-- teclado-->
+    <a-entity id="keyboard" scale="3 3 3" position="0 1.09382 0" a-keyboard></a-entity>
+    <a-text value="hola" id="textoTeclado" position="0.19529 1.5622 -0.15787" keyboard-text></a-text>
 
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
+
+
+  <script>
+      function updateInput(e) {
+        e.preventDefault()
+        var code = parseInt(e.detail.code)
+        console.log(code);
+        var event = document.createEvent("HTMLEvents");
+        event.initEvent("a-keyboard-updater", true, true);
+        event.eventName = "a-keyboard-updater";
+        event.detail = e.detail
+        document.dispatchEvent(event);
+        
+      }
+      //document.addEventListener('a-keyboard-update', updateInput)
+    </script>
 </body>
 
 </html>

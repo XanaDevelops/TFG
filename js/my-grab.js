@@ -53,9 +53,12 @@ AFRAME.registerComponent('my-grab', {
         this.activeTrack = null;
 
         
-
-        this.el.setAttribute('raycaster', { objects: '.grabbable', showLine: true, direction: "0 -1 0" });
+        //por teclado, y el .collidable
+        // el orden importa!
+        this.el.setAttribute('cursor', {rayOrigin: 'entity'})
+        this.el.setAttribute('raycaster', { objects: '.grabbable,.collidable', showLine: true, direction: "0 -1 0" });
         this.el.setAttribute('line', { color: 'white' });
+        
         //detectar colisión
         this.el.addEventListener('hit', (e) => {
             const hitEl = e.detail.el;
@@ -76,6 +79,8 @@ AFRAME.registerComponent('my-grab', {
         this.el.addEventListener('raycaster-intersection', (e) => {
             const hitEl = e.detail.els[0];
             if (!this.targetEl_ray && !this.grabbedEl) {
+                if (!hitEl.classList.contains("grabbable"))
+                    return
                 this.targetEl_ray = hitEl;
                 console.log(`[my-grab:${this.el.id}] RAY: targetEl -> `, this.targetEl_ray.id);
             }
