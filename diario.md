@@ -161,3 +161,7 @@ Se han arreglado incompatibilidades y solucionado un bug respecto al agarre.
 Se tiene que mirar de usar otro sistema que no sea obb para figuras convexas 
 
 ## 20/04
+Se ha añadido el teclado, aunque es molesto que tengas que escuchar desde document y no desde el componente,
+lo que es funcionar funciona.
+
+Habria que pensar en el online, si se va a incluir
