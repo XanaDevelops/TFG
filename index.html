@@ -28,7 +28,7 @@
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
-  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: false; debugDrawMode: 1;" obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false">
+  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;" obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false">
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
       ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab > <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
@@ -48,9 +48,13 @@
     </a-mixin>
 
     <a-assets>
+      <!-- assets-->
       <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
       <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
       <a-asset-item id="foratSemicercle" src="files/forat_semicercle2.glb"></a-asset-item>
+      <a-assets-item id="woodenTable" src="files/wooden-table/wooden_table_02_4k.gltf"></a-assets-item>
+
+      <!-- fuentes-->
       <a-asset-item id="robotoFont" src="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-asset-item>
     </a-assets>
 
@@ -71,9 +75,11 @@
       </a-entity>
     </a-entity>
 
+    <!-- Entorno -->
     <a-box id="suelo" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false" ammo-body="type: static"
       ammo-shape="type: box"></a-box>
 
+    <a-entity id="taulaFusta" position="-0.46598 0 -2.76073" gltf-model="#woodenTable" ammo-body="type: static" ammo-shape="type: mesh"></a-entity>
     <a-entity id="deathBarriers" position="0 0 0">
       <!-- Suelo -->
       <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -50 0" rotation="-90 0 0" width="100" height="100" depth="20"></a-box>
@@ -90,9 +96,11 @@
     </a-entity>
     <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
 
+
+    <!-- Props fisicos-->
     <a-box id="testCubo1" class="grabbable" mixin="grabbable-mixin" scale="0.5 0.5 0.5" position="-0.5 1 -1"
       color="red"></a-box>
-    <a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.4 0.4 0.4" position="-0.5 1 -3"
+    <a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.4 0.4 0.4" position="-0.60049 0.21 -4.5316"
       color="green"></a-box>
     <a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3" position="-0.5 1 -5"
       color="blue"></a-box>
