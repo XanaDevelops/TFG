@@ -28,7 +28,8 @@
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
-  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: true; debugDrawMode: 1;" obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false">
+  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 20" 
+    obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false">
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
       ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab > <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
@@ -105,8 +106,8 @@
     <a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3" position="-0.5 1 -5"
       color="blue"></a-box>
 
-    <a-entity id="eTap" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
-      position="-0.5 3 -5"></a-entity>
+    <a-entity id="eTap" rotation="-28 36.5 -18" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
+      position="-0.17676 1.2 -2.68384"></a-entity>
 
     <a-entity id="eForatSemiC" gltf-model="#foratSemicercle" class="grabbable" mixin="grabbable-vhacd"
       scale="0.03 0.03 0.03" position="-1.5 3 -5"></a-entity>

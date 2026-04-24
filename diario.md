@@ -175,3 +175,5 @@ importante ampliar el tamaño del atlas en la pagina https://msdf-bmfont.donmccu
 _curioso que si pulsas ` o ´ aparece "Dead" dentro de la caja de texto..._
 
 despues en a-frame-keyboard.min.js se modifica el mapa de carácteres y listo, teclado modificado (ajustando el fondo para acomodar las nuevas teclas)
+
+Nótese que al quitar debug, se puede ver un margen entre los elementos fisicos, se puede ajutar con ammo-shape.margin (por defecto 0.01)
