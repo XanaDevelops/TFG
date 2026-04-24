@@ -165,3 +165,13 @@ Se ha añadido el teclado, aunque es molesto que tengas que escuchar desde docum
 lo que es funcionar funciona.
 
 Habria que pensar en el online, si se va a incluir
+
+## 24/04
+Modificado teclado y fuente custom para poder imprimir los siguientes caracteres:
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.?¿!¡/:;,*§£$ø@+°-~#&²'{}[]|`\()=%*µ àáâéèìíòóùúëêïîöôùüûÀÁÂÉÈËÊÏÎÌÍÖÔÒÓÜÛÙÚçÇ€ñÑ<>"
+
+importante ampliar el tamaño del atlas en la pagina https://msdf-bmfont.donmccurdy.com/
+
+_curioso que si pulsas ` o ´ aparece "Dead" dentro de la caja de texto..._
+
+despues en a-frame-keyboard.min.js se modifica el mapa de carácteres y listo, teclado modificado (ajustando el fondo para acomodar las nuevas teclas)
