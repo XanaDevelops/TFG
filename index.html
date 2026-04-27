@@ -24,12 +24,15 @@
   <script src="./js/debug-control.js"></script>
   <script src="./js/sphere-collider.js"></script>
   <script src="./js/keyboard-text.js"></script>
+
+  <script src="./js/online-scene.js"></script>
 </head>
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
   <a-scene stats environment="preset: contact" physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 60; maxSubSteps: 16" 
-    obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false">
+    obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false"
+    online-scene>
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
       ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab > <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
