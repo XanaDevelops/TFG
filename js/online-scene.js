@@ -6,15 +6,20 @@ AFRAME.registerComponent('online-scene', {
     init: function () {
         // Crea una nueva conexión.
         const socket = new WebSocket("ws://localhost:5050");
+        this.socket = socket
 
         // Abre la conexión
-        socket.addEventListener("open", function (event) {
-            socket.send("Hello Server!");
+        this.socket.addEventListener("open", function (e) {
+            //socket.send("Hello Server!");
+            let event = { type: "login", username: "prueba"}
+            socket.send(JSON.stringify(event))
+            event = {type: "echo", message: "hola, que tal"}
+            socket.send(JSON.stringify(event))
         });
 
         // Escucha por mensajes
-        socket.addEventListener("message", function (event) {
-            console.log("Message from server", event.data);
+        this.socket.addEventListener("message", function (event) {
+            console.log("Message from server", JSON.parse(event.data));
         });
     },
 

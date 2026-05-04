@@ -180,3 +180,9 @@ Nótese que al quitar debug, se puede ver un margen entre los elementos fisicos,
 
 ## 27/04
 Base minima de comunicación de websockets
+
+## 29/04
+mock login (no hace nada, pero existe)
+
+## 4/05 MTFBWY
+

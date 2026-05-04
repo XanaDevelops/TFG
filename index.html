@@ -26,11 +26,12 @@
   <script src="./js/keyboard-text.js"></script>
 
   <script src="./js/online-scene.js"></script>
+  <script src="./js/online-entity.js"></script>
 </head>
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
-  <a-scene stats environment="preset: contact" physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 60; maxSubSteps: 16" 
+  <a-scene id="mainScene" stats environment="preset: contact" physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 60; maxSubSteps: 16" 
     obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false"
     online-scene>
     <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
@@ -62,7 +63,7 @@
       <a-asset-item id="robotoFont" src="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-asset-item>
     </a-assets>
 
-    <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0">
+    <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0" online-entity>
       <a-entity id="camera" camera look-controls position="0 1.6 0">
         <a-entity id="respawnPoint" position="0 0 -0.5"></a-entity>
         <a-entity id="debugHud" position="0.0 0.0 -0.5" debug-hud visible="false">
