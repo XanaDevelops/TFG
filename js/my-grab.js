@@ -146,7 +146,7 @@ AFRAME.registerComponent('my-grab', {
 
         // Offset basado en el tamaño del objeto
         const maxDim = (size.x + size.y + size.z) / 3.0;
-        const distance = (maxDim / 2) + 0.0;
+        const distance = (maxDim / 2) + -0.10;
 
         // Crear la posición objetivo con offset respecto a la mano
         const targetWorldPos = new THREE.Vector3(0, -distance, 0);
