@@ -39,7 +39,7 @@
     </a-mixin>
     <a-mixin id="grabbable-base"
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
-      grab-fix>
+      grab-fix grab-glow>
     </a-mixin>
     <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.005" obb-collider></a-mixin>
     <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider></a-mixin>
