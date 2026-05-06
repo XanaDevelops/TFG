@@ -25,6 +25,8 @@
   <script src="./js/sphere-collider.js"></script>
   <script src="./js/keyboard-text.js"></script>
 
+  <script src="./js/moving-platform.js"></script>
+
   <script src="./js/online-scene.js"></script>
   <script src="./js/online-entity.js"></script>
 </head>
@@ -41,7 +43,7 @@
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
       grab-fix grab-glow>
     </a-mixin>
-    <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.005" obb-collider></a-mixin>
+    <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.01" obb-collider></a-mixin>
     <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider></a-mixin>
 
     <!-- Mixin para death barriers -->
@@ -127,6 +129,14 @@
     <a-entity id="keyboard" scale="3 3 3" position="0 1.09382 0" a-keyboard="font: fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-entity>
     <a-text value="aça prueba ñññ àáìí" id="textoTeclado" font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false" position="0.19529 1.5622 -0.15787" keyboard-text></a-text>
 
+
+    <a-box id="pruebaPlataforma" 
+      moving-platform-dynamic-velocity
+      position="1.10053 1 -2.83199"
+      scale="0.8 0.05 0.68"
+      ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
+      ammo-shape="type: box"></a-box>
+
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
@@ -145,6 +155,23 @@
       }
       //document.addEventListener('a-keyboard-update', updateInput)
     </script>
+
+  <script>
+    (function () {
+      var el = document.querySelector('#pruebaPlataforma');
+      if (!el) return;
+
+      function applyFriction() {
+        var body = el.body;
+        if (!body || typeof body.setFriction !== 'function') return;
+        body.setFriction(2);
+        if (typeof body.activate === 'function') body.activate(true);
+      }
+
+      el.addEventListener('body-loaded', applyFriction);
+      applyFriction();
+    })();
+  </script>
 </body>
 
 </html>

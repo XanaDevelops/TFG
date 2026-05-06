@@ -185,4 +185,11 @@ Base minima de comunicación de websockets
 mock login (no hace nada, pero existe)
 
 ## 4/05 MTFBWY
+pequeños avances en el online
 
+## 6/05
+A saber que me dará tiempo entregar para mañana...
+Efecto glow con ayuda IA
+Prueba de plataforma movil para una idea de minijuego, pero haciendo pruebas yo habia miniclips de los objetos encima
+con la IA, llegado a una solución totalmente dinamica, aunque no me acaba de convencer. Investigar usar constraints
+ 
