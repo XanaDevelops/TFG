@@ -64,7 +64,7 @@
     </a-mixin>
 
     <a-assets>
-      <!-- assets-->
+      <!-- modelos -->
       <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
       <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
       <a-asset-item id="foratCercle" src="files/forat_cercle.glb"></a-asset-item>
@@ -75,13 +75,13 @@
       <a-asset-item id="foratRectangule" src="files/forat_rectangule.glb"></a-asset-item>
       <a-asset-item id="foratSemicercle" src="files/forat_semicercle2.glb"></a-asset-item>
       <a-assets-item id="woodenTable" src="files/wooden-table/wooden_table_02_4k.gltf"></a-assets-item>
+      <a-asset-item id="easterEgg" src="files/easter_egg.glb"></a-asset-item>
 
       <!-- fuentes-->
       <a-asset-item id="robotoFont" src="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-asset-item>
 
-      <!-- modelos -->
-      <a-asset-item id="easterEgg" src="files/easter_egg.glb"></a-asset-item>
-
+      <!-- imagenes -->
+      <img id="imgTutoriel" src="./img/intrucciones mando pre.png" alt="instrucciones provisionales del mando" srcset="">
       <!-- audios -->
       <audio id="sndEGG" src="./snd/rickroll hq.wav"></audio>
       <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>
@@ -98,10 +98,10 @@
         </a-entity>
       </a-entity>
 
-      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc" debug-control>
+      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc" debug-control="false">
         <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; far: 0.0" obb-collider></a-entity>
       </a-entity>
-      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc" debug-control>
+      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc" debug-control="false">
         <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; far: 0.0" obb-collider></a-entity>
       </a-entity>
     </a-entity>
@@ -109,6 +109,8 @@
     <!-- Entorno -->
     <a-box id="suelo" mixin="static-mixin" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false"
       ammo-shape="type: box"></a-box>
+
+    <a-image id="tutoriel" position="-1.49482 1.38047 -2.46947" src="#imgTutoriel"></a-image>
 
     <a-entity id="taulaFusta" mixin="static-mixin" position="-0.46598 0 -2.76073" gltf-model="#woodenTable"></a-entity>
     <a-entity id="deathBarriers" position="0 0 0">

@@ -1,14 +1,12 @@
 AFRAME.registerComponent('debug-control', {
-    schema: {
-        
-    },
+    schema: { type: 'boolean', default: false},
 
     init: function () {
       // Do something when component first attached.
       // Handler para abuttondown: alternar visibilidad de #debugHud
         this.el.addEventListener('abuttondown', () => {
             const hud = document.querySelector('#debugHud');
-            if (hud) {
+            if (hud && this.data.debug) {
                 const isVisible = hud.getAttribute('visible');
                 hud.setAttribute('visible', !isVisible);
             }
