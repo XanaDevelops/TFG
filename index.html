@@ -3,7 +3,8 @@
 <head>
   <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.6.1/dist/aframe-extras.min.js"></script>
-  <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script>
+  <!-- <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script> -->
+   <script src="./js/aframe/aframe-environment-component.js"></script>
 
   <script src="https://cdn.jsdelivr.net/gh/MozillaReality/ammo.js@8bbc0ea/builds/ammo.wasm.js"></script>
   <script
@@ -13,9 +14,8 @@
     delete AFRAME.components["grabbable"];
     delete AFRAME.components["sphere-collider"]
   </script>
-  <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
 
-  <script src="./js/aframe-keyboard.min.js"></script>
+  <script src="./js/aframe/aframe-keyboard.min.js"></script>
 
   <script src="./js/my-grab.js"></script>
   <script src="./js/hand-event-log.js"></script>
@@ -27,33 +27,39 @@
 
   <script src="./js/moving-platform.js"></script>
 
-  <script src="./js/online-scene.js"></script>
-  <script src="./js/online-entity.js"></script>
+  <script src="./js/online/online-scene.js"></script>
+  <script src="./js/online/online-entity.js"></script>
 
   <script src="./js/desktop-controller.js"></script>
 </head>
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
-  <a-scene id="mainScene" stats environment="preset: contact" physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 60; maxSubSteps: 16" 
+  <a-scene id="mainScene" stats environment="preset: contact; shadow: true; shadowSize:10; lightPosition: 0 10 1; seed:666; playArea:1"
+    physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 60; maxSubSteps: 16" 
     obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false"
-    online-scene>
-    <a-mixin id="hand-mixin" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
+    online-scene shadow>
+    <a-mixin id="base-object" shadow></a-mixin>
+    <a-mixin id="hand-mixin" mixin="base-object" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
       ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab > <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
-    <a-mixin id="grabbable-base"
+    <a-mixin id="grabbable-base" mixin="base-object"
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
-      grab-fix grab-glow>
+      grab-fix grab-glow shadow>
     </a-mixin>
     <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.01" obb-collider></a-mixin>
     <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider></a-mixin>
 
     <!-- Mixin para death barriers -->
-    <a-mixin id="death-barrier-mixin"
+    <a-mixin id="death-barrier-mixin" mixin="base-object"
       visible="false"
       ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
       ammo-shape="type: box"
       death-barrier>
+    </a-mixin>
+    <a-mixin id="static-mixin" mixin="base-object"
+      ammo-body="type: static; restitution: 0.75"
+      ammo-shape="type: mesh">
     </a-mixin>
 
     <a-assets>
@@ -71,7 +77,16 @@
 
       <!-- fuentes-->
       <a-asset-item id="robotoFont" src="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-asset-item>
+
+      <!-- modelos -->
+      <a-asset-item id="easterEgg" src="files/easter_egg.glb"></a-asset-item>
+
+      <!-- audios -->
+      <audio id="sndEGG" src="./snd/rickroll hq.wav"></audio>
+      <audio id="bgm01" src="./snd/mus_birdnoise.ogg"></audio>
     </a-assets>
+
+    <a-entity sound="src:#bgm01; autoplay:true; loop:true; rolloffFactor:0.1" position="0 2 0"></a-entity>
 
     <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0" online-entity desktop-controller>
       <a-entity id="camera" camera look-controls position="0 1.6 0">
@@ -91,11 +106,10 @@
     </a-entity>
 
     <!-- Entorno -->
-    <a-box id="suelo" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false"
-      ammo-body="type: static; restitution: 0.75"
+    <a-box id="suelo" mixin="static-mixin" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false"
       ammo-shape="type: box"></a-box>
 
-    <a-entity id="taulaFusta" position="-0.46598 0 -2.76073" gltf-model="#woodenTable" ammo-body="type: static" ammo-shape="type: mesh"></a-entity>
+    <a-entity id="taulaFusta" mixin="static-mixin" position="-0.46598 0 -2.76073" gltf-model="#woodenTable"></a-entity>
     <a-entity id="deathBarriers" position="0 0 0">
       <!-- Suelo -->
       <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -50 0" rotation="-90 0 0" width="100" height="100" depth="20"></a-box>
@@ -158,21 +172,23 @@
 
     <!-- teclado-->
      <a-text value="Escriu" id="textoTeclado" rotation="0 54.29290770880168 0" font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false" position="-2.87368 1.5622 -1.44003" keyboard-text>
-          <a-entity id="keyboard" rotation="0 0 0" scale="3 3 3" position="-0.32185 -0.20362 0" a-keyboard="font: fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-entity>
+          <a-entity id="keyboard" rotation="0 0 0" scale="3 3 3" position="-0.32185 -0.20362 0.085" a-keyboard="font: fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-entity>
      </a-text>
     
-      
-    
 
-
-    <a-box id="pruebaPlataforma" 
+    <a-box id="pruebaPlataforma" mixin="base-object"
       moving-platform-dynamic-velocity
       position="2.10053 1 -2.83199"
       scale="0.8 0.05 0.68"
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
-      ammo-shape="type: box"></a-box>
+      ammo-shape="type: box">
+    </a-box>
 
-    <a-sky color="#ECECEC"></a-sky>
+    <a-entity id="eEasterEgg" position="-8.08445 0.13565 -50.29062" scale="2.5 2.5 2.5"mixin="base-object"
+      gltf-model="#easterEgg" animation-mixer
+      sound="src: #sndEGG; autoplay:true; loop:true; maxDistance:10; distanceModel: exponential; rolloffFactor:1.5"
+    ></a-entity>
+      
   </a-scene>
 
 
@@ -206,7 +222,7 @@
       el.addEventListener('body-loaded', applyFriction);
       applyFriction();
     })();
-  </script>
+  </script>  
 </body>
 
 </html>

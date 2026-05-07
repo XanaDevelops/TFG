@@ -202,10 +202,10 @@ AFRAME.registerComponent('my-grab', {
 AFRAME.registerComponent('grab-glow', {
     schema: {
         color: { type: 'color', default: '#ffffff' },
-        maxOpacity: { type: 'number', default: 0.75 },
-        scale: { type: 'number', default: 1.01 },
+        maxOpacity: { type: 'number', default: 0.85 },
+        scale: { type: 'number', default: 1.02 },
         duration: { type: 'number', default: 180 },
-        thresholdAngle: { type: 'number', default: 25 }
+        thresholdAngle: { type: 'number', default: 9 }
     },
 
     init: function () {
@@ -341,6 +341,8 @@ AFRAME.registerComponent('grab-glow', {
 })
 
 //Just works
+// investigar  // Wait for model to load.
+//this.el.addEventListener('model-loaded', ...)
 AFRAME.registerComponent('grab-fix', {
     schema: {
 

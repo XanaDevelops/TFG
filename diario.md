@@ -195,3 +195,9 @@ con la IA, llegado a una solución totalmente dinamica, aunque no me acaba de co
  
 ## 7/05
 Con ayuda de IA, creado un componente para ayudar al desarrollo sin las gafas (que por lo que sea estan ocupadas estos dias)
+
+## 8/05
+Movido archivos
+Añadido easter egg
+Añadido musica
+Hecho más evidente el efecto de glow, no se comporta muy bien con cuerpos curvos
