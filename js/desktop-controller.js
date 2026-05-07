@@ -8,15 +8,14 @@ AFRAME.registerComponent('desktop-controller', {
       this.grabbedEl = null;
       this.grabDistance = 0;
       this.prevAmmoType = null;
-      this.raycaster = new THREE.Raycaster();
-      this.mouse = new THREE.Vector2();
+      this.cursorEl = null;
+      this.lastIntersection = null;
+      this._createdCursor = false;
+      this._targetWorld = new THREE.Vector3();
 
-      this.onMouseDown = (e) => {
-        if (!this.enabled || !this.el.sceneEl.camera) return;
-        this._setMouseFromEvent(e);
-        this.raycaster.setFromCamera(this.mouse, this.el.sceneEl.camera);
-        const hits = this.raycaster.intersectObjects(this.el.sceneEl.object3D.children, true);
-        const hit = hits.find((h) => h.object && h.object.el && h.object.el.classList && h.object.el.classList.contains('grabbable'));
+      this.onMouseDown = () => {
+        if (!this.enabled || !this.lastIntersection) return;
+        const hit = this.lastIntersection;
         if (!hit) return;
 
         this.grabbedEl = hit.object.el;
@@ -28,19 +27,14 @@ AFRAME.registerComponent('desktop-controller', {
         }
       };
 
-      this.onMouseMove = (e) => {
-        if (!this.enabled || !this.grabbedEl || !this.el.sceneEl.camera) return;
-        this._setMouseFromEvent(e);
-        this.raycaster.setFromCamera(this.mouse, this.el.sceneEl.camera);
-        const targetWorld = new THREE.Vector3();
-        targetWorld.copy(this.raycaster.ray.origin);
-        targetWorld.add(this.raycaster.ray.direction.clone().multiplyScalar(this.grabDistance));
-        if (this.grabbedEl.object3D.parent) {
-          this.grabbedEl.object3D.parent.worldToLocal(targetWorld);
-        }
-        this.grabbedEl.object3D.position.copy(targetWorld);
-        const ammo = this.grabbedEl.components['ammo-body'];
-        if (ammo && ammo.body) ammo.syncToPhysics();
+      this.onRaycasterIntersection = (e) => {
+        const intersections = (e.detail && e.detail.intersections) || [];
+        const hit = intersections.find((i) => i.object && i.object.el && i.object.el.classList && i.object.el.classList.contains('grabbable'));
+        this.lastIntersection = hit || null;
+      };
+
+      this.onRaycasterIntersectionCleared = () => {
+        this.lastIntersection = null;
       };
 
       this.onMouseUp = () => {
@@ -62,19 +56,28 @@ AFRAME.registerComponent('desktop-controller', {
         this.enabled = true;
       };
 
-      this._setMouseFromEvent = (e) => {
-        const canvas = this.el.sceneEl.canvas;
-        if (!canvas) return;
-        const rect = canvas.getBoundingClientRect();
-        this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      this._ensureCursor = () => {
+        const cameraEl = this.el.sceneEl.camera && this.el.sceneEl.camera.el;
+        if (!cameraEl) return;
+        this.cursorEl = cameraEl.querySelector('[cursor]');
+        if (!this.cursorEl) {
+          this.cursorEl = document.createElement('a-entity');
+          this.cursorEl.setAttribute('cursor', 'rayOrigin: mouse');
+          this.cursorEl.setAttribute('raycaster', 'objects: .grabbable');
+          cameraEl.appendChild(this.cursorEl);
+          this._createdCursor = true;
+        }
       };
 
       this._bindEvents = () => {
         const canvas = this.el.sceneEl.canvas;
         if (!canvas) return;
+        this._ensureCursor();
+        if (this.cursorEl) {
+          this.cursorEl.addEventListener('raycaster-intersection', this.onRaycasterIntersection);
+          this.cursorEl.addEventListener('raycaster-intersection-cleared', this.onRaycasterIntersectionCleared);
+        }
         canvas.addEventListener('mousedown', this.onMouseDown);
-        canvas.addEventListener('mousemove', this.onMouseMove);
         window.addEventListener('mouseup', this.onMouseUp);
         this.el.sceneEl.addEventListener('enter-vr', this.onEnterVr);
         this.el.sceneEl.addEventListener('exit-vr', this.onExitVr);
@@ -95,16 +98,33 @@ AFRAME.registerComponent('desktop-controller', {
       const canvas = this.el.sceneEl && this.el.sceneEl.canvas;
       if (canvas) {
         canvas.removeEventListener('mousedown', this.onMouseDown);
-        canvas.removeEventListener('mousemove', this.onMouseMove);
       }
       window.removeEventListener('mouseup', this.onMouseUp);
       if (this.el.sceneEl) {
         this.el.sceneEl.removeEventListener('enter-vr', this.onEnterVr);
         this.el.sceneEl.removeEventListener('exit-vr', this.onExitVr);
       }
+      if (this.cursorEl) {
+        this.cursorEl.removeEventListener('raycaster-intersection', this.onRaycasterIntersection);
+        this.cursorEl.removeEventListener('raycaster-intersection-cleared', this.onRaycasterIntersectionCleared);
+        if (this._createdCursor && this.cursorEl.parentNode) {
+          this.cursorEl.parentNode.removeChild(this.cursorEl);
+        }
+      }
     },
 
     tick: function (time, timeDelta) {
-      // Do something on every scene tick or frame.
+      if (!this.enabled || !this.grabbedEl || !this.cursorEl) return;
+      const raycaster = this.cursorEl.components && this.cursorEl.components.raycaster;
+      if (!raycaster || !raycaster.raycaster) return;
+      const ray = raycaster.raycaster.ray;
+      this._targetWorld.copy(ray.origin);
+      this._targetWorld.add(ray.direction.clone().multiplyScalar(this.grabDistance));
+      if (this.grabbedEl.object3D.parent) {
+        this.grabbedEl.object3D.parent.worldToLocal(this._targetWorld);
+      }
+      this.grabbedEl.object3D.position.copy(this._targetWorld);
+      const ammo = this.grabbedEl.components['ammo-body'];
+      if (ammo && ammo.body) ammo.syncToPhysics();
     }
 });
