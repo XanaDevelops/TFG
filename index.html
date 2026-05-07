@@ -91,7 +91,8 @@
     </a-entity>
 
     <!-- Entorno -->
-    <a-box id="suelo" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false" ammo-body="type: static"
+    <a-box id="suelo" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10" visible="false"
+      ammo-body="type: static; restitution: 0.75"
       ammo-shape="type: box"></a-box>
 
     <a-entity id="taulaFusta" position="-0.46598 0 -2.76073" gltf-model="#woodenTable" ammo-body="type: static" ammo-shape="type: mesh"></a-entity>
@@ -115,10 +116,19 @@
     <!-- Props fisicos-->
     <a-box id="testCubo1" class="grabbable" mixin="grabbable-mixin" scale="0.5 0.5 0.5" position="-0.5 1 -1"
       color="red"></a-box>
-    <a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.4 0.4 0.4" position="-1.83563 0.35865 -1.87639"
+    <a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.4 0.4 0.4" position="-0.5 1.45 -1"
       color="green"></a-box>
-    <a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3" position="-0.8582 0.16 -1.92159"
+    <a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3" position="-0.5 1.8 -1"
       color="blue"></a-box>
+
+    <a-sphere id="testEsfera1" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3"
+      position="0.1 1.05 -1.05" color="#ffcc00" ammo-body="restitution: 0.9"></a-sphere>
+    <a-cylinder id="testCilindro1" class="grabbable" mixin="grabbable-mixin" scale="0.25 0.4 0.25"
+      position="0.6 1.1 -1.15" color="#00bcd4"></a-cylinder>
+    <a-cone id="testCono1" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.4 0.3"
+      position="1.1 1.05 -1.25" color="#9c27b0"></a-cone>
+    <a-torus id="testToro1" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3"
+      position="1.6 1.1 -1.35" color="#ff5722"></a-torus>
 
     <a-entity id="eTap" rotation="-28 36.5 -18" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
       position="-0.17676 1.2 -2.68384"></a-entity>
@@ -147,8 +157,12 @@
 
 
     <!-- teclado-->
-    <a-entity id="keyboard" scale="3 3 3" position="0 1.09382 0" a-keyboard="font: fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-entity>
-    <a-text value="Escriu" id="textoTeclado" font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false" position="0.19529 1.5622 -0.15787" keyboard-text></a-text>
+     <a-text value="Escriu" id="textoTeclado" rotation="0 54.29290770880168 0" font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false" position="-2.87368 1.5622 -1.44003" keyboard-text>
+          <a-entity id="keyboard" rotation="0 0 0" scale="3 3 3" position="-0.32185 -0.20362 0" a-keyboard="font: fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-entity>
+     </a-text>
+    
+      
+    
 
 
     <a-box id="pruebaPlataforma" 
