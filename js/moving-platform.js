@@ -71,6 +71,14 @@ AFRAME.registerComponent('moving-platform-dynamic-velocity', {
 
   remove: function () {
     this.el.removeEventListener('body-loaded', this._onBodyLoaded);
+    if (typeof Ammo !== 'undefined') {
+      if (this._btVel) Ammo.destroy(this._btVel);
+      if (this._btZero) Ammo.destroy(this._btZero);
+      if (this._btLinFactor) Ammo.destroy(this._btLinFactor);
+    }
+    this._btVel = null;
+    this._btZero = null;
+    this._btLinFactor = null;
   },
 
   tick: function (time, timeDelta) {

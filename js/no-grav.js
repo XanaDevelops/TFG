@@ -14,6 +14,7 @@ AFRAME.registerComponent('no-grav', {
         ammoBody.body.setAngularVelocity(zero);
         ammoBody.body.setDamping(this.data.linearDamping, this.data.angularDamping);
         ammoBody.body.activate(true);
+        Ammo.destroy(zero);
     },
 
     init: function () {
