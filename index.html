@@ -83,10 +83,10 @@
 
       <!-- audios -->
       <audio id="sndEGG" src="./snd/rickroll hq.wav"></audio>
-      <audio id="bgm01" src="./snd/mus_birdnoise.ogg"></audio>
+      <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>
     </a-assets>
 
-    <a-entity sound="src:#bgm01; autoplay:true; loop:true; rolloffFactor:0.1" position="0 2 0"></a-entity>
+    <a-entity sound="src:#bgm01; autoplay:true; loop:true; rolloffFactor:0.9; refDistance:25" position="0 2 0"></a-entity>
 
     <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0" online-entity desktop-controller>
       <a-entity id="camera" camera look-controls position="0 1.6 0">
