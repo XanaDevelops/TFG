@@ -421,6 +421,8 @@ AFRAME.registerComponent('grab-fix', {
         if (time > 1000 && !this.fixed) {
             el.setAttribute('ammo-body', 'type', 'dynamic');
             ammoBody.syncToPhysics()
+            if (this.el.components['no-grav'])
+                this.el.components['no-grav'].configureNoGrav()
             this.fixed = true
             console.log(this.fixed);
 

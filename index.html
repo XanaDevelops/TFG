@@ -18,11 +18,12 @@
   <script src="./js/aframe/aframe-keyboard.min.js"></script>
 
   <script src="./js/my-grab.js"></script>
+  <script src="./js/no-grav.js"></script>
   <script src="./js/hand-event-log.js"></script>
   <script src="./js/death-barrier.js"></script>
   <script src="./js/debug-hud.js"></script>
   <script src="./js/debug-control.js"></script>
-  <script src="./js/sphere-collider.js"></script>
+  <script src="./js/aframe/sphere-collider.js"></script>
   <script src="./js/keyboard-text.js"></script>
 
   <script src="./js/moving-platform.js"></script>
@@ -48,7 +49,7 @@
       grab-fix grab-glow shadow>
     </a-mixin>
     <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.01" obb-collider></a-mixin>
-    <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider></a-mixin>
+    <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider no-grav></a-mixin>
 
     <!-- Mixin para death barriers -->
     <a-mixin id="death-barrier-mixin" mixin="base-object"
