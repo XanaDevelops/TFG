@@ -88,7 +88,7 @@
       <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>
     </a-assets>
 
-    <a-entity sound="src:#bgm01; autoplay:true; loop:true; rolloffFactor:0.9; refDistance:25; volume:0.8" position="0 2 0"></a-entity>  
+    <a-entity sound="src:#bgm01; autoplay:true; loop:true; rolloffFactor:0.9; refDistance:25; volume:0.6" position="0 2 0"></a-entity>  
 
     <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0" online-entity desktop-controller>
       <a-entity id="camera" camera look-controls position="0 1.6 0">
@@ -175,7 +175,7 @@
 
 
     <!-- teclado-->
-     <a-text value="Escriu" id="textoTeclado" rotation="0 54.29290770880168 0" font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false" position="-3.2968 1.84488 -0.85135" keyboard-text>
+     <a-text value="Escriu: " id="textoTeclado" rotation="0 54.29290770880168 0" font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false" position="-3.2968 1.84488 -0.85135" keyboard-text>
           <a-entity id="keyboard" rotation="0 0 0" scale="3 3 3" position="0.06945 -0.36282 0.0217" a-keyboard="font: fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-entity>
      </a-text>
     
@@ -190,7 +190,7 @@
 
     <a-entity id="eEasterEgg" position="-8.08445 0.13565 -50.29062" scale="2.5 2.5 2.5"mixin="base-object"
       gltf-model="#easterEgg" animation-mixer
-      sound="src: #sndEGG; autoplay:true; loop:true; maxDistance:10; distanceModel: exponential; rolloffFactor:1.5"
+      sound="src: #sndEGG; autoplay:true; loop:true; maxDistance:10; distanceModel: exponential; rolloffFactor:1.5; refDistance:1.5;"
     ></a-entity>
       
   </a-scene>

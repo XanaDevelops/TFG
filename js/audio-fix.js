@@ -1,8 +1,6 @@
-// Activa autoplay+loop en sonidos y desbloquea audio tras el primer gesto del usuario.
+// Desbloquea audio tras el primer gesto y reproduce solo los sonidos con autoplay.
 AFRAME.registerComponent('audio-fix', {
   schema: {
-    forceAutoplay: { default: true },
-    forceLoop: { default: true },
     autoStartOnUnlock: { default: true },
     rescanIntervalMs: { type: 'int', default: 750 },
     debug: { default: false }
@@ -132,53 +130,25 @@ AFRAME.registerComponent('audio-fix', {
     const root = this.el; // Se asume que el componente está puesto en la escena principal.
     if (!root) return;
 
+    const nextManaged = new Set();
     const soundEls = root.querySelectorAll('[sound], a-sound');
     for (let i = 0; i < soundEls.length; i++) {
-      this._ensureLoopAutoplay(soundEls[i]);
+      const el = soundEls[i];
+      if (this._isAutoplay(el)) nextManaged.add(el);
     }
 
-    // También podemos forzar loop en los <audio> de assets si ya están enlazados.
-    // (No tocamos autoplay en el elemento <audio> porque el navegador lo puede bloquear igual.)
-    const audioAssets = root.querySelectorAll('a-assets audio');
-    for (let i = 0; i < audioAssets.length; i++) {
-      const audio = audioAssets[i];
-      if (audio && this.data.forceLoop) audio.loop = true;
-    }
+    this._managed = nextManaged;
   },
 
-  _ensureLoopAutoplay: function (el) {
-    if (!el || this._managed.has(el)) {
-      // Aun así re-aplicamos por si cambió data (p. ej. hot reload / setAttribute externo).
-    }
+  _isAutoplay: function (el) {
+    const sound = el && el.components && el.components.sound;
+    if (sound && sound.data) return !!sound.data.autoplay;
 
-    const sound = el.components && el.components.sound;
-
-    try {
-      if (sound) {
-        if (this.data.forceAutoplay) el.setAttribute('sound', 'autoplay', true);
-        if (this.data.forceLoop) el.setAttribute('sound', 'loop', true);
-      }
-
-      // Si es <a-sound>, también seteamos atributos mapeados por el primitive.
-      if (el.tagName === 'A-SOUND') {
-        if (this.data.forceAutoplay) el.setAttribute('autoplay', true);
-        if (this.data.forceLoop) el.setAttribute('loop', true);
-      }
-
-      if (!this._managed.has(el)) {
-        this._managed.add(el);
-
-        // Si el sound se inicializa más tarde, re-aplicamos y (si ya está unlocked) lo arrancamos.
-        el.addEventListener('componentinitialized', (e) => {
-          if (e.detail && e.detail.name === 'sound') {
-            this._ensureLoopAutoplay(el);
-            if (this._unlocked && this.data.autoStartOnUnlock) this._tryPlay(el);
-          }
-        });
-      }
-    } catch (e) {
-      // Silencioso
-    }
+    const data = el && el.getAttribute && el.getAttribute('sound');
+    if (!data) return false;
+    if (typeof data === 'object' && data.autoplay != null) return !!data.autoplay;
+    if (typeof data === 'string') return /autoplay\s*:\s*true/i.test(data);
+    return false;
   },
 
   _startAll: function () {
@@ -187,6 +157,8 @@ AFRAME.registerComponent('audio-fix', {
   },
 
   _tryPlay: function (el) {
+    if (!this._isAutoplay(el)) return;
+
     const sound = el && el.components && el.components.sound;
     if (!sound || typeof sound.playSound !== 'function') return;
 
