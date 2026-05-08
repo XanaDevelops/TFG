@@ -202,3 +202,5 @@ Añadido easter egg
 Añadido musica
 Hecho más evidente el efecto de glow, no se comporta muy bien con cuerpos curvos
 Efecto de no gravedad, además se ha buscado de hacer destroy de objetos de Bullet
+
+
