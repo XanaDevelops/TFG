@@ -132,40 +132,40 @@
 
 
     <!-- Props fisicos-->
-    <a-box id="testCubo1" class="grabbable" mixin="grabbable-mixin" scale="0.5 0.5 0.5" position="-0.5 1 -1"
+    <a-box id="testCubo1" class="grabbable" mixin="grabbable-mixin" scale="0.425 0.425 0.425" position="-0.5 1 -1"
       color="red"></a-box>
-    <a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.4 0.4 0.4" position="-0.5 1.45 -1"
+    <a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.34 0.34 0.34" position="-0.5 1.45 -1"
       color="green"></a-box>
-    <a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3" position="-0.5 1.8 -1"
+    <a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.255 0.255 0.255" position="-0.5 1.8 -1"
       color="blue"></a-box>
 
-    <a-sphere id="testEsfera1" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3"
+    <a-sphere id="testEsfera1" class="grabbable" mixin="grabbable-mixin" scale="0.255 0.255 0.255"
       position="0.1 1.05 -1.05" color="#ffcc00" ammo-body="restitution: 0.9"></a-sphere>
-    <a-cylinder id="testCilindro1" class="grabbable" mixin="grabbable-mixin" scale="0.25 0.4 0.25"
+    <a-cylinder id="testCilindro1" class="grabbable" mixin="grabbable-mixin" scale="0.2125 0.34 0.2125"
       position="0.6 1.1 -1.15" color="#00bcd4"></a-cylinder>
-    <a-cone id="testCono1" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.4 0.3"
+    <a-cone id="testCono1" class="grabbable" mixin="grabbable-mixin" scale="0.255 0.34 0.255"
       position="1.1 1.05 -1.25" color="#9c27b0"></a-cone>
-    <a-torus id="testToro1" class="grabbable" mixin="grabbable-mixin" scale="0.3 0.3 0.3"
+    <a-torus id="testToro1" class="grabbable" mixin="grabbable-mixin" scale="0.255 0.255 0.255"
       position="1.6 1.1 -1.35" color="#ff5722"></a-torus>
 
-    <a-entity id="eTap" rotation="-28 36.5 -18" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin" scale="0.02 0.02 0.02"
+    <a-entity id="eTap" rotation="-28 36.5 -18" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin" scale="0.017 0.017 0.017"
       position="-0.17676 1.2 -2.68384"></a-entity>
 
     <!-- forats-->
     <a-entity id="eForatSemiC" gltf-model="#foratSemicercle" class="grabbable" mixin="grabbable-vhacd"
-      scale="0.03 0.03 0.03" position="1.5 3 -5"></a-entity>
+      scale="0.0255 0.0255 0.0255" position="1.5 2 -5"></a-entity>
     <a-entity id="eForatCercle" gltf-model="#foratCercle" class="grabbable" mixin="grabbable-vhacd"
-      scale="0.03 0.03 0.03" position="2.5 3 -5"></a-entity>
+      scale="0.0255 0.0255 0.0255" position="2.5 2 -5"></a-entity>
     <a-entity id="eForatEqui" gltf-model="#foratEquilater" class="grabbable" mixin="grabbable-vhacd"
-      scale="0.03 0.03 0.03" position="3.5 3 -5"></a-entity>
+      scale="0.0255 0.0255 0.0255" position="3.5 2 -5"></a-entity>
     <a-entity id="eForatIso" gltf-model="#foratIsosceles" class="grabbable" mixin="grabbable-vhacd"
-      scale="0.03 0.03 0.03" position="4.5 3 -5"></a-entity>
+      scale="0.0255 0.0255 0.0255" position="4.5 2 -5"></a-entity>
     <a-entity id="eForatQuad" gltf-model="#foratQuadrat" class="grabbable" mixin="grabbable-vhacd"
-      scale="0.03 0.03 0.03" position="5.5 3 -5"></a-entity>
+      scale="0.0255 0.0255 0.0255" position="5.5 2 -5"></a-entity>
     <a-entity id="eForatRect" gltf-model="#foratRectangle" class="grabbable" mixin="grabbable-vhacd"
-      scale="0.03 0.03 0.03" position="6.5 3 -5"></a-entity>
+      scale="0.0255 0.0255 0.0255" position="6.5 2 -5"></a-entity>
     <a-entity id="eForatRecta" gltf-model="#foratRectangule" class="grabbable" mixin="grabbable-vhacd"
-      scale="0.03 0.03 0.03" position="7.5 3 -5"></a-entity>
+      scale="0.0255 0.0255 0.0255" position="7.5 2 -5"></a-entity>
 
     <a-box id="deathCubeTest" scale="0.3 0.3 0.3" position="-2 1 -3" color="black"
       ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
@@ -188,6 +188,7 @@
       ammo-shape="type: box">
     </a-box>
 
+    <a-light id="eEasterLight" light="type: point; castShadow: false; intensity: 100" position="-5.12728 14.25545 -44.0129" intensity="10"></a-light>
     <a-entity id="eEasterEgg" position="-8.08445 0.13565 -50.29062" scale="2.5 2.5 2.5"mixin="base-object"
       gltf-model="#easterEgg" animation-mixer
       sound="src: #sndEGG; autoplay:true; loop:true; maxDistance:10; distanceModel: exponential; rolloffFactor:1.5; refDistance:1.5;"
