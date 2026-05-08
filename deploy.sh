@@ -15,3 +15,11 @@ rsync -a --delete \
 	--include='/index.html' \
 	--exclude='*' \
 	./ "$SERVER_PATH/"
+
+if [ $? -eq 0 ]; then
+	echo "rsync ok"
+else
+	echo "rsync err"
+fi
+
+
