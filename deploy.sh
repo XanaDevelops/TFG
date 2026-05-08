@@ -3,6 +3,7 @@
 SERVER_PATH="/var/www/html"
 
 echo "$SERVER_PATH"
+git pull
 
 mkdir -p "$SERVER_PATH/img" "$SERVER_PATH/files" "$SERVER_PATH/fonts" "$SERVER_PATH/js" "$SERVER_PATH/snd"
 
