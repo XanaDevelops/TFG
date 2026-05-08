@@ -205,13 +205,14 @@ AFRAME.registerComponent('grab-glow', {
         maxOpacity: { type: 'number', default: 0.85 },
         scale: { type: 'number', default: 1.02 },
         duration: { type: 'number', default: 180 },
-        thresholdAngle: { type: 'number', default: 9 }
+        thresholdAngle: { type: 'number', default: 9 },
+        lineWidth: { type: 'number', default: 2 }
     },
 
     init: function () {
         this._glowT = 0;
         this._glowTarget = 0;
-        this._outline = null;
+        this._outlines = [];
         this._outlineMat = null;
         this._baseScale = null;
         this._meshObj = null;
@@ -219,7 +220,7 @@ AFRAME.registerComponent('grab-glow', {
         this.activationMask = 0; // 0bRH Ray Hand
 
         this._buildOutline = () => {
-            if (this._outline) return;
+            if (this._outlines && this._outlines.length) return;
             const meshObj = this.el.getObject3D('mesh');
             if (!meshObj) return;
 
@@ -246,12 +247,17 @@ AFRAME.registerComponent('grab-glow', {
                 blending: THREE.AdditiveBlending
             });
 
-            this._outline = new THREE.LineSegments(edges, this._outlineMat);
-            this._outline.renderOrder = 999;
-            this._outline.visible = false;
-
-            // Montar el outline como hijo del mesh para heredar transformaciones
-            mesh.add(this._outline);
+            const steps = Math.max(1, Math.round(this.data.lineWidth));
+            const thicknessStep = Math.max(0.002, 0.0025 * this.data.lineWidth);
+            for (let i = 0; i < steps; i++) {
+                const outline = new THREE.LineSegments(edges, this._outlineMat);
+                outline.renderOrder = 999;
+                outline.visible = false;
+                const s = 1 + thicknessStep * (i + 1);
+                outline.scale.set(s, s, s);
+                this._outlines.push(outline);
+                mesh.add(outline);
+            }
         };
 
         // Intento inmediato (primitivas) + listeners (gltf/model)
@@ -297,7 +303,7 @@ AFRAME.registerComponent('grab-glow', {
     },
 
     tick: function (time, timeDelta) {
-        if (!this._outline || !this._outlineMat || !this._meshObj) return;
+        if (!this._outlines || this._outlines.length === 0 || !this._outlineMat || !this._meshObj) return;
 
         const duration = Math.max(1, this.data.duration);
         const a = Math.min(1, timeDelta / duration);
@@ -305,7 +311,9 @@ AFRAME.registerComponent('grab-glow', {
 
         const t = Math.max(0, Math.min(1, this._glowT));
         const visible = t > 0.01;
-        this._outline.visible = visible;
+        this._outlines.forEach((outline) => {
+            outline.visible = visible;
+        });
 
         // Opacidad suave
         this._outlineMat.opacity = this.data.maxOpacity * t;
@@ -321,17 +329,19 @@ AFRAME.registerComponent('grab-glow', {
         this.el.removeEventListener('object3dset', this._onObject3DSet);
         this.el.removeEventListener('model-loaded', this._onModelLoaded);
 
-        if (this._meshObj && this._outline) {
-            try { this._meshObj.remove(this._outline); } catch (e) { }
+        if (this._meshObj && this._outlines) {
+            this._outlines.forEach((outline) => {
+                try { this._meshObj.remove(outline); } catch (e) { }
+                if (outline.geometry) outline.geometry.dispose();
+            });
         }
-        if (this._outline && this._outline.geometry) this._outline.geometry.dispose();
         if (this._outlineMat) this._outlineMat.dispose();
 
         if (this._meshObj && this._baseScale) {
             this._meshObj.scale.copy(this._baseScale);
         }
 
-        this._outline = null;
+        this._outlines = null;
         this._outlineMat = null;
         this._meshObj = null;
         this._baseScale = null;

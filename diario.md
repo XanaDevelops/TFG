@@ -203,4 +203,19 @@ Añadido musica
 Hecho más evidente el efecto de glow, no se comporta muy bien con cuerpos curvos
 Efecto de no gravedad, además se ha buscado de hacer destroy de objetos de Bullet
 
+Resultados viernes CxT:
+Las instrucciones no se transmiten dentro del juego de forma efectiva, tendré que hacer una escena tutorial...
+La musica de fondo era muy alta en relación a otra musica
+El easter egg era muy raro que la gente vaya, de forma provisional he puesto una luz que resalta el pilar un poco (aunque lo cambiaré en el futuro)
+Los objetos son demasiado grandes y dificulta manejar 2 de forma simultanea, los he hecho algo más pequeños
+Grab-fix no siempre funciona a la primera! tendre que investigar esto ya que costó arreglar el bug de agarre...
+el efecto grab-glow lo he hecho más evidente
+He ralentizado la plataforma
+
+Aunque los chavales y chavalas se han divertido de forma general, no tener la guia didactica ni ningun minijuego hace que algunos se pierdan en no saber que hacer. Considero que a nivel de assets y comportamientos fisicos esta bien, se deberia priorizar crear las escenas solicitadas, junto con la del tutorial y los minijuegos, para tener un TFG de matricula
+Tambien el control del tiempo ha fallado al principio y la variedad de tamaño de cabezas hace una pesadilla ajustar las gafas...
+
+Acordarse de hacer alguna foto, siempre puedo preguntar al resto
+
+El juego esta en el server del ltim en lyoko.ltim.uib.es con contraseña cambiada [REDACTED]
 

@@ -5,11 +5,11 @@
 AFRAME.registerComponent('moving-platform-dynamic-velocity', {
   schema: {
     radius: { type: 'number', default: 1 },
-    speed: { type: 'number', default: 1 },
+    speed: { type: 'number', default: 0.6 },
     // Ganancia del “seguidor de trayectoria” (m/s por metro de error).
     followStrength: { type: 'number', default: 3 },
     // Clamp de velocidad total.
-    maxLinearSpeed: { type: 'number', default: 10 }
+    maxLinearSpeed: { type: 'number', default: 8 }
   },
 
   init: function () {
