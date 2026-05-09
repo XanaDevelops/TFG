@@ -2,6 +2,7 @@
 
 SERVER_PATH="/var/www/html"
 
+eval "$(ssh-agent -s)"
 echo "$SERVER_PATH"
 git pull
 
