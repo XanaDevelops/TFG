@@ -8,7 +8,7 @@ git pull
 
 mkdir -p "$SERVER_PATH/img" "$SERVER_PATH/files" "$SERVER_PATH/fonts" "$SERVER_PATH/js" "$SERVER_PATH/snd"
 
-sudo rsync -a --delete \
+sudo -S rsync -a --delete \
 	--include='/img/***' \
 	--include='/files/***' \
 	--include='/fonts/***' \
