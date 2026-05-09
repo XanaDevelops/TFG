@@ -219,3 +219,5 @@ Acordarse de hacer alguna foto, siempre puedo preguntar al resto
 
 El juego esta en el server del ltim en lyoko.ltim.uib.es con contraseña cambiada [REDACTED]
 
+BUGFIX: en el server no se mostraba en el teclado ni ç ni ñ (aunque en la caja de texto sí), usando el codigo unicode directamente se ha arreglado
+
