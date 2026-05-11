@@ -89,9 +89,11 @@
       <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>
     </a-assets>
 
-    <a-entity sound="src:#bgm01; autoplay:true; loop:true; rolloffFactor:0.9; refDistance:25; volume:0.6" position="0 2 0"></a-entity>  
+    
 
     <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0" online-entity desktop-controller>
+      <a-entity id="bgSndEmmiter" sound="src:#bgm01; autoplay:true; loop:true; rolloffFactor:0.9; refDistance:25; volume:0.6" position="0 2 0"></a-entity>  
+      
       <a-entity id="camera" camera look-controls position="0 1.6 0">
         <a-entity id="respawnPoint" position="0 0 -0.5"></a-entity>
         <a-entity id="debugHud" position="0.0 0.0 -0.5" debug-hud visible="false">
