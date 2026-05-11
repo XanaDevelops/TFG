@@ -39,7 +39,8 @@
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
   <a-scene id="mainScene" stats environment="preset: contact; shadow: true; shadowSize:10; lightPosition: 0 10 1; seed:666; playArea:1"
-    physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 60; maxSubSteps: 16" 
+    renderer="highRefreshRate: true"
+    physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 40; maxSubSteps: 8" 
     obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false"
     online-scene shadow audio-fix>
     <a-mixin id="base-object" shadow></a-mixin>
@@ -120,17 +121,17 @@
     <a-entity id="taulaFusta" mixin="static-mixin" position="-0.46598 0 -2.76073" gltf-model="#woodenTable"></a-entity>
     <a-entity id="deathBarriers" position="0 0 0">
       <!-- Suelo -->
-      <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -50 0" rotation="-90 0 0" width="100" height="100" depth="20"></a-box>
+      <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -70 0" rotation="-90 0 0" width="140" height="140" depth="20"></a-box>
       <!-- Techo -->
-      <a-box id="topDeathBarrier" mixin="death-barrier-mixin" position="0 50 0" rotation="90 0 0" width="100" height="100" depth="20"></a-box>
+      <a-box id="topDeathBarrier" mixin="death-barrier-mixin" position="0 70 0" rotation="90 0 0" width="140" height="140" depth="20"></a-box>
       <!-- Pared trasera (z positiva) -->
-      <a-box id="backDeathBarrier" mixin="death-barrier-mixin" position="0 0 50" rotation="0 0 0" width="100" height="100" depth="20"></a-box>
+      <a-box id="backDeathBarrier" mixin="death-barrier-mixin" position="0 0 70" rotation="0 0 0" width="140" height="140" depth="20"></a-box>
       <!-- Pared delantera (z negativa) -->
-      <a-box id="frontDeathBarrier" mixin="death-barrier-mixin" position="0 0 -50" rotation="0 180 0" width="100" height="100" depth="20"></a-box>
+      <a-box id="frontDeathBarrier" mixin="death-barrier-mixin" position="0 0 -70" rotation="0 180 0" width="140" height="140" depth="20"></a-box>
       <!-- Pared izquierda (x negativa) -->
-      <a-box id="leftDeathBarrier" mixin="death-barrier-mixin" position="-50 0 0" rotation="0 90 0" width="100" height="100" depth="20"></a-box>
+      <a-box id="leftDeathBarrier" mixin="death-barrier-mixin" position="-70 0 0" rotation="0 90 0" width="140" height="140" depth="20"></a-box>
       <!-- Pared derecha (x positiva) -->
-      <a-box id="rightDeathBarrier" mixin="death-barrier-mixin" position="50 0 0" rotation="0 -90 0" width="100" height="100" depth="20"></a-box>
+      <a-box id="rightDeathBarrier" mixin="death-barrier-mixin" position="70 0 0" rotation="0 -90 0" width="140" height="140" depth="20"></a-box>
     </a-entity>
     <!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
 
@@ -197,7 +198,7 @@
       gltf-model="#easterEgg" animation-mixer
       sound="src: #sndEGG; autoplay:true; loop:true; maxDistance:10; distanceModel: exponential; rolloffFactor:1.5; refDistance:1.5;"
     ></a-entity>
-      
+  
   </a-scene>
 
 
@@ -232,6 +233,50 @@
       applyFriction();
     })();
   </script>  
+
+  <script>
+    (function () {
+      var sceneEl = document.querySelector('#mainScene');
+      if (!sceneEl) return;
+
+      function logSessionFrameRates(session) {
+        var supported = session.supportedFrameRates || null;
+        var targetFps = typeof session.frameRate === 'number' ? session.frameRate : null;
+        var supportedList = supported && typeof supported.length === 'number' ? Array.from(supported) : null;
+
+        console.log('[webxr] target fps:', targetFps !== null ? targetFps : 'n/a');
+        console.log('[webxr] supported fps:', supportedList ? supportedList.join(', ') : 'n/a');
+      }
+
+      function logVrFrameRates() {
+        if (!sceneEl.renderer || !sceneEl.renderer.xr || !sceneEl.renderer.xr.getSession) return;
+        var session = sceneEl.renderer.xr.getSession();
+        if (!session) return;
+
+        session.requestAnimationFrame(function () {
+          logSessionFrameRates(session);
+        });
+      }
+
+      function onEnterVr() {
+        var xr = sceneEl.renderer && sceneEl.renderer.xr;
+        if (xr && xr.getSession && xr.getSession()) {
+          logVrFrameRates();
+          return;
+        }
+
+        if (xr && xr.addEventListener) {
+          var onSessionStart = function () {
+            xr.removeEventListener('sessionstart', onSessionStart);
+            logVrFrameRates();
+          };
+          xr.addEventListener('sessionstart', onSessionStart);
+        }
+      }
+
+      sceneEl.addEventListener('enter-vr', onEnterVr);
+    })();
+  </script>
 </body>
 
 </html>

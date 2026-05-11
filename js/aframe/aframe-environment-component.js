@@ -239,8 +239,8 @@
 	    this.sunlight.classList.add('environment');
 	    this.sunlight.setAttribute('position', this.data.lightPosition);
 	    this.sunlight.setAttribute('light', {intensity: 1.884,
-											 shadowMapWidth: 2048,
-											 shadowMapHeight: 2048});
+											 shadowMapWidth: 1024,
+											 shadowMapHeight: 1024});
 
 	    // add everything to the scene
 	    this.el.appendChild(this.hemilight);
