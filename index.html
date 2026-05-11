@@ -25,6 +25,7 @@
   <script src="./js/debug-control.js"></script>
   <script src="./js/aframe/sphere-collider.js"></script>
   <script src="./js/keyboard-text.js"></script>
+  <script src="./js/fps-text.js"></script>
 
   <script src="./js/moving-platform.js"></script>
   <script src="./js/audio-fix.js"></script>
@@ -89,11 +90,11 @@
       <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>
     </a-assets>
 
-    
+    <a-text id="fpsText" rotation="0 16.093238549634563 0" position="-2.35487 3.40379 -4.84702" fps-text></a-text>
 
     <a-entity id="player" movement-controls="controls: keyboard, gamepad" position="0 0 0" online-entity desktop-controller>
       <a-entity id="bgSndEmmiter" sound="src:#bgm01; autoplay:true; loop:true; rolloffFactor:0.9; refDistance:25; volume:0.6" position="0 2 0"></a-entity>  
-      
+
       <a-entity id="camera" camera look-controls position="0 1.6 0">
         <a-entity id="respawnPoint" position="0 0 -0.5"></a-entity>
         <a-entity id="debugHud" position="0.0 0.0 -0.5" debug-hud visible="false">
