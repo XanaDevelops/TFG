@@ -389,20 +389,25 @@ AFRAME.registerComponent('grab-glow', {
 //this.el.addEventListener('model-loaded', ...)
 AFRAME.registerComponent('grab-fix', {
     schema: {
-
+        kinematicDelay: { type: 'number', default: 300 },
+        dynamicDelay: { type: 'number', default: 700 },
+        dynamicRetryDelay: { type: 'number', default: 150 },
+        maxDynamicRetries: { type: 'number', default: 20 }
     },
 
     init: function () {
-
         const el = this.el;
-        const ammo_body = el.components['ammo-body'];
+        const ammoBody = el.components && el.components['ammo-body'];
 
-        if (ammo_body.type === "static") return
+        if (!ammoBody || (ammoBody.data && ammoBody.data.type === 'static')) return;
 
         this.fixed = false;
-
-        // Flag para indicar si el body soporta CCD (solo comprobación, no lo activamos)
         this.ccdAvailable = false;
+        this._fixStarted = false;
+        this._bodyReady = !!ammoBody.body;
+        this._dynamicRetries = 0;
+        this._kinematicTimeout = null;
+        this._dynamicTimeout = null;
 
         const checkCCD = () => {
             const comp = el.components && el.components['ammo-body'];
@@ -410,12 +415,10 @@ AFRAME.registerComponent('grab-fix', {
             const body = comp.body;
             let avail = false;
             try {
-                // Comprobaciones típicas de API de Ammo para CCD
                 if (typeof body.setCcdMotionThreshold === 'function' || typeof body.setCcdSweptSphereRadius === 'function' || typeof body.getCcdSweptSphereRadius === 'function') {
                     avail = true;
                 }
             } catch (e) {
-                // Si la introspección falla, asumimos no disponible
                 avail = false;
             }
             this.ccdAvailable = avail;
@@ -423,57 +426,92 @@ AFRAME.registerComponent('grab-fix', {
             return avail;
         };
 
-        // Intento inicial de comprobación (si el body ya está cargado)
-        checkCCD();
-
-        // Guardar el color original establecido en el HTML
-        //this.originalColor = el.getAttribute('material').color;
-
-        this._fixTimeout = setTimeout(() => {
-            el.setAttribute('ammo-body', 'type', 'kinematic');
-
-            console.log("start fix");
-        }, 500);
-
-        this._onBodyLoaded = (e) => {
-            console.log("body loaded " + this.fixed);
-            // Volver a comprobar CCD cuando el body se haya cargado completamente
-            checkCCD();
-
+        this._needsMesh = () => {
+            const shape = el.components && el.components['ammo-shape'];
+            if (!shape || !shape.data) return false;
+            const type = String(shape.data.type || '').toLowerCase();
+            const fit = String(shape.data.fit || '').toLowerCase();
+            return fit === 'all' || fit === 'mesh' || type === 'mesh' || type === 'hull' || type === 'hacd';
         };
-        this.el.addEventListener('body-loaded', this._onBodyLoaded)
 
+        this._hasMesh = () => {
+            return !!(el.getObject3D('mesh') || (el.object3DMap && el.object3DMap.mesh));
+        };
 
-        
+        this._setBodyType = (type) => {
+            const comp = el.components && el.components['ammo-body'];
+            if (!comp) return false;
+            const data = el.getAttribute('ammo-body');
+            const current = data && data.type;
+            if (current === type) return true;
+            el.setAttribute('ammo-body', 'type', type);
+            if (comp.body && typeof comp.syncToPhysics === 'function') comp.syncToPhysics();
+            return true;
+        };
 
+        this._ensureDynamic = () => {
+            if (this.fixed) return;
+            const comp = el.components && el.components['ammo-body'];
+            const ok = this._setBodyType('dynamic');
+            const ready = comp && comp.body;
+            if (ok && ready) {
+                if (this.el.components['no-grav']) this.el.components['no-grav'].configureNoGrav();
+                this.fixed = true;
+                el.emit('body-fixed');
+                return;
+            }
+            this._dynamicRetries += 1;
+            if (this._dynamicRetries <= this.data.maxDynamicRetries) {
+                this._dynamicTimeout = setTimeout(this._ensureDynamic, this.data.dynamicRetryDelay);
+            }
+        };
+
+        this._startFix = () => {
+            if (this._fixStarted) return;
+            this._fixStarted = true;
+            this._kinematicTimeout = setTimeout(() => {
+                this._setBodyType('kinematic');
+            }, this.data.kinematicDelay);
+            this._dynamicTimeout = setTimeout(this._ensureDynamic, this.data.dynamicDelay);
+        };
+
+        this._maybeStartFix = () => {
+            if (this._fixStarted) return;
+            const needsMesh = this._needsMesh();
+            if (needsMesh && !this._hasMesh()) return;
+            if (!this._bodyReady) return;
+            this._startFix();
+        };
+
+        checkCCD();
+        this._maybeStartFix();
+
+        this._onBodyLoaded = () => {
+            this._bodyReady = true;
+            checkCCD();
+            this._maybeStartFix();
+        };
+        this._onObject3DSet = (e) => {
+            if (e && e.detail && e.detail.type === 'mesh') this._maybeStartFix();
+        };
+        this._onModelLoaded = () => {
+            this._maybeStartFix();
+        };
+
+        this.el.addEventListener('body-loaded', this._onBodyLoaded);
+        this.el.addEventListener('object3dset', this._onObject3DSet);
+        this.el.addEventListener('model-loaded', this._onModelLoaded);
     },
 
-    tick: function (time, timeDelta) {
-
-        const el = this.el;
-        const ammoBody = el.components['ammo-body'];
-
-        if (!ammoBody) return; // Si no hay ammo-body, no hacemos nada
-
-        // Verificar el tipo de cuerpo y cambiar el color
-        const bodyType = el.getAttribute('ammo-body').type;
-        /*if (bodyType === 'dynamic') {
-            el.setAttribute('material', 'color', this.originalColor); // Restaurar el color original
-        } else if (bodyType === 'kinematic') {
-            el.setAttribute('material', 'color', 'yellow'); // Cambiar a amarillo
-        }
-        */
-        if (time > 1000 && !this.fixed) {
-            el.setAttribute('ammo-body', 'type', 'dynamic');
-            ammoBody.syncToPhysics()
-            if (this.el.components['no-grav'])
-                this.el.components['no-grav'].configureNoGrav()
-            this.fixed = true
-            console.log(this.fixed);
-            el.emit("body-fixed")
-
-        }
-
+    remove: function () {
+        if (this._kinematicTimeout) clearTimeout(this._kinematicTimeout);
+        if (this._dynamicTimeout) clearTimeout(this._dynamicTimeout);
+        if (this._onBodyLoaded) this.el.removeEventListener('body-loaded', this._onBodyLoaded);
+        if (this._onObject3DSet) this.el.removeEventListener('object3dset', this._onObject3DSet);
+        if (this._onModelLoaded) this.el.removeEventListener('model-loaded', this._onModelLoaded);
+        this._onBodyLoaded = null;
+        this._onObject3DSet = null;
+        this._onModelLoaded = null;
     }
 });
 
