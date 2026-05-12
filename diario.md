@@ -221,3 +221,15 @@ El juego esta en el server del ltim en lyoko.ltim.uib.es con contraseña cambiad
 
 BUGFIX: en el server no se mostraba en el teclado ni ç ni ñ (aunque en la caja de texto sí), usando el codigo unicode directamente se ha arreglado
 
+
+## 9/05
+Otro dia de fira, mucho niño chico, aunque las gafas no les iban bien y tenia que explicar externamente los controles, fue un dia similar al viernes.
+Parece que mover ciertos objetos y cambiar la velocidad de la plataforma fue un cambio a mejor.
+
+## 11/05
+Iniciado a diseñar la estructura del tutorial (ver imagen), aunque hará falta un sistema de cambio de escenas, a a-frame no le gusta tener
+<a-scene> dentro de <a-scene> (ni al lado).
+
+## 12/05
+Inicio del sistema de escenas, antes de nada, con ayuda de la IA se indentifica los componentes en uso que deben implementar un play() pause() remove() acorde a su comportamiento
+Despues, de las utilidades llamadas "superframe" https://github.com/supermedium/superframe se usará template para cargar/descargar escenas

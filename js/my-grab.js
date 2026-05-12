@@ -435,6 +435,7 @@ AFRAME.registerComponent('grab-fix', {
                 this.el.components['no-grav'].configureNoGrav()
             this.fixed = true
             console.log(this.fixed);
+            el.emit("body-fixed")
 
         }
 

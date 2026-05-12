@@ -18,13 +18,14 @@ AFRAME.registerComponent('no-grav', {
     },
 
     init: function () {
-      this.el.addEventListener('body-loaded', () => {
+      this.el.addEventListener('body-fixed', () => {
         this.configureNoGrav();
       });
     },
 
+    // mirar de no depender de esto...
     update: function () {
-      this.configureNoGrav();
+      //this.configureNoGrav();
     },
 
     remove: function () {
