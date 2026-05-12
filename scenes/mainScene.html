@@ -1,0 +1,97 @@
+<a-text id="fpsText" rotation="0 16.093238549634563 0" position="-2.35487 3.40379 -4.84702" fps-text></a-text>
+
+<a-entity template="src: templates/player.html"></a-entity>
+
+<!-- Entorno -->
+<a-box id="suelo" mixin="static-mixin" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10"
+    visible="false" ammo-shape="type: box"></a-box>
+
+<a-image id="tutoriel" position="-0.57305 1.39529 -3.34007" src="#imgTutoriel"></a-image>
+
+<a-entity id="taulaFusta" mixin="static-mixin" position="-0.46598 0 -2.76073" gltf-model="#woodenTable"></a-entity>
+<a-entity id="deathBarriers" position="0 0 0">
+    <!-- Suelo -->
+    <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -70 0" rotation="-90 0 0" width="140"
+        height="140" depth="20"></a-box>
+    <!-- Techo -->
+    <a-box id="topDeathBarrier" mixin="death-barrier-mixin" position="0 70 0" rotation="90 0 0" width="140" height="140"
+        depth="20"></a-box>
+    <!-- Pared trasera (z positiva) -->
+    <a-box id="backDeathBarrier" mixin="death-barrier-mixin" position="0 0 70" rotation="0 0 0" width="140" height="140"
+        depth="20"></a-box>
+    <!-- Pared delantera (z negativa) -->
+    <a-box id="frontDeathBarrier" mixin="death-barrier-mixin" position="0 0 -70" rotation="0 180 0" width="140"
+        height="140" depth="20"></a-box>
+    <!-- Pared izquierda (x negativa) -->
+    <a-box id="leftDeathBarrier" mixin="death-barrier-mixin" position="-70 0 0" rotation="0 90 0" width="140"
+        height="140" depth="20"></a-box>
+    <!-- Pared derecha (x positiva) -->
+    <a-box id="rightDeathBarrier" mixin="death-barrier-mixin" position="70 0 0" rotation="0 -90 0" width="140"
+        height="140" depth="20"></a-box>
+</a-entity>
+<!--- <a-entity id="reset-bnt" gltf-model="#reset" position="-1 0.5 -3" scale="0.1 0.1 0.1" grabbable></a-entity> -->
+
+
+<!-- Props fisicos-->
+<a-box id="testCubo1" class="grabbable" mixin="grabbable-mixin" scale="0.425 0.425 0.425" position="-0.5 1 -1"
+    color="red"></a-box>
+<a-box id="testCubo2" class="grabbable" mixin="grabbable-mixin" scale="0.34 0.34 0.34" position="-0.5 1.45 -1"
+    color="green"></a-box>
+<a-box id="testCubo3" class="grabbable" mixin="grabbable-mixin" scale="0.255 0.255 0.255" position="-0.5 1.8 -1"
+    color="blue"></a-box>
+
+<a-sphere id="testEsfera1" class="grabbable" mixin="grabbable-mixin" scale="0.255 0.255 0.255" position="0.1 1.05 -1.05"
+    color="#ffcc00" ammo-body="restitution: 0.9"></a-sphere>
+<a-cylinder id="testCilindro1" class="grabbable" mixin="grabbable-mixin" scale="0.2125 0.34 0.2125"
+    position="0.6 1.1 -1.15" color="#00bcd4"></a-cylinder>
+<a-cone id="testCono1" class="grabbable" mixin="grabbable-mixin" scale="0.255 0.34 0.255" position="1.1 1.05 -1.25"
+    color="#9c27b0"></a-cone>
+<a-torus id="testToro1" class="grabbable" mixin="grabbable-mixin" scale="0.255 0.255 0.255" position="1.6 1.1 -1.35"
+    color="#ff5722"></a-torus>
+
+<a-entity id="eTap" rotation="-28 36.5 -18" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin"
+    scale="0.017 0.017 0.017" position="-0.17676 1.2 -2.68384"></a-entity>
+
+<!-- forats-->
+<a-entity id="eForatSemiC" rotation="65 0 0" gltf-model="#foratSemicercle" class="grabbable" mixin="grabbable-vhacd"
+    scale="0.0255 0.0255 0.0255" position="1.5 2 -5"></a-entity>
+<a-entity id="eForatCercle" rotation="65 0 0" gltf-model="#foratCercle" class="grabbable" mixin="grabbable-vhacd"
+    scale="0.0255 0.0255 0.0255" position="2.5 2 -5"></a-entity>
+<a-entity id="eForatEqui" rotation="65 0 0" gltf-model="#foratEquilater" class="grabbable" mixin="grabbable-vhacd"
+    scale="0.0255 0.0255 0.0255" position="3.5 2 -5"></a-entity>
+<a-entity id="eForatIso" rotation="65 0 0" gltf-model="#foratIsosceles" class="grabbable" mixin="grabbable-vhacd"
+    scale="0.0255 0.0255 0.0255" position="4.5 2 -5"></a-entity>
+<a-entity id="eForatQuad" rotation="65 0 0" gltf-model="#foratQuadrat" class="grabbable" mixin="grabbable-vhacd"
+    scale="0.0255 0.0255 0.0255" position="5.5 2 -5"></a-entity>
+<a-entity id="eForatRect" rotation="65 0 0" gltf-model="#foratRectangle" class="grabbable" mixin="grabbable-vhacd"
+    scale="0.0255 0.0255 0.0255" position="6.5 2 -5"></a-entity>
+<a-entity id="eForatRecta" rotation="65 0 0" gltf-model="#foratRectangule" class="grabbable" mixin="grabbable-vhacd"
+    scale="0.0255 0.0255 0.0255" position="7.5 2 -5"></a-entity>
+
+<a-box id="deathCubeTest" scale="0.3 0.3 0.3" position="-2 1 -3" color="black"
+    ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
+    ammo-shape="type: box" death-barrier>
+
+</a-box>
+
+
+<!-- teclado-->
+<a-text value="Escriu: " id="textoTeclado" rotation="0 54.29290770880168 0"
+    font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false"
+    position="-3.2968 1.84488 -0.85135" keyboard-text>
+    <a-entity id="keyboard" rotation="0 0 0" scale="3 3 3" position="0.06945 -0.36282 0.0217"
+        a-keyboard="font: fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-entity>
+</a-text>
+
+
+<a-box id="pruebaPlataforma" mixin="base-object" moving-platform-dynamic-velocity position="2.10053 1 -2.83199"
+    scale="0.8 0.05 0.68"
+    ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
+    ammo-shape="type: box">
+</a-box>
+
+<a-light id="eEasterLight" light="type: point; castShadow: false; intensity: 100" position="-5.12728 14.25545 -44.0129"
+    intensity="10"></a-light>
+<a-entity id="eEasterEgg" position="-8.08445 0.13565 -50.29062" scale="2.5 2.5 2.5" mixin="base-object"
+    gltf-model="#easterEgg" animation-mixer
+    sound="src: #sndEGG; autoplay:true; loop:true; maxDistance:10; distanceModel: exponential; rolloffFactor:1.5; refDistance:1.5;"></a-entity>
