@@ -11,7 +11,7 @@ AFRAME.registerComponent('death-barrier', {
 
         const id = this.el.id;
 
-        const listener = (e) => {
+        this._onHit = (e) => {
             const hitEl = e.detail.targetEl;
             console.log(`[death-barrier:${id}]: ${this.data.mode} -> ${hitEl.id}`);
             var player = document.querySelector("#respawnPoint")
@@ -50,8 +50,8 @@ AFRAME.registerComponent('death-barrier', {
             }
         };
 
-        this.el.addEventListener('hit', listener);
-        this.el.addEventListener('collidestart', listener)
+        this.el.addEventListener('hit', this._onHit);
+        this.el.addEventListener('collidestart', this._onHit)
     },
 
     update: function () {
@@ -59,7 +59,11 @@ AFRAME.registerComponent('death-barrier', {
     },
 
     remove: function () {
-      // Do something the component or its entity is detached.
+            if (this._onHit) {
+                this.el.removeEventListener('hit', this._onHit);
+                this.el.removeEventListener('collidestart', this._onHit);
+                this._onHit = null;
+            }
     },
 
     tick: function (time, timeDelta) {

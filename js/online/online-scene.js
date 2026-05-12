@@ -9,18 +9,20 @@ AFRAME.registerComponent('online-scene', {
         this.socket = socket
 
         // Abre la conexión
-        this.socket.addEventListener("open", function (e) {
+        this._onOpen = function (e) {
             //socket.send("Hello Server!");
             let event = { type: "login", username: "prueba"}
             socket.send(JSON.stringify(event))
             event = {type: "echo", message: "hola, que tal"}
             socket.send(JSON.stringify(event))
-        });
+        };
+        this.socket.addEventListener("open", this._onOpen);
 
         // Escucha por mensajes
-        this.socket.addEventListener("message", function (event) {
+        this._onMessage = function (event) {
             console.log("Message from server", JSON.parse(event.data));
-        });
+        };
+        this.socket.addEventListener("message", this._onMessage);
     },
 
     update: function () {
@@ -28,7 +30,14 @@ AFRAME.registerComponent('online-scene', {
     },
 
     remove: function () {
-        // Do something the component or its entity is detached.
+        if (this.socket) {
+            if (this._onOpen) this.socket.removeEventListener("open", this._onOpen);
+            if (this._onMessage) this.socket.removeEventListener("message", this._onMessage);
+            try { this.socket.close(); } catch (e) {}
+        }
+        this._onOpen = null;
+        this._onMessage = null;
+        this.socket = null;
     },
 
     tick: function (time, timeDelta) {

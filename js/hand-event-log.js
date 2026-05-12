@@ -16,10 +16,21 @@ AFRAME.registerComponent('hand-event-log', {
           'surfacedown', 'surfaceup', 'surfacetouchstart', 'surfacetouchend', 'surfacechanged'
         ];
 
-        events.forEach(function (eventName) {
-          el.addEventListener(eventName, function (evt) {
+        this._handlers = [];
+        events.forEach((eventName) => {
+          const handler = function () {
             console.log('[hand-elog:' + handID + '] ' + eventName);
-          });
+          };
+          this._handlers.push({ eventName: eventName, handler: handler });
+          el.addEventListener(eventName, handler);
         });
+      },
+
+      remove: function () {
+        if (!this._handlers) return;
+        this._handlers.forEach((entry) => {
+          this.el.removeEventListener(entry.eventName, entry.handler);
+        });
+        this._handlers = null;
       }
     });

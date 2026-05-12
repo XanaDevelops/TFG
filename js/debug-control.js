@@ -4,13 +4,14 @@ AFRAME.registerComponent('debug-control', {
     init: function () {
       // Do something when component first attached.
       // Handler para abuttondown: alternar visibilidad de #debugHud
-        this.el.addEventListener('abuttondown', () => {
+        this._onAButtonDown = () => {
             const hud = document.querySelector('#debugHud');
             if (hud && this.data.debug) {
                 const isVisible = hud.getAttribute('visible');
                 hud.setAttribute('visible', !isVisible);
             }
-        });
+        };
+        this.el.addEventListener('abuttondown', this._onAButtonDown);
     },
 
     update: function () {
@@ -18,7 +19,10 @@ AFRAME.registerComponent('debug-control', {
     },
 
     remove: function () {
-      // Do something the component or its entity is detached.
+      if (this._onAButtonDown) {
+        this.el.removeEventListener('abuttondown', this._onAButtonDown);
+        this._onAButtonDown = null;
+      }
     },
 
     tick: function (time, timeDelta) {

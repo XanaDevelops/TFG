@@ -60,23 +60,25 @@ AFRAME.registerComponent('my-grab', {
         this.el.setAttribute('line', { color: 'white' });
         
         //detectar colisión
-        this.el.addEventListener('hit', (e) => {
+        this._onHit = (e) => {
             const hitEl = e.detail.el;
             if (!this.targetEl && !this.grabbedEl) {
                 this.targetEl = hitEl;
                 console.log(`[my-grab:${this.el.id}] targetEl -> `, this.targetEl.id);
             }
-        });
+        };
+        this.el.addEventListener('hit', this._onHit);
 
-        this.el.addEventListener('hitend', (e) => {
+        this._onHitEnd = (e) => {
             const hitEl = e.detail.el;
             if (this.targetEl === hitEl) {
                 this.targetEl = null;
                 console.log(`[my-grab:${this.el.id}] targetEl -> NULL`);
             }
-        });
+        };
+        this.el.addEventListener('hitend', this._onHitEnd);
         
-        this.el.addEventListener('raycaster-intersection', (e) => {
+        this._onRayIntersection = (e) => {
             const hitEl = e.detail.els[0];
             if (!this.targetEl_ray && !this.grabbedEl) {
                 if (!hitEl.classList.contains("grabbable"))
@@ -84,9 +86,10 @@ AFRAME.registerComponent('my-grab', {
                 this.targetEl_ray = hitEl;
                 console.log(`[my-grab:${this.el.id}] RAY: targetEl -> `, this.targetEl_ray.id);
             }
-        });
+        };
+        this.el.addEventListener('raycaster-intersection', this._onRayIntersection);
 
-        this.el.addEventListener('raycaster-intersection-cleared', (e) => {
+        this._onRayIntersectionCleared = (e) => {
             console.log(e.detail)
             //FIXME: e.detail.clearedEls no tiene el cubo, que en teoria deberia estar
             //const hitEl = e.detail.els[0];
@@ -95,10 +98,11 @@ AFRAME.registerComponent('my-grab', {
             //}
             this.targetEl_ray = null;
             console.log(`[my-grab:${this.el.id}] RAY: targetEl -> NULL`);
-        });
+        };
+        this.el.addEventListener('raycaster-intersection-cleared', this._onRayIntersectionCleared);
         
 
-        this.el.addEventListener('gripdown', () => {
+        this._onGripDown = () => {
             if ((this.targetEl || this.targetEl_ray) && !this.grabbedEl) {
                 //grab
                 this.setConstraint()
@@ -106,9 +110,10 @@ AFRAME.registerComponent('my-grab', {
             if (!this.targetEl) {
                 //track
             }
-        });
+        };
+        this.el.addEventListener('gripdown', this._onGripDown);
         //this.el.addEventListener('triggerdown', onGrab);
-        this.el.addEventListener('gripup', () => {
+        this._onGripUp = () => {
             if (this.activeTrack) {  //FIXME: hacer esto hace que el cubo salga despedido, lol
                 this.activeTrack.setAttribute('ammo-body', 'type', 'dynamic');
                 this.activeTrack = null;
@@ -116,10 +121,11 @@ AFRAME.registerComponent('my-grab', {
             if (this.grabbedEl && this.activeConstraintId) {
                 this.delConstraint()
             }
-        });
+        };
+        this.el.addEventListener('gripup', this._onGripUp);
         //this.el.addEventListener('triggerup', onRelease);
 
-        this.el.addEventListener('triggerdown', () => {
+        this._onTriggerDown = () => {
             if (this.grabbedEl) {
 
                 //this.animAnim();
@@ -129,7 +135,8 @@ AFRAME.registerComponent('my-grab', {
 
                 console.log(`[my-grab:${this.el.id}]: grabbedEL tracked:`);
             }
-        });
+        };
+        this.el.addEventListener('triggerdown', this._onTriggerDown);
 
 
     },
@@ -187,7 +194,34 @@ AFRAME.registerComponent('my-grab', {
     },
 
     remove: function () {
-        // Do something the component or its entity is detached.
+        if (this._fixTimeout) {
+            clearTimeout(this._fixTimeout);
+            this._fixTimeout = null;
+        }
+        if (this._onBodyLoaded) {
+            this.el.removeEventListener('body-loaded', this._onBodyLoaded);
+            this._onBodyLoaded = null;
+        }
+    },
+
+    remove: function () {
+        if (this.grabbedEl && this.activeConstraintId) {
+            this.delConstraint();
+        }
+        if (this._onHit) this.el.removeEventListener('hit', this._onHit);
+        if (this._onHitEnd) this.el.removeEventListener('hitend', this._onHitEnd);
+        if (this._onRayIntersection) this.el.removeEventListener('raycaster-intersection', this._onRayIntersection);
+        if (this._onRayIntersectionCleared) this.el.removeEventListener('raycaster-intersection-cleared', this._onRayIntersectionCleared);
+        if (this._onGripDown) this.el.removeEventListener('gripdown', this._onGripDown);
+        if (this._onGripUp) this.el.removeEventListener('gripup', this._onGripUp);
+        if (this._onTriggerDown) this.el.removeEventListener('triggerdown', this._onTriggerDown);
+        this._onHit = null;
+        this._onHitEnd = null;
+        this._onRayIntersection = null;
+        this._onRayIntersectionCleared = null;
+        this._onGripDown = null;
+        this._onGripUp = null;
+        this._onTriggerDown = null;
     },
 
     tick: function (time, timeDelta) {
@@ -395,18 +429,19 @@ AFRAME.registerComponent('grab-fix', {
         // Guardar el color original establecido en el HTML
         //this.originalColor = el.getAttribute('material').color;
 
-        setTimeout(() => {
+        this._fixTimeout = setTimeout(() => {
             el.setAttribute('ammo-body', 'type', 'kinematic');
 
             console.log("start fix");
         }, 500);
 
-        this.el.addEventListener('body-loaded', (e) => {
+        this._onBodyLoaded = (e) => {
             console.log("body loaded " + this.fixed);
             // Volver a comprobar CCD cuando el body se haya cargado completamente
             checkCCD();
 
-        })
+        };
+        this.el.addEventListener('body-loaded', this._onBodyLoaded)
 
 
         
@@ -454,26 +489,39 @@ AFRAME.registerComponent('close-detect', {
     init: function () {
         // close-detect ahora escucha los eventos del componente `obb-collider`
         // y reenvía la información a la entidad padre como `hit` / `hitend`.
-        const onObbStart = (e) => {
+        this._onObbStart = (e) => {
             const hitEl = e && e.detail && e.detail.withEl;
             const parent = this.el.parentEl || this.el.parentNode;
             if (hitEl && parent) parent.emit('hit', { el: hitEl });
         };
-        const onObbEnd = (e) => {
+        this._onObbEnd = (e) => {
             const hitEl = e && e.detail && e.detail.withEl;
             const parent = this.el.parentEl || this.el.parentNode;
             if (hitEl && parent) parent.emit('hitend', { el: hitEl });
         };
 
-        this.el.addEventListener('obbcollisionstarted', onObbStart);
-        this.el.addEventListener('obbcollisionended', onObbEnd);
+        this.el.addEventListener('obbcollisionstarted', this._onObbStart);
+        this.el.addEventListener('obbcollisionended', this._onObbEnd);
 
         // También escuchar eventos OBB en el padre (el mixin `hand-mixin` aplica obb-collider al mano)
         const parentEl = this.el.parentEl || this.el.parentNode;
-        if (parentEl) {
-            parentEl.addEventListener('obbcollisionstarted', onObbStart);
-            parentEl.addEventListener('obbcollisionended', onObbEnd);
+        this._parentEl = parentEl || null;
+        if (this._parentEl) {
+            this._parentEl.addEventListener('obbcollisionstarted', this._onObbStart);
+            this._parentEl.addEventListener('obbcollisionended', this._onObbEnd);
         }
+    },
+
+    remove: function () {
+        if (this._onObbStart) this.el.removeEventListener('obbcollisionstarted', this._onObbStart);
+        if (this._onObbEnd) this.el.removeEventListener('obbcollisionended', this._onObbEnd);
+        if (this._parentEl) {
+            this._parentEl.removeEventListener('obbcollisionstarted', this._onObbStart);
+            this._parentEl.removeEventListener('obbcollisionended', this._onObbEnd);
+        }
+        this._onObbStart = null;
+        this._onObbEnd = null;
+        this._parentEl = null;
     }
 
 

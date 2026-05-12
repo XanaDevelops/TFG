@@ -7,7 +7,7 @@ AFRAME.registerComponent('keyboard-text', {
         var input = this.el.getAttribute("text").value
 
         // Do something when component first attached.
-        document.addEventListener('a-keyboard-update', (e) => {
+        this._onKeyboardUpdate = (e) => {
             var code = parseInt(e.detail.code)
             console.log(code);
             
@@ -25,7 +25,8 @@ AFRAME.registerComponent('keyboard-text', {
             }
 
             this.el.setAttribute("text", {value: input})
-        })
+        };
+        document.addEventListener('a-keyboard-update', this._onKeyboardUpdate)
     },
 
     update: function () {
@@ -33,7 +34,10 @@ AFRAME.registerComponent('keyboard-text', {
     },
 
     remove: function () {
-        // Do something the component or its entity is detached.
+        if (this._onKeyboardUpdate) {
+            document.removeEventListener('a-keyboard-update', this._onKeyboardUpdate)
+            this._onKeyboardUpdate = null;
+        }
     },
 
     tick: function (time, timeDelta) {
