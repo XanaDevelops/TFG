@@ -233,3 +233,7 @@ Iniciado a diseñar la estructura del tutorial (ver imagen), aunque hará falta 
 ## 12/05
 Inicio del sistema de escenas, antes de nada, con ayuda de la IA se indentifica los componentes en uso que deben implementar un play() pause() remove() acorde a su comportamiento
 Despues, de las utilidades llamadas "superframe" https://github.com/supermedium/superframe se usará template para cargar/descargar escenas
+La cosa ha ido bien, quedaria añadir una escena de menu, alguna forma de volver al menu desde la principal y el tutorial.
+Al final basta implementar remove() ya que se es lo que se llamará al descargar
+
+Tambien se ha refactorizado grab-fix para que sea más estable, aunque en el servidor la mesa tarda mucho en cargar
