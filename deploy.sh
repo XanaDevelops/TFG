@@ -6,9 +6,7 @@ eval "$(ssh-agent -s)"
 echo "$SERVER_PATH"
 git pull
 
-mkdir -p "$SERVER_PATH/img" "$SERVER_PATH/files" "$SERVER_PATH/fonts" "$SERVER_PATH/js" "$SERVER_PATH/snd"
-
-sudo -S rsync -a --delete \
+sudo -S rsync -a --delete --mkpath \
 	--include='/img/***' \
 	--include='/files/***' \
 	--include='/fonts/***' \
