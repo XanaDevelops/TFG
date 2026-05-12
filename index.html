@@ -19,6 +19,8 @@
 
   <script src="./js/aframe/aframe-keyboard.min.js"></script>
 
+  <script src="./js/scene-manajer.js"></script>
+
   <script src="./js/my-grab.js"></script>
   <script src="./js/no-grav.js"></script>
   <script src="./js/hand-event-log.js"></script>
@@ -93,7 +95,7 @@
       <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>
     </a-assets>
 
-    <a-entity id="sceneContainer" template="src: scenes/mainScene.html"></a-entity>
+    <a-entity id="sceneContainer" scene-manager></a-entity>
     
     <a-entity template="src: templates/player.html"></a-entity>
 
