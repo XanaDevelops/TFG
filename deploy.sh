@@ -15,6 +15,8 @@ sudo -S rsync -a --delete \
 	--include='/js/***' \
 	--include='/snd/***' \
 	--include='/index.html' \
+	--include='/scenes/***' \
+	--include='/templates/***' \
 	--exclude='*' \
 	./ "$SERVER_PATH/"
 
