@@ -95,9 +95,11 @@
       <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>
     </a-assets>
 
+    <a-entity template="src: templates/player.html"></a-entity>
+
     <a-entity id="sceneContainer" scene-manager></a-entity>
     
-    <a-entity template="src: templates/player.html"></a-entity>
+    
 
   
   </a-scene>
@@ -177,6 +179,12 @@
 
       sceneEl.addEventListener('enter-vr', onEnterVr);
     })();
+  </script>
+
+  <script>
+    AFRAME.changeScene = function (index) {
+      document.getElementById("sceneContainer").components["scene-manager"].loadScene(index)
+    }
   </script>
 </body>
 

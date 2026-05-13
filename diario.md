@@ -237,3 +237,9 @@ La cosa ha ido bien, quedaria añadir una escena de menu, alguna forma de volver
 Al final basta implementar remove() ya que se es lo que se llamará al descargar
 
 Tambien se ha refactorizado grab-fix para que sea más estable, aunque en el servidor la mesa tarda mucho en cargar
+
+
+## 13/05
+Recibido guia de escenas didacticas, habra que crear un triproyector de sombras
+Trabajando en el menu principal, queda programar un boton
+Se ha creado la funcion AFRAME.changeScene() por conveniencia
