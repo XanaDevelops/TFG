@@ -1,9 +1,9 @@
 <a-entity id="panelMenu" position="-0.82127 2.15682 -1.48181">
     <a-plane id="panelMenuBg" width="2.2" height="1.1" position="1.04178 -0.24654 -0.01" material="color: #888888; opacity: 0.8; transparent: true"></a-plane>
     
-    <a-text id="titulo" value="TITULO SUPER EPICO"></a-text>
-    <a-text id="labelOpciones" position="0 -0.25579 0" value="selecciona opciones:"></a-text>
-    <a-entity id="btnTutorial" position="0.34998 -0.5 0" text="value: tutorial; baseline: center; anchor: left; width: 4"></a-entity>
-    <a-entity id="btnSandbox" position="1.18777 -0.5 0" text="value: sandbox; anchor: left; width: 4"></a-entity>
+    <a-text id="titulo" position="0 0.1 0"value="TITULO SUPER EPICO"></a-text>
+    <a-text id="labelOpciones" position="0 -0.1 0" value="selecciona opciones:"></a-text>
+    <a-entity id="btnTutorial" class="collidable" position="0.5 -0.5 0" button="text: Tutorial;"></a-entity>
+    <a-entity id="btnSandbox" position="1.56 -0.5 0" button="text: Sandbox; changeScene: 1"></a-entity>
 
 </a-entity>
