@@ -243,3 +243,6 @@ Tambien se ha refactorizado grab-fix para que sea más estable, aunque en el ser
 Recibido guia de escenas didacticas, habra que crear un triproyector de sombras
 Trabajando en el menu principal, queda programar un boton
 Se ha creado la funcion AFRAME.changeScene() por conveniencia
+
+## 15/05
+Añadida funcionalidad basica del componente 'button', puede cambiar de escena al hacer click
