@@ -9,10 +9,10 @@
         </a-entity>
       </a-entity>
 
-      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc" debug-control="false">
-        <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; far: 0.0" obb-collider></a-entity>
+      <a-entity id="leftHand" mixin="hand-mixin" hand-controls="hand: left; color: #ffcccc" debug-control="true">
+        <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; size: 0.04; rows: 2; cols: 2; spacing: 0.01"></a-entity>
       </a-entity>
-      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc" debug-control="false">
-        <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; far: 0.0" obb-collider></a-entity>
+      <a-entity id="rightHand" mixin="hand-mixin" hand-controls="hand: right; color: #ffcccc" debug-control="true">
+        <a-entity class="hand-collider" position="0 0 0.0" close-detect="objects: .grabbable; size: 0.04; rows: 2; cols: 2; spacing: 0.01"></a-entity>
       </a-entity>
     </a-entity>

@@ -520,46 +520,77 @@ AFRAME.registerComponent('grab-fix', {
 AFRAME.registerComponent('close-detect', {
     schema: {
         objects: { type: 'string', default: '.grabbable' },
-        far: { type: 'number', default: 0.5 }
+        size: { type: 'number', default: 0.04 },
+        rows: { type: 'number', default: 1 },
+        cols: { type: 'number', default: 3 },
+        spacing: { type: 'number', default: 0.01 },
+        offsetY: { type: 'number', default: 0.0 }
     },
 
 
     init: function () {
-        // close-detect ahora escucha los eventos del componente `obb-collider`
-        // y reenvía la información a la entidad padre como `hit` / `hitend`.
+        this._hitCounts = new Map();
+        this._colliders = [];
+
+        // close-detect crea varios `obb-collider` y reenvia eventos agregados al padre.
         this._onObbStart = (e) => {
             const hitEl = e && e.detail && e.detail.withEl;
             const parent = this.el.parentEl || this.el.parentNode;
-            if (hitEl && parent) parent.emit('hit', { el: hitEl });
+            if (!hitEl || !parent) return;
+            const count = (this._hitCounts.get(hitEl) || 0) + 1;
+            this._hitCounts.set(hitEl, count);
+            if (count === 1) parent.emit('hit', { el: hitEl });
         };
         this._onObbEnd = (e) => {
             const hitEl = e && e.detail && e.detail.withEl;
             const parent = this.el.parentEl || this.el.parentNode;
-            if (hitEl && parent) parent.emit('hitend', { el: hitEl });
+            if (!hitEl || !parent) return;
+            const count = (this._hitCounts.get(hitEl) || 0) - 1;
+            if (count <= 0) {
+                this._hitCounts.delete(hitEl);
+                parent.emit('hitend', { el: hitEl });
+            } else {
+                this._hitCounts.set(hitEl, count);
+            }
         };
 
-        this.el.addEventListener('obbcollisionstarted', this._onObbStart);
-        this.el.addEventListener('obbcollisionended', this._onObbEnd);
+        const rows = Math.max(1, Math.floor(this.data.rows));
+        const cols = Math.max(1, Math.floor(this.data.cols));
+        const spacing = Math.max(0, this.data.spacing);
+        const cubeSize = Math.max(0.001, this.data.size);
+        const step = cubeSize + spacing;
+        const height = cols * cubeSize + (cols - 1) * spacing;
+        const depth = rows * cubeSize + (rows - 1) * spacing;
 
-        // También escuchar eventos OBB en el padre (el mixin `hand-mixin` aplica obb-collider al mano)
-        const parentEl = this.el.parentEl || this.el.parentNode;
-        this._parentEl = parentEl || null;
-        if (this._parentEl) {
-            this._parentEl.addEventListener('obbcollisionstarted', this._onObbStart);
-            this._parentEl.addEventListener('obbcollisionended', this._onObbEnd);
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const x = 0;
+                const y = -height / 2 + cubeSize / 2 + c * step + this.data.offsetY;
+                const z = -depth / 2 + cubeSize / 2 + r * step;
+                const colliderEl = document.createElement('a-entity');
+                colliderEl.classList.add('hand-collider');
+                colliderEl.setAttribute('position', `${x} ${y} ${z}`);
+                colliderEl.setAttribute('obb-collider', `size: ${cubeSize}`);
+                colliderEl.addEventListener('obbcollisionstarted', this._onObbStart);
+                colliderEl.addEventListener('obbcollisionended', this._onObbEnd);
+                this.el.appendChild(colliderEl);
+                this._colliders.push(colliderEl);
+            }
         }
     },
 
     remove: function () {
-        if (this._onObbStart) this.el.removeEventListener('obbcollisionstarted', this._onObbStart);
-        if (this._onObbEnd) this.el.removeEventListener('obbcollisionended', this._onObbEnd);
-        if (this._parentEl) {
-            this._parentEl.removeEventListener('obbcollisionstarted', this._onObbStart);
-            this._parentEl.removeEventListener('obbcollisionended', this._onObbEnd);
+        if (this._colliders) {
+            this._colliders.forEach((colliderEl) => {
+                colliderEl.removeEventListener('obbcollisionstarted', this._onObbStart);
+                colliderEl.removeEventListener('obbcollisionended', this._onObbEnd);
+                if (colliderEl.parentNode) colliderEl.parentNode.removeChild(colliderEl);
+            });
         }
+        this._colliders = null;
+        this._hitCounts = null;
         this._onObbStart = null;
         this._onObbEnd = null;
-        this._parentEl = null;
     }
 
 
