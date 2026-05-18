@@ -51,6 +51,7 @@ AFRAME.registerComponent('my-grab', {
         this.grabbedEl = null;
         this.activeConstraintId = null;
         this.activeTrack = null;
+        this._cfg = this.el.sceneEl.systems['player-config'];
 
         
         //por teclado, y el .collidable
@@ -61,6 +62,7 @@ AFRAME.registerComponent('my-grab', {
         
         //detectar colisión
         this._onHit = (e) => {
+            if (!this._cfg.allowGrab) return;
             const hitEl = e.detail.el;
             if (!this.targetEl && !this.grabbedEl) {
                 this.targetEl = hitEl;
@@ -70,6 +72,7 @@ AFRAME.registerComponent('my-grab', {
         this.el.addEventListener('hit', this._onHit);
 
         this._onHitEnd = (e) => {
+            if (!this._cfg.allowGrab) return;
             const hitEl = e.detail.el;
             if (this.targetEl === hitEl) {
                 this.targetEl = null;
@@ -79,6 +82,7 @@ AFRAME.registerComponent('my-grab', {
         this.el.addEventListener('hitend', this._onHitEnd);
         
         this._onRayIntersection = (e) => {
+            if (!this._cfg.allowRayGrab) return;
             const hitEl = e.detail.els[0];
             if (!this.targetEl_ray && !this.grabbedEl) {
                 if (!hitEl.classList.contains("grabbable"))
@@ -103,6 +107,7 @@ AFRAME.registerComponent('my-grab', {
         
 
         this._onGripDown = () => {
+            if (!this._cfg.allowGrab) return;
             if ((this.targetEl || this.targetEl_ray) && !this.grabbedEl) {
                 //grab
                 this.setConstraint()
@@ -126,6 +131,7 @@ AFRAME.registerComponent('my-grab', {
         //this.el.addEventListener('triggerup', onRelease);
 
         this._onTriggerDown = () => {
+            if (!this._cfg.allowRayTrack) return;
             if (this.grabbedEl) {
 
                 //this.animAnim();
@@ -142,6 +148,7 @@ AFRAME.registerComponent('my-grab', {
     },
 
     manualAnim: function (timeDelta) {
+        if (!this._cfg.allowRayTrack) return;
         const gEl = this.activeTrack;
 
         if (!gEl) return; // Si no hay un target, no hacemos nada
@@ -225,6 +232,7 @@ AFRAME.registerComponent('my-grab', {
     },
 
     tick: function (time, timeDelta) {
+        if (!this._cfg.allowRayGrab) this.targetEl_ray = null;
         // Do something on every scene tick or frame.
         if (this.activeTrack != null) {
             this.manualAnim(timeDelta);
@@ -250,6 +258,7 @@ AFRAME.registerComponent('grab-glow', {
         this._outlineMat = null;
         this._baseScale = null;
         this._meshObj = null;
+        this._cfg = this.el.sceneEl.systems['player-config'];
 
         this.activationMask = 0; // 0bRH Ray Hand
 
@@ -314,10 +323,12 @@ AFRAME.registerComponent('grab-glow', {
         }
 
         this.el.addEventListener('mouseenter', (e) => {
+            if (!this._cfg.allowRayGrab) return;
             this.activationMask |= 0b10
             enableGlow(e)
         });
         this.el.addEventListener('obbcollisionstarted', (e) => {
+            if (!this._cfg.allowGrab) return;
             const colliderEl = e.detail.withEl;
             if (!colliderEl || !colliderEl.classList || !colliderEl.classList.contains('hand-collider')) return;
             this.activationMask |= 0b01
@@ -325,10 +336,12 @@ AFRAME.registerComponent('grab-glow', {
         });
 
         this.el.addEventListener('mouseleave', (e) => {
+            if (!this._cfg.allowRayGrab) return;
             this.activationMask &= 0b01
             disableGlow(e)
         });
         this.el.addEventListener('obbcollisionended', (e) => {
+            if (!this._cfg.allowGrab) return;
             const colliderEl = e.detail.withEl;
             if (!colliderEl || !colliderEl.classList || !colliderEl.classList.contains('hand-collider')) return;
             this.activationMask &= 0b10
@@ -337,6 +350,9 @@ AFRAME.registerComponent('grab-glow', {
     },
 
     tick: function (time, timeDelta) {
+        if (!this._cfg.allowGrab) this.activationMask &= 0b10;
+        if (!this._cfg.allowRayGrab) this.activationMask &= 0b01;
+        if (!this.activationMask) this._glowTarget = 0;
         if (!this._outlines || this._outlines.length === 0 || !this._outlineMat || !this._meshObj) return;
 
         const duration = Math.max(1, this.data.duration);

@@ -12,9 +12,10 @@ AFRAME.registerComponent('desktop-controller', {
       this.lastIntersection = null;
       this._createdCursor = false;
       this._targetWorld = new THREE.Vector3();
+      this._cfg = this.el.sceneEl.systems['player-config'];
 
       this.onMouseDown = () => {
-        if (!this.enabled || !this.lastIntersection) return;
+        if (!this.enabled || !this._cfg.allowGrab || !this.lastIntersection) return;
         const hit = this.lastIntersection;
         if (!hit) return;
 
@@ -114,7 +115,7 @@ AFRAME.registerComponent('desktop-controller', {
     },
 
     tick: function (time, timeDelta) {
-      if (!this.enabled || !this.grabbedEl || !this.cursorEl) return;
+      if (!this.enabled || !this._cfg.allowGrab || !this.grabbedEl || !this.cursorEl) return;
       const raycaster = this.cursorEl.components && this.cursorEl.components.raycaster;
       if (!raycaster || !raycaster.raycaster) return;
       const ray = raycaster.raycaster.ray;
