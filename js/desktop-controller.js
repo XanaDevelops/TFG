@@ -64,7 +64,7 @@ AFRAME.registerComponent('desktop-controller', {
         if (!this.cursorEl) {
           this.cursorEl = document.createElement('a-entity');
           this.cursorEl.setAttribute('cursor', 'rayOrigin: mouse');
-          this.cursorEl.setAttribute('raycaster', 'objects: .grabbable');
+          this.cursorEl.setAttribute('raycaster', 'objects: .grabbable, .collidable');
           cameraEl.appendChild(this.cursorEl);
           this._createdCursor = true;
         }
