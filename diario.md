@@ -251,3 +251,6 @@ Añadida funcionalidad basica del componente 'button', puede cambiar de escena a
 Añadida la funcionalidad de player-config, que aprovecha la dualidad de sistema-componente para, a traves de un componente, modificar su sistema y alterar las capacidades del jugador, como poder moverse o agarrar objetos. (esto principalmente para el tutorial o minijuegos que puedan surgir)
 
 Tambien se ha modificado desktop-controller para poder hacer click a los botones y hecho el jugador algo más lento (evita mareos y screen tearings)
+
+## 22/05
+Creado modelo provisional del proyector de sombras, queda ajustar materiales
