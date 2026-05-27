@@ -28,6 +28,9 @@ AFRAME.registerComponent('button', {
         anchor: "center",
         align: "center",
         baseline: "center",
+        font: "fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json",
+        shader: "msdf",
+        negate: false,
         width: 4,
       })
 

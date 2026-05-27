@@ -1,0 +1,42 @@
+<a-entity id="panelMenu" position="-0.82127 2.15682 -1.48181">
+    <a-plane id="panelMenuBg" width="2.2" height="1.8" position="1.04178 -0.5 -0.01" material="color: #888888; opacity: 0.8; transparent: true"></a-plane>
+    
+    <a-entity id="btnVolver" position="1.0 -1.05 0" button="text: Tornar; changeScene: 0"></a-entity>
+
+</a-entity>
+
+
+
+
+<a-entity id="projector" class="collidable"shadow="cast: false" gltf-model="#proyector" mixin="static-mixin">
+    <a-light id="lightAlzada"
+    mixin="luz-proyector"
+    light="shadowCameraTop: 0.37; shadowCameraLeft: -0.67; shadowCameraFar: 1.43; shadowCameraBottom: -0.74; shadowCameraRight: 0.45"
+    target="#lightGuideAlzada"
+    position="0 1.39718 0.82345">
+        <a-entity id="lightGuideAlzada" position="0 0 -1.19078"></a-entity>
+    </a-light>
+
+    <a-light id="lightPlanta"
+    mixin="luz-proyector"
+    light="shadowCameraTop: 0.37; shadowCameraLeft: -0.67; shadowCameraFar: 1.43; shadowCameraBottom: -0.74; shadowCameraRight: 0.45"
+    target="#lightGuidePlanta"
+    position="-0.69116 1.39718 0.0384">
+        <a-entity id="lightGuidePlanta" position="0.56307 -0.02988 0"></a-entity>
+    </a-light>
+    
+    <a-light id="lightPerfil"
+    mixin="luz-proyector"
+    light="shadowCameraTop: 0.37; shadowCameraLeft: -0.67; shadowCameraFar: 1.43; shadowCameraBottom: -0.74; shadowCameraRight: 0.45"
+    target="#lightGuidePerfil"
+    position="0 0.40038 0.0248">
+        <a-entity id="lightGuidePerfil" position="0 0.66462 0"></a-entity>
+    </a-light>
+</a-entity>
+
+<a-plane id="Techo" scale="4.74746 4.6153 1" rotation="90 179.9998479605043 179.9998479605043" position="0.05902 2.80259 0"></a-plane>
+
+<a-entity id="eTap" rotation="-28 36.5 -18" gltf-model="#tap" class="grabbable" mixin="grabbable-mixin"
+    scale="0.017 0.017 0.017" position="-0.17676 1.2 -2.68384"></a-entity>
+
+<a-entity player-config="allowMovement: true; allowGrab: true; allowRayGrab: true; allowRayTrack: true"></a-entity>

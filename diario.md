@@ -254,3 +254,11 @@ Tambien se ha modificado desktop-controller para poder hacer click a los botones
 
 ## 22/05
 Creado modelo provisional del proyector de sombras, queda ajustar materiales
+
+## 27/05
+Habiendo acabado la entrega de Lab, ahora full TFG, yay...
+
+Se ha mejorado el proyector, las sombras raras se han eliminado (shade flat) y se han añadido luces direccionales para las projecciones de sombras.
+Se ha creado una escena nueva para probar de forma aislada estos cambios, aunque queda por hacer ajustes.
+
+

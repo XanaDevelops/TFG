@@ -5,8 +5,10 @@ AFRAME.registerComponent('scene-manager', {
 
     init: function () {
         // Do something when component first attached.
-        this.scenes = ["scenes/mainMenu.html",
-            "scenes/mainScene.html"
+        this.scenes = [
+            "scenes/mainMenu.html",
+            "scenes/mainScene.html",
+            "scenes/mainClasse.html",
         ]
         this.currentScene = 0
 

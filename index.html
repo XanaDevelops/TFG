@@ -63,6 +63,10 @@
     <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.01" obb-collider></a-mixin>
     <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider no-grav></a-mixin>
 
+    <a-mixin id="luz-proyector"
+      light="type: directional; castShadow: true; angle: 11.14; shadowCameraVisible: true; shadowRadius: 1">
+    </a-mixin>
+
     <!-- Mixin para death barriers -->
     <a-mixin id="death-barrier-mixin" mixin="base-object"
       visible="false"
@@ -87,7 +91,7 @@
       <a-asset-item id="foratRectangule" src="files/forat_rectangule.glb"></a-asset-item>
       <a-asset-item id="foratSemicercle" src="files/forat_semicercle2.glb"></a-asset-item>
       <a-asset-item id="woodenTable" src="files/wooden-table/wooden_table_02_4k.gltf"></a-asset-item>
-      <a-asset-item id="proyector" src="files/proyector.glb"></a-asset-item>
+      <a-asset-item id="proyector" shadow="cast: false" src="files/proyector.glb"></a-asset-item>
       <a-asset-item id="easterEgg" src="files/easter_egg.glb"></a-asset-item>
 
       <!-- fuentes-->
@@ -105,6 +109,9 @@
 
     <a-entity id="sceneContainer" scene-manager></a-entity>
     
+    <!-- suelo-->
+     <a-box id="suelo" mixin="static-mixin" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10"
+    visible="false" ammo-shape="type: box"></a-box>
     
 
   
