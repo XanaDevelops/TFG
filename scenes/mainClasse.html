@@ -8,28 +8,31 @@
 
 
 
-<a-entity id="projector" class="collidable"shadow="cast: false" gltf-model="#proyector" mixin="static-mixin">
+<a-entity id="projector" shadow="receive: true; cast: false" class="collidable"shadow="cast: false" gltf-model="#proyector" mixin="static-mixin">
     <a-light id="lightAlzada"
     mixin="luz-proyector"
-    light="shadowCameraTop: 0.37; shadowCameraLeft: -0.67; shadowCameraFar: 1.43; shadowCameraBottom: -0.74; shadowCameraRight: 0.45"
-    target="#lightGuideAlzada"
-    position="0 1.39718 0.82345">
+    light="; penumbra: 0; decay: 0; distance: 2.3"
+    target=""
+    orthographic-shadow-camera
+    position="0 1.39718 0.95">
         <a-entity id="lightGuideAlzada" position="0 0 -1.19078"></a-entity>
     </a-light>
 
-    <a-light id="lightPlanta"
+    <a-light id="lightPlanta" rotation="0 -90 0"
     mixin="luz-proyector"
-    light="shadowCameraTop: 0.37; shadowCameraLeft: -0.67; shadowCameraFar: 1.43; shadowCameraBottom: -0.74; shadowCameraRight: 0.45"
-    target="#lightGuidePlanta"
-    position="-0.69116 1.39718 0.0384">
+    light="; distance: 2.3"
+    target=""
+    orthographic-shadow-camera
+    position="-0.95 1.397 0">
         <a-entity id="lightGuidePlanta" position="0.56307 -0.02988 0"></a-entity>
     </a-light>
     
-    <a-light id="lightPerfil"
+    <a-light id="lightPerfil" rotation="90 0 0"
     mixin="luz-proyector"
-    light="shadowCameraTop: 0.37; shadowCameraLeft: -0.67; shadowCameraFar: 1.43; shadowCameraBottom: -0.74; shadowCameraRight: 0.45"
-    target="#lightGuidePerfil"
-    position="0 0.40038 0.0248">
+    light="; distance: 3"
+    target=""
+    orthographic-shadow-camera
+    position="0 0.15166 0">
         <a-entity id="lightGuidePerfil" position="0 0.66462 0"></a-entity>
     </a-light>
 </a-entity>

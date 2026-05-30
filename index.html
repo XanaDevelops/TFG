@@ -24,6 +24,8 @@
 
   <script src="./js/scene-manajer.js"></script>
 
+  <script src="./js/orthographic-shadow-camera.js"></script>
+
   <script src="./js/my-grab.js"></script>
   <script src="./js/no-grav.js"></script>
   <script src="./js/hand-event-log.js"></script>
@@ -64,7 +66,7 @@
     <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider no-grav></a-mixin>
 
     <a-mixin id="luz-proyector"
-      light="type: directional; castShadow: true; angle: 11.14; shadowCameraVisible: true; shadowRadius: 1">
+      light="type: spot; castShadow: true; angle: 15; shadowCameraVisible: true; shadowRadius: 1">
     </a-mixin>
 
     <!-- Mixin para death barriers -->

@@ -262,3 +262,6 @@ Se ha mejorado el proyector, las sombras raras se han eliminado (shade flat) y s
 Se ha creado una escena nueva para probar de forma aislada estos cambios, aunque queda por hacer ajustes.
 
 
+## 30/05
+Se ha mejorado las luces del proyector, ahora usa luces "spot" focales.
+Las luces ambientales de la escena interfieren en la fuerza de las sombras, investigar.
