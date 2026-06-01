@@ -265,3 +265,9 @@ Se ha creado una escena nueva para probar de forma aislada estos cambios, aunque
 ## 30/05
 Se ha mejorado las luces del proyector, ahora usa luces "spot" focales.
 Las luces ambientales de la escena interfieren en la fuerza de las sombras, investigar.
+
+## 1/06
+Mejora en el modelado del proyector
+Se tiene que tener en cuenta la altura de la persona, si es muy alto no se alinea bien la altura para ver las 3 vistas
+
+Añadir muros de respawn (death-barrier) en todas las escenas
