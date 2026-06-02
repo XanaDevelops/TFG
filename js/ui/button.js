@@ -7,6 +7,7 @@ AFRAME.registerComponent('button', {
 
     init: function () {
       this.el.classList.add("collidable")
+      this._isPaused = false
 
       this.el.setAttribute("geometry", {
         primitive: "plane",
@@ -43,6 +44,11 @@ AFRAME.registerComponent('button', {
       }
 
       this.onClick = () => {
+        if (this._isPaused) {
+          console.warn("Button click ignored: scene is paused")
+          return
+        }
+
         if (this.data.changeScene != -1){
             AFRAME.changeScene(this.data.changeScene)
         }
@@ -55,6 +61,14 @@ AFRAME.registerComponent('button', {
 
     update: function () {
       // Do something when component's data is updated.
+    },
+
+    pause: function () {
+      this._isPaused = true
+    },
+
+    play: function () {
+      this._isPaused = false
     },
 
     remove: function () {
