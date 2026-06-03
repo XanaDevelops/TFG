@@ -27,6 +27,7 @@
   <script src="./js/orthographic-shadow-camera.js"></script>
 
   <script src="./js/my-grab.js"></script>
+  <script src="./js/interact-glow.js"></script>
   <script src="./js/no-grav.js"></script>
   <script src="./js/hand-event-log.js"></script>
   <script src="./js/death-barrier.js"></script>
@@ -60,7 +61,7 @@
     </a-mixin>
     <a-mixin id="grabbable-base" mixin="base-object"
       ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"
-      grab-fix grab-glow shadow>
+      grab-fix interact-glow shadow>
     </a-mixin>
     <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.01" obb-collider></a-mixin>
     <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider no-grav></a-mixin>
