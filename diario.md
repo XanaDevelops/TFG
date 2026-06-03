@@ -282,4 +282,10 @@ Nota, para usar {{ atributo }} en los templates hay que especificar "type: handl
 Nota2: usar templates impide usar aframe-watcher para guardar los cambios...
 
 ## 3/06
-Para los botones fisicos, se ha cambiado de grab-glow (dentro de my-grab) a interact-glow (en su propio archivo)
+Para los botones fisicos, se ha cambiado de grab-glow (dentro de my-grab) a interact-glow (en su propio archivo).
+
+Además, se ha arreglado un bug del doble click con el cursor, ya que ambas manos compartian los eventos click.
+Queda, respecto a esta parte:
+- añadir un suavizado si se pulsa el boton manualmente
+- acabar el resto de la funcionalidad del projector
+- si acaso fusionar ui/button y physic-button (a efectos practicos es casi lo mismo) (puede ser un whapper o algo)
