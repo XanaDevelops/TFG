@@ -280,3 +280,6 @@ Los botones es mejor tenerlo separado del modelo principal para que sea más fac
 
 Nota, para usar {{ atributo }} en los templates hay que especificar "type: handlebars" en el componente
 Nota2: usar templates impide usar aframe-watcher para guardar los cambios...
+
+## 3/06
+Para los botones fisicos, se ha cambiado de grab-glow (dentro de my-grab) a interact-glow (en su propio archivo)
