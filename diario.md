@@ -271,3 +271,12 @@ Mejora en el modelado del proyector
 Se tiene que tener en cuenta la altura de la persona, si es muy alto no se alinea bien la altura para ver las 3 vistas
 
 Añadir muros de respawn (death-barrier) en todas las escenas
+
+## 2/06
+Añadido el modelo de los diferentes botones del panel de control del proyector.
+Aun estos no tienen funcionalidad, a falta de ver como queda en VR.
+
+Los botones es mejor tenerlo separado del modelo principal para que sea más facil ajustar, colorear, e incluso animarlo, aunque desde el modelo se puede hacer (debería al menos) desde el inspector de aframe haria lo que con blender haría igualmente...
+
+Nota, para usar {{ atributo }} en los templates hay que especificar "type: handlebars" en el componente
+Nota2: usar templates impide usar aframe-watcher para guardar los cambios...

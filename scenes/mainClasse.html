@@ -7,33 +7,55 @@
 
 
 
-
+<!-- TODO: hacer template-->
 <a-entity id="projector" shadow="receive: true; cast: false" class="collidable"shadow="cast: false" gltf-model="#proyector" mixin="static-mixin">
+    <!-- panel control -->
+    <!-- TODO: hacer template del pack de botones-->
+    <a-entity id="panelControlProyector" position="-0.48482 0.90372 0.48492" rotation="0 45 51.5">
+        <a-entity id="selectorSombraA" position="0 0 -0.69645"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="A">
+        </a-entity>
+        <a-entity id="selectorSombraB" position="0 0 -0.29057"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="B">
+        </a-entity>
+        <a-entity id="selectorSombraC" position="0 0 0.11512"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="C">
+        </a-entity>
+
+        <a-entity id="botonesRot" position="0 -0.00562 0.4864">
+            <a-cylinder id="btnRotLeft" position="0.01651 0 -0.07965" scale="0.05 0.04 0.05"></a-cylinder>
+            <a-cylinder id="btnRotRight" position="0.0175 0 0.08292" scale="0.05 0.04 0.05"></a-cylinder>
+            <a-cylinder id="btnRotUp" position="0.11179 0 0" scale="0.05 0.04 0.05"></a-cylinder>
+            <a-cylinder id="btnRotDown" position="-0.07788 0 0" scale="0.05 0.04 0.05"></a-cylinder>
+        </a-entity>
+
+        <a-entity id="botonesPrincipal" position="0 0 0.74721">
+            <a-box id="btnValidar" position="0.11245 0 0.02095" scale="0.15 0.04 0.15"></a-box>
+            <a-box id="btnLuz" position="-0.04982 0 0.02145" scale="0.15 0.04 0.15"></a-box>
+        </a-entity>
+
+    </a-entity>
+
+    <!-- luces -->
     <a-light id="lightAlzada"
-    mixin="luz-proyector"
-    light="; penumbra: 0; decay: 0; distance: 2.3"
-    target=""
-    orthographic-shadow-camera
-    position="0 1.39718 0.95">
-        <a-entity id="lightGuideAlzada" position="0 0 -1.19078"></a-entity>
+        mixin="luz-proyector"
+        light="; penumbra: 0; decay: 0; distance: 2.3"
+        orthographic-shadow-camera
+        position="0 1.39718 0.95">
     </a-light>
 
     <a-light id="lightPlanta" rotation="0 -90 0"
-    mixin="luz-proyector"
-    light="; distance: 2.3"
-    target=""
-    orthographic-shadow-camera
-    position="-0.95 1.397 0">
-        <a-entity id="lightGuidePlanta" position="0.56307 -0.02988 0"></a-entity>
+        mixin="luz-proyector"
+        light="; distance: 2.3"
+        orthographic-shadow-camera
+        position="-0.95 1.397 0">
     </a-light>
     
     <a-light id="lightPerfil" rotation="90 0 0"
-    mixin="luz-proyector"
-    light="; distance: 3"
-    target=""
-    orthographic-shadow-camera
-    position="0 0.15166 0">
-        <a-entity id="lightGuidePerfil" position="0 0.66462 0"></a-entity>
+        mixin="luz-proyector"
+        light="; distance: 3"
+        orthographic-shadow-camera
+        position="0 0.15166 0">
     </a-light>
 </a-entity>
 
