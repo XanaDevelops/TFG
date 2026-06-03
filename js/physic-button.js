@@ -15,10 +15,14 @@ AFRAME.registerComponent('physic-button', {
         this._isPaused = false;
         this._pressedByHand = false;
         this._targetEl = null;
+        this._clickTimeout = null;
         this._baseScaleY = this.el.object3D.scale.y;
         this._clickScaleY = this._baseScaleY * 0.65;
 
         this.el.classList.add('collidable');
+        if (!this.el.hasAttribute('obb-collider')) {
+            this.el.setAttribute('obb-collider', '');
+        }
         this._applyMaterial();
         this._applyTextOrIcon();
         this._resolveTarget();
@@ -38,7 +42,10 @@ AFRAME.registerComponent('physic-button', {
         };
 
         this.onClick = () => {
+            console.log("[physic-button]: clicked!");
+            
             if (!this._canInteractRay()) return;
+            this._flashPress();
             this._sendEvent();
         };
 
@@ -97,6 +104,11 @@ AFRAME.registerComponent('physic-button', {
         this.el.removeEventListener('click', this.onClick);
         this.el.removeEventListener('obbcollisionstarted', this.onObbStart);
         this.el.removeEventListener('obbcollisionended', this.onObbEnd);
+
+        if (this._clickTimeout) {
+            clearTimeout(this._clickTimeout);
+            this._clickTimeout = null;
+        }
 
         if (this._iconEl && this._iconEl.parentNode) {
             this._iconEl.parentNode.removeChild(this._iconEl);
@@ -170,7 +182,8 @@ AFRAME.registerComponent('physic-button', {
 
     _sendEvent: function () {
         if (!this.data.event) return;
-
+        console.log("[physic-button]: send event");
+        
         var detail = null;
         if (this.data.args) {
             try {
@@ -203,6 +216,18 @@ AFRAME.registerComponent('physic-button', {
     _restoreScale: function () {
         if (this._baseScaleY === undefined || this._baseScaleY === null) return;
         this.el.object3D.scale.y = this._baseScaleY;
+    },
+
+    _flashPress: function () {
+        if (!this.data.enabled || this._isPaused) return;
+        this._setPressed(true);
+        this._applyClickScale();
+        if (this._clickTimeout) clearTimeout(this._clickTimeout);
+        this._clickTimeout = setTimeout(() => {
+            this._setPressed(false);
+            this._restoreScale();
+            this._clickTimeout = null;
+        }, 120);
     },
 
     _canInteractRay: function () {

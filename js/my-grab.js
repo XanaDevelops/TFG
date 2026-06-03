@@ -56,7 +56,6 @@ AFRAME.registerComponent('my-grab', {
         
         //por teclado, y el .collidable
         // el orden importa!
-        this.el.setAttribute('cursor', {rayOrigin: 'entity'})
         this.el.setAttribute('raycaster', { objects: '.grabbable,.collidable', showLine: true, direction: "0 -1 0" });
         this.el.setAttribute('line', { color: 'white' });
         
@@ -81,10 +80,15 @@ AFRAME.registerComponent('my-grab', {
         };
         this.el.addEventListener('hitend', this._onHitEnd);
         
+        this._rayHoverEl = null;
         this._onRayIntersection = (e) => {
-            if (!this._cfg.allowRayGrab) return;
             const hitEl = e.detail.els[0];
-            if (!this.targetEl_ray && !this.grabbedEl) {
+            if (hitEl && hitEl !== this._rayHoverEl) {
+                if (this._rayHoverEl) this._rayHoverEl.emit('mouseleave', { cursorEl: this.el }, false);
+                this._rayHoverEl = hitEl;
+                this._rayHoverEl.emit('mouseenter', { cursorEl: this.el }, false);
+            }
+            if (this._cfg.allowRayGrab && !this.targetEl_ray && !this.grabbedEl) {
                 if (!hitEl.classList.contains("grabbable"))
                     return
                 this.targetEl_ray = hitEl;
@@ -100,6 +104,10 @@ AFRAME.registerComponent('my-grab', {
             //if (this.targetEl === hitEl) {
 
             //}
+            if (this._rayHoverEl) {
+                this._rayHoverEl.emit('mouseleave', { cursorEl: this.el }, false);
+            }
+            this._rayHoverEl = null;
             this.targetEl_ray = null;
             console.log(`[my-grab:${this.el.id}] RAY: targetEl -> NULL`);
         };
@@ -131,6 +139,9 @@ AFRAME.registerComponent('my-grab', {
         //this.el.addEventListener('triggerup', onRelease);
 
         this._onTriggerDown = () => {
+            if (this._rayHoverEl) {
+                this._rayHoverEl.emit('click', { cursorEl: this.el }, false);
+            }
             if (!this._cfg.allowRayTrack) return;
             if (this.grabbedEl) {
 
@@ -223,6 +234,7 @@ AFRAME.registerComponent('my-grab', {
         this._onHitEnd = null;
         this._onRayIntersection = null;
         this._onRayIntersectionCleared = null;
+        this._rayHoverEl = null;
         this._onGripDown = null;
         this._onGripUp = null;
         this._onTriggerDown = null;
