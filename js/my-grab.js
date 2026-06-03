@@ -209,9 +209,6 @@ AFRAME.registerComponent('my-grab', {
             this.el.removeEventListener('body-loaded', this._onBodyLoaded);
             this._onBodyLoaded = null;
         }
-    },
-
-    remove: function () {
         if (this.grabbedEl && this.activeConstraintId) {
             this.delConstraint();
         }
