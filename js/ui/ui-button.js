@@ -1,6 +1,6 @@
-AFRAME.registerComponent('button', {
+AFRAME.registerComponent('ui-button', {
     schema: {
-        text: {type: "string", default: "button"},
+        text: {type: "string", default: "ui-button"},
         size: {type: "vec2", default: {x: 1, y: 0.5}},
         changeScene: {type: "int", default: -1}
     },
@@ -45,7 +45,7 @@ AFRAME.registerComponent('button', {
 
       this.onClick = () => {
         if (this._isPaused) {
-          console.warn("Button click ignored: scene is paused")
+          console.warn("ui-button click ignored: scene is paused")
           return
         }
 
