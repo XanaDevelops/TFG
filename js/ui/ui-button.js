@@ -6,8 +6,7 @@ AFRAME.registerComponent('ui-button', {
     },
 
     init: function () {
-      this.el.classList.add("collidable")
-      this._isPaused = false
+
 
       this.el.setAttribute("geometry", {
         primitive: "plane",
