@@ -110,8 +110,10 @@
       <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>
     </a-assets>
 
+    <!-- JUGADOR-->
     <a-entity template="src: templates/player.html"></a-entity>
 
+    <!-- ESCENA ACTIVA -->
     <a-entity id="sceneContainer" scene-manager></a-entity>
     
     <!-- suelo-->
@@ -119,6 +121,27 @@
     visible="false" ammo-shape="type: box"></a-box>
     
 
+    <!-- paredes limite -->
+    <a-entity id="globalDeathBarriers" position="0 0 0">
+    <!-- Suelo -->
+    <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -70 0" rotation="-90 0 0" width="140"
+        height="140" depth="20"></a-box>
+    <!-- Techo -->
+    <a-box id="topDeathBarrier" mixin="death-barrier-mixin" position="0 70 0" rotation="90 0 0" width="140" height="140"
+        depth="20"></a-box>
+    <!-- Pared trasera (z positiva) -->
+    <a-box id="backDeathBarrier" mixin="death-barrier-mixin" position="0 0 70" rotation="0 0 0" width="140" height="140"
+        depth="20"></a-box>
+    <!-- Pared delantera (z negativa) -->
+    <a-box id="frontDeathBarrier" mixin="death-barrier-mixin" position="0 0 -70" rotation="0 180 0" width="140"
+        height="140" depth="20"></a-box>
+    <!-- Pared izquierda (x negativa) -->
+    <a-box id="leftDeathBarrier" mixin="death-barrier-mixin" position="-70 0 0" rotation="0 90 0" width="140"
+        height="140" depth="20"></a-box>
+    <!-- Pared derecha (x positiva) -->
+    <a-box id="rightDeathBarrier" mixin="death-barrier-mixin" position="70 0 0" rotation="0 -90 0" width="140"
+        height="140" depth="20"></a-box>
+</a-entity>
   
   </a-scene>
 
