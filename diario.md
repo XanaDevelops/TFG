@@ -289,3 +289,8 @@ Queda, respecto a esta parte:
 - añadir un suavizado si se pulsa el boton manualmente
 - acabar el resto de la funcionalidad del projector
 - si acaso fusionar ui/button y physic-button (a efectos practicos es casi lo mismo) (puede ser un whapper o algo)
+
+
+## 05/06
+Se ha refactorizado parte del codigo a base-button, del physic-button se tiene que mover más cosas, pero buneo, ya se hará.
+Un error que crasheaba el motor se ha resuelto haciendo que el mixin static-base este en un hijo de #projector con el modelo 3D, así la generación dinamica de textos o cosas varias no molesta

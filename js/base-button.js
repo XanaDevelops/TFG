@@ -33,7 +33,10 @@ AFRAME.registerComponent('base-button', {
       this.data.clickAction()
     }
 
-    if (this.data.text && this.data.text !== '') {
+    console.log(this.data.text);
+    console.log(this.data.text.length)
+    
+    if (this.data.text && this.data.text.length > 0) {
       console.log("texto")
       var textEl = document.createElement('a-entity');
       textEl.setAttribute("text", {
