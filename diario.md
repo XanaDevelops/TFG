@@ -294,3 +294,5 @@ Queda, respecto a esta parte:
 ## 05/06
 Se ha refactorizado parte del codigo a base-button, del physic-button se tiene que mover más cosas, pero buneo, ya se hará.
 Un error que crasheaba el motor se ha resuelto haciendo que el mixin static-base este en un hijo de #projector con el modelo 3D, así la generación dinamica de textos o cosas varias no molesta
+
+Por otro lado, se ha probado la funcionalidad de iconos, estos deberian tener en cuenta el tamaño del objeto para posicionarse fuera, ademas de tener en cuenta sistema de coornedadas local.

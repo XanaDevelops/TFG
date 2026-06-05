@@ -138,14 +138,14 @@ AFRAME.registerComponent('physic-button', {
             color: this.data.primaryColor,
             transparent: false
         });
-        
+        /*
         if (!this.data.text && this.data.icon) {
             this.el.setAttribute('material', {
                 color: this.data.primaryColor,
                 src: this.data.icon,
                 transparent: true
             });
-        }
+        }*/
     },
 
 

@@ -56,7 +56,10 @@ AFRAME.registerComponent('base-button', {
       console.log("created icon");
 
       var iconEl = document.createElement('a-plane');
-      iconEl.setAttribute('position', '0 0 0.001');
+      iconEl.setAttribute('position', '0 0.55 0');
+      iconEl.setAttribute('height', 1.0)
+      iconEl.setAttribute('width', 1.0)
+      iconEl.setAttribute('rotation', '-90 -90 0')
       iconEl.setAttribute('material', {
         src: this.data.icon,
         transparent: true
