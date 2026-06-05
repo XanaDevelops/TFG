@@ -1,12 +1,13 @@
 AFRAME.registerComponent('ui-button', {
     schema: {
         text: {type: "string", default: "ui-button"},
+        icon: { type: 'string', default: '' },
         size: {type: "vec2", default: {x: 1, y: 0.5}},
         changeScene: {type: "int", default: -1}
     },
 
     init: function () {
-
+      this._isPaused = false
 
       this.el.setAttribute("geometry", {
         primitive: "plane",
@@ -23,39 +24,23 @@ AFRAME.registerComponent('ui-button', {
         transparent: true
       })
 
-      this.el.setAttribute("text", {
-        value: this.data.text,
-        anchor: "center",
-        align: "center",
-        baseline: "center",
-        font: "fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json",
-        shader: "msdf",
-        negate: false,
-        width: 4,
-      })
+     
 
-      this.onMouseEnter = () => {
-        this.el.setAttribute("material", "color", this.hoverColor)
-      }
-
-      this.onMouseLeave = () => {
-        this.el.setAttribute("material", "color", this.baseColor)
-      }
 
       this.onClick = () => {
-        if (this._isPaused) {
-          console.warn("ui-button click ignored: scene is paused")
-          return
-        }
-
         if (this.data.changeScene != -1){
             AFRAME.changeScene(this.data.changeScene)
         }
       }
 
-      this.el.addEventListener("mouseenter", this.onMouseEnter)
-      this.el.addEventListener("mouseleave", this.onMouseLeave)
-      this.el.addEventListener("click", this.onClick)
+      this.el.setAttribute("base-button", {
+        enabled: this.data.enabled,
+        primaryColor: this.baseColor,
+        hoverColor: this.hoverColor,
+        pressedColor: this.hoverColor,
+        text: this.data.text,
+        clickAction: this.onClick
+      })
     },
 
     update: function () {
@@ -71,9 +56,7 @@ AFRAME.registerComponent('ui-button', {
     },
 
     remove: function () {
-      this.el.removeEventListener("mouseenter", this.onMouseEnter)
-      this.el.removeEventListener("mouseleave", this.onMouseLeave)
-      this.el.removeEventListener("click", this.onClick)
+      
     },
 
     tick: function (time, timeDelta) {

@@ -19,12 +19,8 @@ AFRAME.registerComponent('physic-button', {
         this._baseScaleY = this.el.object3D.scale.y;
         this._clickScaleY = this._baseScaleY * 0.65;
 
-        this.el.classList.add('collidable');
-        if (!this.el.hasAttribute('obb-collider')) {
-            this.el.setAttribute('obb-collider', '');
-        }
+
         this._applyMaterial();
-        this._applyTextOrIcon();
         this._resolveTarget();
 
         this.el.setAttribute('interact-glow', '');
@@ -43,7 +39,7 @@ AFRAME.registerComponent('physic-button', {
 
         this.onClick = () => {
             console.log("[physic-button]: clicked!");
-            
+
             if (!this._canInteractRay()) return;
             this._flashPress();
             this._sendEvent();
@@ -65,11 +61,33 @@ AFRAME.registerComponent('physic-button', {
             this._restoreScale();
         };
 
+        // Peta si no se hace así
+        setTimeout(() => {
+           this.el.setAttribute("base-button", {
+            enabled: this.data.enabled,
+            primaryColor: this.data.primaryColor,
+            pressedColor: this.data.pressedColor,
+            allowRay: this.data.allowRay,
+            text: this.data.text,
+            icon: this.data.icon,
+            clickAction: this.onClick
+        })
+        }, 0);
+
+        
+
+
+        if (!this.el.hasAttribute('obb-collider')) {
+            this.el.setAttribute('obb-collider', '');
+        }
+
+        //Pasar a base-button
         this.el.addEventListener('mousedown', this.onMouseDown);
         this.el.addEventListener('mouseup', this.onMouseUp);
-        this.el.addEventListener('click', this.onClick);
         this.el.addEventListener('obbcollisionstarted', this.onObbStart);
         this.el.addEventListener('obbcollisionended', this.onObbEnd);
+        console.log("ok");
+
     },
 
     update: function (oldData) {
@@ -77,10 +95,6 @@ AFRAME.registerComponent('physic-button', {
 
         if (oldData.primaryColor !== this.data.primaryColor || oldData.pressedColor !== this.data.pressedColor) {
             this._applyMaterial();
-        }
-
-        if (oldData.text !== this.data.text || oldData.icon !== this.data.icon) {
-            this._applyTextOrIcon(true);
         }
 
         if (oldData.target !== this.data.target) {
@@ -101,7 +115,6 @@ AFRAME.registerComponent('physic-button', {
     remove: function () {
         this.el.removeEventListener('mousedown', this.onMouseDown);
         this.el.removeEventListener('mouseup', this.onMouseUp);
-        this.el.removeEventListener('click', this.onClick);
         this.el.removeEventListener('obbcollisionstarted', this.onObbStart);
         this.el.removeEventListener('obbcollisionended', this.onObbEnd);
 
@@ -125,7 +138,7 @@ AFRAME.registerComponent('physic-button', {
             color: this.data.primaryColor,
             transparent: false
         });
-
+        
         if (!this.data.text && this.data.icon) {
             this.el.setAttribute('material', {
                 color: this.data.primaryColor,
@@ -135,36 +148,7 @@ AFRAME.registerComponent('physic-button', {
         }
     },
 
-    _applyTextOrIcon: function (reset) {
-        if (reset && this._iconEl && this._iconEl.parentNode) {
-            this._iconEl.parentNode.removeChild(this._iconEl);
-            this._iconEl = null;
-        }
 
-        if (this.data.text) {
-            this.el.setAttribute('text', {
-                value: this.data.text,
-                anchor: 'center',
-                align: 'center',
-                baseline: 'center',
-                font: 'fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json',
-                shader: 'msdf',
-                negate: false,
-                width: 4
-            });
-            return;
-        }
-
-        if (this.data.icon) {
-            this._iconEl = document.createElement('a-plane');
-            this._iconEl.setAttribute('position', '0 0 0.001');
-            this._iconEl.setAttribute('material', {
-                src: this.data.icon,
-                transparent: true
-            });
-            this.el.appendChild(this._iconEl);
-        }
-    },
 
     _resolveTarget: function () {
         if (!this.data.target) {
@@ -183,7 +167,7 @@ AFRAME.registerComponent('physic-button', {
     _sendEvent: function () {
         if (!this.data.event) return;
         console.log("[physic-button]: send event");
-        
+
         var detail = null;
         if (this.data.args) {
             try {
@@ -209,8 +193,10 @@ AFRAME.registerComponent('physic-button', {
     },
 
     _applyClickScale: function () {
+        
         if (this._clickScaleY === undefined || this._clickScaleY === null) return;
         this.el.object3D.scale.y = this._clickScaleY;
+    
     },
 
     _restoreScale: function () {
@@ -219,6 +205,7 @@ AFRAME.registerComponent('physic-button', {
     },
 
     _flashPress: function () {
+        
         if (!this.data.enabled || this._isPaused) return;
         this._setPressed(true);
         this._applyClickScale();

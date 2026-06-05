@@ -1,52 +1,87 @@
 AFRAME.registerComponent('base-button', {
-    schema: {
-        enabled: { type: 'boolean', default: true },
-        primaryColor: { type: 'color', default: 'blue' },
-        hoverColor:   { type: 'color', default: 'yellow'},
-        pressedColor: { type: 'color', default: 'green' },
-        allowRay: { type: 'boolean', default: true }
+  schema: {
+    enabled: { type: 'boolean', default: true },
+    primaryColor: { type: 'color', default: 'blue' },
+    hoverColor: { type: 'color', default: 'yellow' },
+    pressedColor: { type: 'color', default: 'green' },
+    allowRay: { type: 'boolean', default: true },
+    text: { type: "string", default: "base-button" },
+    icon: { type: 'string', default: '' },
+    clickAction: {}
+  },
 
-    },
+  init: function () {
+    console.log("bones");
 
-    init: function () {
-      this.el.classList.add("collidable")
-      this._isPaused = false
+    this.el.classList.add("collidable")
+    this._isPaused = false
 
-      this.onMouseEnter = () => {
-        this.el.setAttribute("material", "color", this.data.hoverColor)
+    this.onMouseEnter = () => {
+      this.el.setAttribute("material", "color", this.data.hoverColor)
+    }
+
+    this.onMouseLeave = () => {
+      this.el.setAttribute("material", "color", this.data.primaryColor)
+    }
+
+    this.onClick = () => {
+      if (this._isPaused) {
+        console.warn("ui-button click ignored: scene is paused")
+        return
       }
+      this.el.setAttribute("material", "color", this.data.pressedColor)
+      this.data.clickAction()
+    }
 
-      this.onMouseLeave = () => {
-        this.el.setAttribute("material", "color", this.data.primaryColor)
-      }
+    if (this.data.text && this.data.text !== '') {
+      console.log("texto")
+      var textEl = document.createElement('a-entity');
+      textEl.setAttribute("text", {
+        value: this.data.text,
+        anchor: "center",
+        align: "center",
+        baseline: "center",
+        font: "fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json",
+        shader: "msdf",
+        negate: false,
+        width: 4,
+      });
+      this.el.appendChild(textEl);
+    }
 
-      this.onClick = () => {
-        if (this._isPaused) {
-          console.warn("ui-button click ignored: scene is paused")
-          return
-        }
-        this.el.setAttribute("material", "color", this.data.pressedColor)
-      }
+    if (this.data.icon) {
+      console.log("created icon");
+
+      var iconEl = document.createElement('a-plane');
+      iconEl.setAttribute('position', '0 0 0.001');
+      iconEl.setAttribute('material', {
+        src: this.data.icon,
+        transparent: true
+      });
+      this.el.appendChild(iconEl);
+    }
+
+    //TODO: mousedown, mouseup
+    this.el.addEventListener("mouseenter", this.onMouseEnter)
+    this.el.addEventListener("mouseleave", this.onMouseLeave)
+    this.el.addEventListener("click", this.onClick)
+
+    console.log("dew");
 
 
-      this.el.addEventListener("mouseenter", this.onMouseEnter)
-      this.el.addEventListener("mouseleave", this.onMouseLeave)
-      this.el.addEventListener("click", this.onClick)
+  },
 
+  pause: function () {
+    this._isPaused = true
+  },
 
-      
-    },
-    pause: function () {
-      this._isPaused = true
-    },
+  play: function () {
+    this._isPaused = false
+  },
 
-    play: function () {
-      this._isPaused = false
-    },
-
-    remove: function () {
-      this.el.removeEventListener("mouseenter", this.onMouseEnter)
-      this.el.removeEventListener("mouseleave", this.onMouseLeave)
-      this.el.removeEventListener("click", this.onClick)
-    },
+  remove: function () {
+    this.el.removeEventListener("mouseenter", this.onMouseEnter)
+    this.el.removeEventListener("mouseleave", this.onMouseLeave)
+    this.el.removeEventListener("click", this.onClick)
+  },
 });
