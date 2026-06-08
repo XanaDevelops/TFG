@@ -21,6 +21,13 @@ AFRAME.registerComponent('shadow-selector', {
             "./img/icons/PLACEHOLDER_triangle.png"
         ]
 
+        //configurar display 
+        this.display = document.createElement('a-plane')
+        this.el.appendChild(this.display)
+        this.display.setAttribute('height', 1.0)
+        this.display.setAttribute('width', 0.65)
+        this.display.setAttribute('position', '0 0 0.0001');
+
         this.updateMaterial()
 
         this.moveDisplay = (e) => {
@@ -42,6 +49,9 @@ AFRAME.registerComponent('shadow-selector', {
 
     updateMaterial: function () {
         this.el.setAttribute('material', {
+            color: this.colors[this.data.id],
+        })
+        this.display.setAttribute('material', {
             color: this.colors[this.data.id],
             src: this.shadows[this.currentIndex],
             transparent: true

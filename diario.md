@@ -305,13 +305,18 @@ Mirar el bug ese del boton verde y un autoclick en modo escritorio y la no detec
 Más iconos y funcionalidad de encender y apagar la luz
 
 ## 8/6
-Los hex de los colores son 
-- alzada #E76B82FF
+Los hex de los colores son: (mantener orden en donde aplique!)
 - perfil #E7CF6FFF
 - planta #5DE761FF
+- alzada #E76B82FF
+
+Seguramente puede haber error si se tiene en cuenta el alfa (FF)
 
 Se han solucionado bugs y asperezas de los botones.
 
 Se ha implementado el selector de sobras, las imagenes aparecen rotadas y estiradas, habrá que usar otro plano por encima...
 
+Se ha implementado que el proyector lea las selecciones de los selectores, valga la redundancia.
+Tambien se ha creado otro plano para el icono
 
+Considerar pasar los iconos a svg (los definitivos)
