@@ -11,16 +11,26 @@ AFRAME.registerComponent('base-button', {
   },
 
   init: function () {
-
     this.el.classList.add("collidable")
     this._isPaused = false
+    this._isHovered = false
+    this._isPressed = false
+    this._pressTimeout = null
 
     this.onMouseEnter = () => {
-      this.el.setAttribute("material", "color", this.data.hoverColor)
+      this._isHovered = true
+      var isPressed = this._isPressed || (this.el.components['physic-button'] && (this.el.components['physic-button']._pressedByHand || this.el.components['physic-button']._clickTimeout));
+      if (!isPressed) {
+        this.el.setAttribute("material", "color", this.data.hoverColor)
+      }
     }
 
     this.onMouseLeave = () => {
-      this.el.setAttribute("material", "color", this.data.primaryColor)
+      this._isHovered = false
+      var isPressed = this._isPressed || (this.el.components['physic-button'] && (this.el.components['physic-button']._pressedByHand || this.el.components['physic-button']._clickTimeout));
+      if (!isPressed) {
+        this.el.setAttribute("material", "color", this.data.primaryColor)
+      }
     }
 
     this.onClick = () => {
@@ -28,8 +38,18 @@ AFRAME.registerComponent('base-button', {
         console.warn("ui-button click ignored: scene is paused")
         return
       }
+      this._isPressed = true
       this.el.setAttribute("material", "color", this.data.pressedColor)
       this.data.clickAction()
+      if (this._pressTimeout) clearTimeout(this._pressTimeout)
+      this._pressTimeout = setTimeout(() => {
+        this._isPressed = false
+        this._pressTimeout = null
+        var isPressed = this.el.components['physic-button'] && (this.el.components['physic-button']._pressedByHand || this.el.components['physic-button']._clickTimeout);
+        if (!isPressed) {
+          this.el.setAttribute("material", "color", this._isHovered ? this.data.hoverColor : this.data.primaryColor)
+        }
+      }, 120)
     }
     
     if (this.data.text && this.data.text.length > 0) {
@@ -49,9 +69,8 @@ AFRAME.registerComponent('base-button', {
 
     if (this.data.icon) {
       console.log("created icon");
-
-      var iconEl = document.createElement('a-plane'); //TODO: valorar insertar imagen en el material de la geometria principal
-      iconEl.setAttribute('position', '0 0.55 0'); //TODO: revisar con ui-button
+      var iconEl = document.createElement('a-plane');
+      iconEl.setAttribute('position', '0 0.55 0');
       iconEl.setAttribute('height', 1.0)
       iconEl.setAttribute('width', 1.0)
       iconEl.setAttribute('material', {
@@ -61,15 +80,18 @@ AFRAME.registerComponent('base-button', {
       this.el.appendChild(iconEl);
     }
 
-    //TODO: mousedown, mouseup
     this.el.addEventListener("mouseenter", this.onMouseEnter)
     this.el.addEventListener("mouseleave", this.onMouseLeave)
     this.el.addEventListener("click", this.onClick)
-
   },
 
   pause: function () {
     this._isPaused = true
+    if (this._pressTimeout) {
+      clearTimeout(this._pressTimeout)
+      this._pressTimeout = null
+      this._isPressed = false
+    }
   },
 
   play: function () {
@@ -80,5 +102,9 @@ AFRAME.registerComponent('base-button', {
     this.el.removeEventListener("mouseenter", this.onMouseEnter)
     this.el.removeEventListener("mouseleave", this.onMouseLeave)
     this.el.removeEventListener("click", this.onClick)
+    if (this._pressTimeout) {
+      clearTimeout(this._pressTimeout)
+      this._pressTimeout = null
+    }
   },
 });
