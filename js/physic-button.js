@@ -163,7 +163,7 @@ AFRAME.registerComponent('physic-button', {
 
     _sendEvent: function () {
         if (!this.data.event) return;
-        console.log("[physic-button]: send event");
+        console.log("[physic-button]: send event " + this.data.event);
 
         var detail = null;
         if (this.data.args) {

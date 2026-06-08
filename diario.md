@@ -300,4 +300,6 @@ Por otro lado, se ha probado la funcionalidad de iconos, estos deberian tener en
 ## 7/6
 Siguiendo con las refactorizaciones, se ha eliminado el codigo de imagen y texto para un physic-button, ya que, un boton de UI siempre es igual, pero un boton fisico puede tener una geometria variable (y el texto/icono te puede interesar tenerlo en otro lado...)
 
-Mirar el bug ese del boton verde
+Mirar el bug ese del boton verde y un autoclick en modo escritorio y la no detección entre ciertos botones
+
+Más iconos y funcionalidad de encender y apagar la luz

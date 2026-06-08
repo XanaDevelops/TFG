@@ -8,7 +8,7 @@
 
 
 <!-- TODO: hacer template-->
-<a-entity id="projector" shadow="receive: true; cast: false" class="collidable"shadow="cast: false">
+<a-entity id="projector" shadow="receive: true; cast: false" class="collidable" shadow="cast: false" projector-controller>
     <!-- panel control -->
     <a-entity id="modeloProyector" gltf-model="#proyector" mixin="static-mixin"></a-entity>
     <!-- TODO: hacer template del pack de botones-->
@@ -36,34 +36,40 @@
 
         <a-entity id="botonesPrincipal" position="0 0 0.74721">
             <a-box id="btnValidar" position="0.11245 0 0.02095" scale="0.15 0.04 0.15"
-                physic-button></a-box>
+                physic-button>
+                <a-image src="#icoValid" mixin="pbtn-icon"></a-image>
+            </a-box>
             <a-box id="btnLuz" position="-0.04982 0 0.02145" scale="0.15 0.04 0.15"
-                physic-button></a-box>
+                physic-button="target: projector; event: toggle-light">
+                <a-image src="#icoLight" mixin="pbtn-icon"></a-image>
+            </a-box>
         </a-entity>
 
     </a-entity>
 
     <!-- luces -->
-    <a-light id="lightAlzada"
-        mixin="luz-proyector"
-        light="; penumbra: 0; decay: 0; distance: 2.3"
-        orthographic-shadow-camera
-        position="0 1.39718 0.95">
-    </a-light>
+    <a-entity id="shadowLights">
+        <a-light id="lightAlzada"
+            mixin="luz-proyector"
+            light="; penumbra: 0; decay: 0; distance: 2.3"
+            orthographic-shadow-camera
+            position="0 1.39718 0.95">
+        </a-light>
 
-    <a-light id="lightPlanta" rotation="0 -90 0"
-        mixin="luz-proyector"
-        light="; distance: 2.3"
-        orthographic-shadow-camera
-        position="-0.95 1.397 0">
-    </a-light>
-    
-    <a-light id="lightPerfil" rotation="90 0 0"
-        mixin="luz-proyector"
-        light="; distance: 3"
-        orthographic-shadow-camera
-        position="0 0.15166 0">
-    </a-light>
+        <a-light id="lightPlanta" rotation="0 -90 0"
+            mixin="luz-proyector"
+            light="; distance: 2.3"
+            orthographic-shadow-camera
+            position="-0.95 1.397 0">
+        </a-light>
+        
+        <a-light id="lightPerfil" rotation="90 0 0"
+            mixin="luz-proyector"
+            light="; distance: 3"
+            orthographic-shadow-camera
+            position="0 0.15166 0">
+        </a-light>
+    </a-entity>
 </a-entity>
 
 <a-plane id="Techo" scale="4.74746 4.6153 1" rotation="90 179.9998479605043 179.9998479605043" position="0.05902 2.80259 0"></a-plane>

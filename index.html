@@ -11,7 +11,10 @@
     src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.4/dist/aframe-physics-system.min.js">
   </script>
 
+  <!-- lo pide template-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
   <script src="https://unpkg.com/aframe-template-component@latest/dist/aframe-template-component.min.js"></script>
+
   <script>
     delete AFRAME.components["grabbable"];
     delete AFRAME.components["sphere-collider"]
@@ -36,6 +39,7 @@
   <script src="./js/aframe/sphere-collider.js"></script>
   <script src="./js/keyboard-text.js"></script>
   <script src="./js/fps-text.js"></script>
+  <script src="./js/projector-controller.js"></script>
 
   <script src="./js/moving-platform.js"></script>
   <script src="./js/audio-fix.js"></script>
@@ -84,6 +88,9 @@
       ammo-shape="type: mesh">
     </a-mixin>
 
+    <!-- mixin para los iconos de los botones del proyector-->
+    <a-mixin id="pbtn-icon" position="0 0.51 0" rotation="-90 -90 0"></a-mixin>
+
     <a-assets>
       <!-- modelos -->
       <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
@@ -106,7 +113,11 @@
       <!-- imagenes -->
       <img id="imgTutoriel" src="./img/intrucciones mando pre.png" alt="instrucciones provisionales del mando" srcset="">
       <!-- iconos -->
-       <img id="icoLeft" src="./img/icons/PLACEHOLDER_left.png" alt="left" srcset="">
+       <img id="icoArrow" src="./img/icons/PLACEHOLDER_arrow.png" alt="arrow" srcset="">
+       <img id="icoValid" src="./img/icons/PLACEHOLDER_valid.png" alt="valid" srcset="">
+       <img id="icoLight" src="./img/icons/PLACEHOLDER_light.png" alt="light" srcset="">
+
+
       <!-- audios -->
       <audio id="sndEGG" src="./snd/rickroll hq.wav"></audio>
       <audio id="bgm01" src="./snd/019 Scarlet Forest.mp3"></audio>

@@ -11,7 +11,6 @@ AFRAME.registerComponent('base-button', {
   },
 
   init: function () {
-    console.log("bones");
 
     this.el.classList.add("collidable")
     this._isPaused = false
@@ -32,12 +31,8 @@ AFRAME.registerComponent('base-button', {
       this.el.setAttribute("material", "color", this.data.pressedColor)
       this.data.clickAction()
     }
-
-    console.log(this.data.text);
-    console.log(this.data.text.length)
     
     if (this.data.text && this.data.text.length > 0) {
-      console.log("texto")
       var textEl = document.createElement('a-entity');
       textEl.setAttribute("text", {
         value: this.data.text,
@@ -70,9 +65,6 @@ AFRAME.registerComponent('base-button', {
     this.el.addEventListener("mouseenter", this.onMouseEnter)
     this.el.addEventListener("mouseleave", this.onMouseLeave)
     this.el.addEventListener("click", this.onClick)
-
-    console.log("dew");
-
 
   },
 
