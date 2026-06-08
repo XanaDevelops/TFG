@@ -55,11 +55,10 @@ AFRAME.registerComponent('base-button', {
     if (this.data.icon) {
       console.log("created icon");
 
-      var iconEl = document.createElement('a-plane');
-      iconEl.setAttribute('position', '0 0.55 0');
+      var iconEl = document.createElement('a-plane'); //TODO: valorar insertar imagen en el material de la geometria principal
+      iconEl.setAttribute('position', '0 0.55 0'); //TODO: revisar con ui-button
       iconEl.setAttribute('height', 1.0)
       iconEl.setAttribute('width', 1.0)
-      iconEl.setAttribute('rotation', '-90 -90 0')
       iconEl.setAttribute('material', {
         src: this.data.icon,
         transparent: true

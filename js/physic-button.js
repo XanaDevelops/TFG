@@ -6,8 +6,6 @@ AFRAME.registerComponent('physic-button', {
         event: { type: 'string', default: '' },
         target: { type: 'string', default: '' },
         args: { type: 'string', default: '' },
-        text: { type: 'string', default: '' },
-        icon: { type: 'string', default: '' },
         allowRay: { type: 'boolean', default: true }
     },
 
@@ -68,8 +66,7 @@ AFRAME.registerComponent('physic-button', {
             primaryColor: this.data.primaryColor,
             pressedColor: this.data.pressedColor,
             allowRay: this.data.allowRay,
-            text: this.data.text,
-            icon: this.data.icon,
+            text: '', //evitar default
             clickAction: this.onClick
         })
         }, 0);
