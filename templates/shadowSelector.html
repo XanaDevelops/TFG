@@ -1,9 +1,9 @@
-<a-box id="btnPrev{{ id }}" position="0.01623 -0.015 -0.14055" scale="0.1 0.03 0.1" physic-button="event: placeholder;">
+<a-box id="btnPrev{{ id }}" position="0.01623 -0.015 -0.14055" scale="0.1 0.03 0.1" physic-button="target: btnShadow{{ id }}; event: move-shadow; args: -1">
     <a-image src="#icoArrow" mixin="pbtn-icon"></a-image>
 </a-box>
-<a-plane id="btnShadow{{ id }}" scale="0.25 0.15 1" position="0.0344 -0.02365 0" rotation="270 180 180">
+<a-plane id="btnShadow{{ id }}" scale="0.25 0.15 1" position="0.0344 -0.02365 0" rotation="270 180 180" shadow-selector="id: {{ index }}">
 
 </a-plane>
-<a-box id="btnNext{{ id }}" position="0.01776 -0.015 0.13786" scale="0.1 0.03 0.1" physic-button="event: placeholder">
+<a-box id="btnNext{{ id }}" position="0.01776 -0.015 0.13786" scale="0.1 0.03 0.1" physic-button="target: btnShadow{{ id }}; event: move-shadow; args: 1">
     <a-image src="#icoArrow" width="-1" mixin="pbtn-icon"></a-image>
 </a-box>

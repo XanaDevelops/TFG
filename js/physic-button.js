@@ -199,6 +199,7 @@ AFRAME.registerComponent('physic-button', {
             }
         }
 
+        // mirar de usar entity.emit()?
         var evt = new CustomEvent(this.data.event, {
             detail: detail,
             bubbles: true

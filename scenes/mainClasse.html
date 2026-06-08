@@ -12,15 +12,15 @@
     <!-- panel control -->
     <a-entity id="modeloProyector" gltf-model="#proyector" mixin="static-mixin"></a-entity>
     <!-- TODO: hacer template del pack de botones-->
-    <a-entity id="panelControlProyector" position="-0.48482 0.90372 0.48492" rotation="0 45 51.5">
-        <a-entity id="selectorSombraA" position="0 0 -0.69645"
-            template="src: templates/shadowSelector.html; type: handlebars" data-id="A">
+    <a-entity id="panelControlProyector" position="-0.486 0.905 0.486" rotation="0 45 50">
+        <a-entity id="selectorSombraPerfil" position="0 0 -0.69645"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="Perfil" data-index="1">
         </a-entity>
-        <a-entity id="selectorSombraB" position="0 0 -0.29057"
-            template="src: templates/shadowSelector.html; type: handlebars" data-id="B">
+        <a-entity id="selectorSombraPlanta" position="0 0 -0.29057"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="Planta" data-index="2">
         </a-entity>
-        <a-entity id="selectorSombraC" position="0 0 0.11512"
-            template="src: templates/shadowSelector.html; type: handlebars" data-id="C">
+        <a-entity id="selectorSombraAlzada" position="0 0 0.11512"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="Alzada" data-index="0">
         </a-entity>
 
         <a-entity id="botonesRot" position="0 -0.00562 0.4864">

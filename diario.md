@@ -303,3 +303,15 @@ Siguiendo con las refactorizaciones, se ha eliminado el codigo de imagen y texto
 Mirar el bug ese del boton verde y un autoclick en modo escritorio y la no detección entre ciertos botones
 
 Más iconos y funcionalidad de encender y apagar la luz
+
+## 8/6
+Los hex de los colores son 
+- alzada #E76B82FF
+- perfil #E7CF6FFF
+- planta #5DE761FF
+
+Se han solucionado bugs y asperezas de los botones.
+
+Se ha implementado el selector de sobras, las imagenes aparecen rotadas y estiradas, habrá que usar otro plano por encima...
+
+
