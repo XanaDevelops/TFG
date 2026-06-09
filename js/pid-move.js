@@ -5,7 +5,7 @@
 AFRAME.registerComponent('pid-move', {
   schema: {
     // Ganancia del “seguidor de trayectoria” (m/s por metro de error).
-    followStrength: { type: 'number', default: 3 },
+    followStrength: { type: 'number', default: 30 },
     // Clamp de velocidad total.
     maxLinearSpeed: { type: 'number', default: 8 },
     
@@ -47,6 +47,7 @@ AFRAME.registerComponent('pid-move', {
     this._btAngFactor = null;
 
     this._initializedTargets = false;
+    this._isBodyConfigured = false; // Flag para evitar doble configuración simultánea
 
     this._setInitialTargetsIfNeeded = () => {
       if (this._initializedTargets || !this.el.object3D) return;
@@ -57,6 +58,8 @@ AFRAME.registerComponent('pid-move', {
     };
 
     this._configureBody = () => {
+      if (this._isBodyConfigured) return; // Si ya se configuró, salimos inmediatamente
+
       const ammoBody = this.el.components && this.el.components['ammo-body'];
       const body = ammoBody && ammoBody.body;
       if (!body) return;
@@ -70,6 +73,7 @@ AFRAME.registerComponent('pid-move', {
           if (!this._btAngFactor) this._btAngFactor = new Ammo.btVector3(this.data.angularFactor.x, this.data.angularFactor.y, this.data.angularFactor.z);
         } catch (e) {
           // Si falla la creación, degradamos: no aplicaremos estas optimizaciones.
+          return;
         }
       }
 
@@ -82,6 +86,8 @@ AFRAME.registerComponent('pid-move', {
         if (this._btAngFactor && typeof body.setAngularFactor === 'function') body.setAngularFactor(this._btAngFactor);
         if (this._btZero && typeof body.setAngularVelocity === 'function') body.setAngularVelocity(this._btZero);
         if (typeof body.activate === 'function') body.activate(true);
+        
+        this._isBodyConfigured = true; // Marcamos como configurado exitosamente
       } catch (e) {
         // Silencioso
       }
@@ -94,12 +100,19 @@ AFRAME.registerComponent('pid-move', {
 
     this.el.addEventListener('body-loaded', this._onBodyLoaded);
     this._setInitialTargetsIfNeeded();
+
+    // Si el componente 'ammo-body' ya existe y su objeto físico interno está listo,
+    // intentamos configurarlo directamente protegiéndonos con la guarda interna.
+    const ammoBody = this.el.components && this.el.components['ammo-body'];
+    if (ammoBody && ammoBody.body) {
+      this._onBodyLoaded();
+    }
   },
 
   update: function (oldData) {
     const ammoBody = this.el.components && this.el.components['ammo-body'];
     const body = ammoBody && ammoBody.body;
-    if (!body) return;
+    if (!body || !this._isBodyConfigured) return;
 
     try {
       if (this._btLinFactor && typeof body.setLinearFactor === 'function') {
@@ -129,11 +142,12 @@ AFRAME.registerComponent('pid-move', {
     this._btZero = null;
     this._btLinFactor = null;
     this._btAngFactor = null;
+    this._isBodyConfigured = false;
   },
 
   tick: function (time, timeDelta) {
     this._setInitialTargetsIfNeeded();
-    if (!this._initializedTargets) return;
+    if (!this._initializedTargets || !this._isBodyConfigured) return;
 
     const ammoBody = this.el.components && this.el.components['ammo-body'];
     const body = ammoBody && ammoBody.body;
