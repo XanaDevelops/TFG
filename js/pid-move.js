@@ -5,7 +5,7 @@
 AFRAME.registerComponent('pid-move', {
   schema: {
     // Ganancia del “seguidor de trayectoria” (m/s por metro de error).
-    followStrength: { type: 'number', default: 30 },
+    followStrength: { type: 'number', default: 3 },
     // Clamp de velocidad total.
     maxLinearSpeed: { type: 'number', default: 8 },
     
