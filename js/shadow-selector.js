@@ -24,9 +24,10 @@ AFRAME.registerComponent('shadow-selector', {
         //configurar display 
         this.display = document.createElement('a-plane')
         this.el.appendChild(this.display)
-        this.display.setAttribute('height', 1.0)
-        this.display.setAttribute('width', 0.65)
+        this.display.setAttribute('height', 0.65)
+        this.display.setAttribute('width', 1.0)
         this.display.setAttribute('position', '0 0 0.0001');
+        this.display.setAttribute('rotation', "0 0 -90")
 
         this.updateMaterial()
 
