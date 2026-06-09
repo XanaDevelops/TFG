@@ -320,3 +320,8 @@ Se ha implementado que el proyector lea las selecciones de los selectores, valga
 Tambien se ha creado otro plano para el icono
 
 Considerar pasar los iconos a svg (los definitivos)
+
+
+## 9/6
+
+Se ha modificado la geometria del tap para que esté alineada con los ejes, lo que dentro de blender he tenido que transladar la geometria (modo edición) porque despues el ammo-body se desplazaba respecto a la geometria (ni idea de por que, pero bueno)
