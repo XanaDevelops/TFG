@@ -16,7 +16,10 @@ AFRAME.registerComponent('pid-move', {
 
     // Vectores para limitar los ejes de movimiento y rotación (por defecto permiten todos)
     linearFactor: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
-    angularFactor: { type: 'vec3', default: { x: 1, y: 1, z: 1 } }
+    angularFactor: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
+    surfaceFriction: { type: 'number', default: 0.75 },
+    // Max acceleration (m/s²) applied to linear velocity each tick.
+    maxAcceleration: { type: 'number', default: 20 }
   },
 
   init: function () {
@@ -29,14 +32,17 @@ AFRAME.registerComponent('pid-move', {
     this._pos = new THREE.Vector3();
     this._err = new THREE.Vector3();
     this._vel = new THREE.Vector3();
-    
+    this._prevVel = new THREE.Vector3();
+    this._dv = new THREE.Vector3();
+
     // Historial para calcular de forma autónoma la velocidad sin obstáculos
     this._lastTargetPosition = new THREE.Vector3();
     this._hasLastTarget = false;
-    
+
     // Vectores y cuaterniones auxiliares para la rotación
     this._angVel = new THREE.Vector3();
     this._qDiff = new THREE.Quaternion();
+    this._qInv = new THREE.Quaternion();
     this._axis = new THREE.Vector3();
 
     // btVector3 reutilizables
@@ -85,6 +91,8 @@ AFRAME.registerComponent('pid-move', {
         // Evitar rotaciones por impactos.
         if (this._btAngFactor && typeof body.setAngularFactor === 'function') body.setAngularFactor(this._btAngFactor);
         if (this._btZero && typeof body.setAngularVelocity === 'function') body.setAngularVelocity(this._btZero);
+        if (typeof body.setFriction === 'function') body.setFriction(this.data.surfaceFriction);
+        if (typeof body.setRestitution === 'function') body.setRestitution(0);
         if (typeof body.activate === 'function') body.activate(true);
         
         this._isBodyConfigured = true; // Marcamos como configurado exitosamente
@@ -123,6 +131,8 @@ AFRAME.registerComponent('pid-move', {
         this._btAngFactor.setValue(this.data.angularFactor.x, this.data.angularFactor.y, this.data.angularFactor.z);
         body.setAngularFactor(this._btAngFactor);
       }
+      if (typeof body.setFriction === 'function') body.setFriction(this.data.surfaceFriction);
+      if (typeof body.setRestitution === 'function') body.setRestitution(0);
     } catch (e) {
       // Silencioso
     }
@@ -185,9 +195,24 @@ AFRAME.registerComponent('pid-move', {
       if (len > maxV) this._vel.multiplyScalar(maxV / len);
     }
 
+    const maxAcc = this.data.maxAcceleration;
+    if (maxAcc > 0) {
+      // Límite de frenada: impide superar la velocidad desde la que podemos detenernos en la distancia restante (√2·a·d).
+      // Evita rebotes cuando la aceleración máxima es baja.
+      const brakingSpeed = Math.sqrt(2 * maxAcc * this._err.length());
+      const speed = this._vel.length();
+      if (speed > brakingSpeed) this._vel.multiplyScalar(brakingSpeed / speed);
+
+      // Clamp de aceleración: limita el cambio de velocidad por frame para arranques suaves.
+      const maxDelta = maxAcc * dt;
+      this._dv.subVectors(this._vel, this._prevVel);
+      if (this._dv.length() > maxDelta) this._vel.copy(this._prevVel).addScaledVector(this._dv.normalize(), maxDelta);
+    }
+    this._prevVel.copy(this._vel);
+
     // --- CÁLCULO DE VELOCIDAD ANGULAR ---
-    const qCurrent = this.el.object3D.quaternion;
-    this._qDiff.copy(this.targetRotation).multiply(qCurrent.clone().invert());
+    this._qInv.copy(this.el.object3D.quaternion).invert();
+    this._qDiff.copy(this.targetRotation).multiply(this._qInv);
     
     // Asegurar el camino más corto en la rotación esférica
     let qw = this._qDiff.w, qx = this._qDiff.x, qy = this._qDiff.y, qz = this._qDiff.z;
