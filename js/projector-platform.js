@@ -14,6 +14,7 @@ AFRAME.registerComponent('projector-platform', {
 
       this.isInRest = true
 
+      this.detectedEl = null
 
       this.el.setAttribute('rotation', {
         x: 0, y:0, z:0
@@ -26,6 +27,16 @@ AFRAME.registerComponent('projector-platform', {
         maxAcceleration: 0.2 * 10,
         surfaceFriction: 10000
       })
+
+
+      this.detector = document.createElement('a-cylinder')
+      this.el.appendChild(this.detector)
+      this.detector.id = "platDetector"
+      this.detector.setAttribute('scale', {x:1,  y: 8,  z: 1})
+      this.detector.setAttribute("position", {x: 0, y: 4.47833, z: 0})
+      this.detector.setAttribute("obb-collider", {})
+      this.detector.setAttribute('visible', false)
+      
 
       this.pid = this.el.components['pid-move']
       console.log(this.pid);
@@ -47,11 +58,40 @@ AFRAME.registerComponent('projector-platform', {
         this.rot.y += rotVal
         this.quaternion.setFromEuler(this.rot)
         this.pid.targetRotation.copy(this.quaternion)
-        
+      }
+
+      this.enterEnt = (e) => {
+        let hitEl = e.detail
+
+        if(!this.detectedEl){
+          this.detectedEl = hitEl
+        }
+        console.log("[platform]: entrado: ", hitEl);
+      }
+
+      this.exitEl = (e) => {
+        let hitEl = e.detail
+
+        console.log("[platform]: salir: ", hitEl);
+        if(this.detectedEl == hitEl){
+          this.detectedEl = null
+        }
       }
 
       this.el.addEventListener('toggle-position', this.togglePos)
       this.el.addEventListener('rotate-platform', this.rotate)
+
+      this.detector.addEventListener("obbcollisionstarted", this.enterEnt)
+      this.detector.addEventListener("obbcollisionended", this.exitEl)
+    },
+
+    // coloca en posicion al mover
+    recolocate: function () {
+        if(!this.detectedEl){
+          return
+        }
+
+        
     },
 
     update: function () {
@@ -61,6 +101,7 @@ AFRAME.registerComponent('projector-platform', {
     remove: function () {
       // Do something the component or its entity is detached.
       this.el.removeEventListener('toggle-position', this.togglePos)
+      this.el.removeEventListener('rotate-platform', this.rotate)
     },
 
     tick: function (time, timeDelta) {
