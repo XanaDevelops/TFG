@@ -9,7 +9,15 @@ AFRAME.registerComponent('projector-platform', {
       this.restPos = new THREE.Vector3(0, 1.20, 0)
       this.placePos = new THREE.Vector3(-1, 1.2, 0.5)
       
+      this.rot = new THREE.Euler(0, 0, 0, 'XYZ') //en radianes
+      this.quaternion = new THREE.Quaternion()
+
       this.isInRest = true
+
+
+      this.el.setAttribute('rotation', {
+        x: 0, y:0, z:0
+      })
 
       this.el.setAttribute('pid-move', {
         followStrength: 30, //compensar peso
@@ -33,7 +41,17 @@ AFRAME.registerComponent('projector-platform', {
         }
       }
 
+      this.rotate = (e) => {
+        let rotVal = THREE.MathUtils.degToRad(e.detail)
+        console.log("rot (radians): ", rotVal);
+        this.rot.y += rotVal
+        this.quaternion.setFromEuler(this.rot)
+        this.pid.targetRotation.copy(this.quaternion)
+        
+      }
+
       this.el.addEventListener('toggle-position', this.togglePos)
+      this.el.addEventListener('rotate-platform', this.rotate)
     },
 
     update: function () {

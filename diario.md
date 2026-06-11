@@ -331,3 +331,7 @@ Se ha modificado la geometria del tap para que esté alineada con los ejes, lo q
 Se ha acabado de implementar la funcionalidad basica de la plataforma (queda pulir sus posiciones y trayecto [capaz hacerlo por fases])
 
 Tambien se ha modificado el PID para añadir friccion, retribución (rebote) y aceleracción maxima.
+
+## 11/6
+
+Se ha añadido la funcionalidad de rotar la platadorma

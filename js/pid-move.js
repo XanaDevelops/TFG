@@ -12,7 +12,7 @@ AFRAME.registerComponent('pid-move', {
     // Ganancia del seguidor de rotación (rad/s por radián de error).
     followRotationStrength: { type: 'number', default: 3 },
     // Clamp de velocidad angular total.
-    maxAngularSpeed: { type: 'number', default: 8 },
+    maxAngularSpeed: { type: 'number', default: 6 },
 
     // Vectores para limitar los ejes de movimiento y rotación (por defecto permiten todos)
     linearFactor: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
