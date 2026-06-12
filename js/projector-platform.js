@@ -46,10 +46,12 @@ AFRAME.registerComponent('projector-platform', {
       console.log(this.isInRest)
       if (this.isInRest) {
         this.el.setAttribute('pid-move', {linearFactor: {x:0, y:0, z:0}})
-        this.recolocate().then(() => {
+        this.recolocate(this.placePos).then(() => {
           this.el.setAttribute('pid-move', {linearFactor: {x:1, y:1, z:1}})
 
           this.pid.targetPosition.copy(this.restPos)
+
+          this.el.addEventListener('pid-move-end', () => {this.recolocate(this.restPos)}, {once: true})
         })
       } else {
         this.pid.targetPosition.copy(this.placePos)
@@ -90,7 +92,7 @@ AFRAME.registerComponent('projector-platform', {
   },
 
   // coloca en posicion al mover
-  recolocate: function () {
+  recolocate: function (target) {
     return new Promise((resolve) => {
       if (!this.detectedEl) {
         resolve();
@@ -104,7 +106,7 @@ AFRAME.registerComponent('projector-platform', {
       const obbSize = new THREE.Vector3()
       this.detectedEl.components['obb-collider'].obb.getSize(obbSize)
 
-      const targetWorldPos = new THREE.Vector3(this.placePos.x, worldPos.y + (obbSize.y * 0.5) + 0, this.placePos.z)
+      const targetWorldPos = new THREE.Vector3(target.x, worldPos.y + (obbSize.y * 0.5 * 1) + 0.0, target.z)
       const targetLocalPos = targetWorldPos.clone();
       if (this.detectedEl.object3D.parent) {
         this.detectedEl.object3D.parent.worldToLocal(targetLocalPos);

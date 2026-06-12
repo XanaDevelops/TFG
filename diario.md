@@ -335,3 +335,12 @@ Tambien se ha modificado el PID para añadir friccion, retribución (rebote) y a
 ## 11/6
 
 Se ha añadido la funcionalidad de rotar la platadorma
+
+## 12/6
+
+Se ha añadido la funcionalidad de recolocar la figura sobre la plataforma.
+Se ha reutilizado el pid con modificaciones para añadir eventos de finalización y controlar la gravedad si se elimina el componente.
+
+Para la plataforma, se usan promesas para controlar la secuencia del movimiento y colocación del objeto.
+
+Mirar si hace falta salvaguardas si se coge el objeto o se "cae"
