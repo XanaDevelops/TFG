@@ -39,6 +39,9 @@ AFRAME.registerComponent('pid-move', {
     this._lastTargetPosition = new THREE.Vector3();
     this._hasLastTarget = false;
 
+    this._posEndFired = false;
+    this._rotEndFired = false;
+
     // Vectores y cuaterniones auxiliares para la rotación
     this._angVel = new THREE.Vector3();
     this._qDiff = new THREE.Quaternion();
@@ -153,12 +156,23 @@ AFRAME.registerComponent('pid-move', {
     this._btLinFactor = null;
     this._btAngFactor = null;
     this._isBodyConfigured = false;
+
+    if(!this.el.components['no-grav']){
+      const ammoBody = this.el.components['ammo-body'];
+      const body = ammoBody && ammoBody.body;
+      if (!body) return
+
+      const physicsSystem = this.el.sceneEl.systems.physics;
+      const worldGravity = physicsSystem.driver.physicsWorld.getGravity();
+      body.setGravity(worldGravity);
+    }
   },
 
   tick: function (time, timeDelta) {
     this._setInitialTargetsIfNeeded();
     if (!this._initializedTargets || !this._isBodyConfigured) return;
-
+    const data = this.data;
+    if (!data) return;
     const ammoBody = this.el.components && this.el.components['ammo-body'];
     const body = ammoBody && ammoBody.body;
     if (!body) return;
@@ -186,16 +200,26 @@ AFRAME.registerComponent('pid-move', {
 
     // Corrección hacia la trayectoria (control P en velocidad).
     this._err.copy(this.targetPosition).sub(this._pos);
-    this._vel.addScaledVector(this._err, this.data.followStrength);
+
+    if (this._err.length() < 0.05) {
+      if (!this._posEndFired) {
+        this._posEndFired = true;
+        this.el.emit('pid-move-end');
+      }
+    } else {
+      this._posEndFired = false;
+    }
+
+    this._vel.addScaledVector(this._err, data.followStrength);
 
     // Clamp total
-    const maxV = this.data.maxLinearSpeed;
+    const maxV = data.maxLinearSpeed;
     if (maxV > 0) {
       const len = this._vel.length();
       if (len > maxV) this._vel.multiplyScalar(maxV / len);
     }
 
-    const maxAcc = this.data.maxAcceleration;
+    const maxAcc = data.maxAcceleration;
     if (maxAcc > 0) {
       // Límite de frenada: impide superar la velocidad desde la que podemos detenernos en la distancia restante (√2·a·d).
       // Evita rebotes cuando la aceleración máxima es baja.
@@ -228,12 +252,21 @@ AFRAME.registerComponent('pid-move', {
       this._axis.set(0, 0, 0);
     }
 
+    if (angle < 0.02) {
+      if (!this._rotEndFired) {
+        this._rotEndFired = true;
+        this.el.emit('pid-rotate-end');
+      }
+    } else {
+      this._rotEndFired = false;
+    }
+
     // Corrección hacia la rotación objetivo (control P en velocidad angular) + feed-forward
     this._angVel.copy(this.targetAngularVelocity);
-    this._angVel.addScaledVector(this._axis, angle * this.data.followRotationStrength);
+    this._angVel.addScaledVector(this._axis, angle * data.followRotationStrength);
 
     // Clamp total de velocidad angular
-    const maxAngV = this.data.maxAngularSpeed;
+    const maxAngV = data.maxAngularSpeed;
     if (maxAngV > 0) {
       const lenAng = this._angVel.length();
       if (lenAng > maxAngV) this._angVel.multiplyScalar(maxAngV / lenAng);
