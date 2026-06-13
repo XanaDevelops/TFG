@@ -370,3 +370,12 @@ Mitja:
 
     Entra/Surt en camp de visió X objecte
     Vista central entra/surt X objecte
+
+
+## 13/06
+
+Implementando el LOGGER, este genera un JSON al pulsar F9 (al menos mientras hago pruebas)
+
+Se ha colocado las llamadas pertinentes en los diferentes scripts, a la espera de algunos TODOs que requieren las gafas para comprobarlo...
+
+nota: desacoplar base-button i physic-button

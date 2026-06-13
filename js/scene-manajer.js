@@ -18,6 +18,12 @@ AFRAME.registerComponent('scene-manager', {
     loadScene: function (index) {
         this.currentScene = index
         this.el.setAttribute("template", { "src": this.scenes[this.currentScene] })
+        LOGGER.logSceneChange(index)
+
+        // TODO: ESTO ES DE PRUEBA!!
+        if (index == 2) {
+            LOGGER.enterClass(index)
+        }
     },
 
     update: function () {

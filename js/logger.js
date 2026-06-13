@@ -235,9 +235,10 @@ AFRAME.registerSystem('logger', {
 
   /**
    * Registra que el jugador activó o desactivó las luces de la escena.
+   * @param {boolean} state - Estado actual
    */
-  logToggleLights() {
-    this._push(this._entry('TOGGLE_LIGHTS', {}));
+  logToggleLights(state) {
+    this._push(this._entry('TOGGLE_LIGHTS', {currentState: state}));
   },
 
   /**

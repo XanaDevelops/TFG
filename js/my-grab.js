@@ -119,6 +119,10 @@ AFRAME.registerComponent('my-grab', {
             if ((this.targetEl || this.targetEl_ray) && !this.grabbedEl) {
                 //grab
                 this.setConstraint()
+
+                LOGGER.logGrab(this.grabbedEl.id, this.el.id, 
+                    (this.targetEl_ray && !this.targetEl) ? true : false
+                )
             }
             if (!this.targetEl) {
                 //track
@@ -133,6 +137,8 @@ AFRAME.registerComponent('my-grab', {
             }
             if (this.grabbedEl && this.activeConstraintId) {
                 this.delConstraint()
+
+                LOGGER.logUngrab(this.grabbedEl.id, this.el.id)
             }
         };
         this.el.addEventListener('gripup', this._onGripUp);
@@ -150,6 +156,7 @@ AFRAME.registerComponent('my-grab', {
                 this.activeTrack = this.grabbedEl;
                 this.delConstraint();
 
+                LOGGER.logPull(this.grabbedEl.id, this.el.id)
                 console.log(`[my-grab:${this.el.id}]: grabbedEL tracked:`);
             }
         };

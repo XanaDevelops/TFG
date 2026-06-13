@@ -33,11 +33,15 @@ AFRAME.registerComponent('base-button', {
       }
     }
 
-    this.onClick = () => {
+    this.onClick = (e) => {
+      console.log(e);
+      
       if (this._isPaused) {
         console.warn("ui-button click ignored: scene is paused")
         return
       }
+      LOGGER.logBtnPress(this.el.id, e.detail.cursorEl.id || "mouse", true) //TODO: ray
+
       this._isPressed = true
       this.el.setAttribute("material", "color", this.data.pressedColor)
       this.data.clickAction()

@@ -17,12 +17,16 @@ AFRAME.registerComponent('projector-controller',{
 
         this.toggleLight = () =>{
             this.lights.setAttribute('visible', !this.lights.getAttribute('visible'))
+            LOGGER.logToggleLights(this.lights.getAttribute('visible'))
         }
 
         this.validate = () => {
             // por template recargar cada vez...
             this.loadFromTemplates()
             console.log(this.selectors);
+
+            //PLACEHOLDER
+            LOGGER.logValidation(true, true, true)
 
             
         }
