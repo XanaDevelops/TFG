@@ -344,3 +344,29 @@ Se ha reutilizado el pid con modificaciones para añadir eventos de finalizació
 Para la plataforma, se usan promesas para controlar la secuencia del movimiento y colocación del objeto.
 
 Mirar si hace falta salvaguardas si se coge el objeto o se "cae"
+
+Una propuesta de lo que registrar seria
+Accions a registrar:
+Trivial (tecnicamente ya se hace o se puede hacer muy facil):
+
+    Apunta a X objecte
+    Agafa (amb ma o raig) X objecte
+    Atreu X objecte
+    Amolla X objece
+    Pulsa X botó
+    Encen/Apaga llum
+    Selecciona X ombra per Y projecció
+    Valida ombres (amb resultat)
+    Canvi de escena
+
+Facil:
+
+    Rota X en tdelta en Y eix Z objecte
+    Desplaça X tdelta en Y eix Z objecte
+    Fa (o intenta) pasar X objecte per Y forat
+
+
+Mitja:
+
+    Entra/Surt en camp de visió X objecte
+    Vista central entra/surt X objecte
