@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
   <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.6.1/dist/aframe-extras.min.js"></script>
   <!-- <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script> -->
-   <script src="./js/aframe/aframe-environment-component.js"></script>
+  <script src="./js/aframe/aframe-environment-component.js"></script>
 
   <script src="https://cdn.jsdelivr.net/gh/MozillaReality/ammo.js@8bbc0ea/builds/ammo.wasm.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.4/dist/aframe-physics-system.min.js">
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.4/dist/aframe-physics-system.min.js">
   </script>
 
   <!-- lo pide template-->
@@ -21,7 +22,9 @@
   </script>
 
   <!-- sistemas -->
-   <script src="./js/player-config.js"></script>
+  <script src="./js/logger.js"></script>
+  <script src="./js/player-config.js"></script>
+
 
   <script src="./js/aframe/aframe-keyboard.min.js"></script>
 
@@ -59,36 +62,35 @@
 
 <body>
   <!-- Note To Self: si el rendimiento peta es aqui-->
-  <a-scene id="mainScene" stats environment="preset: contact; shadow: true; shadowSize:10; lightPosition: 0 10 1; seed:666; playArea:1"
+  <a-scene id="mainScene" stats
+    environment="preset: contact; shadow: true; shadowSize:10; lightPosition: 0 10 1; seed:666; playArea:1"
     renderer="highRefreshRate: true"
-    physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 40; maxSubSteps: 8" 
-    obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false"
-    online-scene shadow audio-fix>
+    physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 40; maxSubSteps: 8"
+    obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false" online-scene shadow audio-fix>
     <a-mixin id="base-object" shadow></a-mixin>
-    <a-mixin id="hand-mixin" mixin="base-object" ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
-      ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab > <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
+    <a-mixin id="hand-mixin" mixin="base-object"
+      ammo-body="type: kinematic; collisionFilterGroup: 2; collisionFilterMask: 2"
+      ammo-shape="type: sphere; fit: manual; sphereRadius: 0.01" my-grab>
+      <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
-    <a-mixin id="dyn-body" ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"></a-mixin>
-    <a-mixin id="grabbable-base" mixin="base-object, dyn-body"
-      grab-fix interact-glow shadow>
+    <a-mixin id="dyn-body"
+      ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"></a-mixin>
+    <a-mixin id="grabbable-base" mixin="base-object, dyn-body" grab-fix interact-glow shadow>
     </a-mixin>
     <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.01" obb-collider></a-mixin>
-    <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider no-grav></a-mixin>
+    <a-mixin id="grabbable-vhacd" mixin="grabbable-base" ammo-shape="type: hacd; margin: 0.01" obb-collider
+      no-grav></a-mixin>
 
     <a-mixin id="luz-proyector"
       light="type: spot; castShadow: true; angle: 15; shadowCameraVisible: false; shadowRadius: 1">
     </a-mixin>
 
     <!-- Mixin para death barriers -->
-    <a-mixin id="death-barrier-mixin" mixin="base-object"
-      visible="false"
+    <a-mixin id="death-barrier-mixin" mixin="base-object" visible="false"
       ammo-body="type: static; collisionFilterGroup: 3; collisionFilterMask: 3; emitCollisionEvents: true"
-      ammo-shape="type: box"
-      death-barrier>
+      ammo-shape="type: box" death-barrier>
     </a-mixin>
-    <a-mixin id="static-mixin" mixin="base-object"
-      ammo-body="type: static; restitution: 0.75"
-      ammo-shape="type: mesh">
+    <a-mixin id="static-mixin" mixin="base-object" ammo-body="type: static; restitution: 0.75" ammo-shape="type: mesh">
     </a-mixin>
 
     <!-- mixin para los iconos de los botones del proyector-->
@@ -114,11 +116,12 @@
       <img id="robotoAtlas" src="fonts/roboto/Roboto-VariableFontwdthwght.png" alt="roboto msdf atlas">
 
       <!-- imagenes -->
-      <img id="imgTutoriel" src="./img/intrucciones mando pre.png" alt="instrucciones provisionales del mando" srcset="">
+      <img id="imgTutoriel" src="./img/intrucciones mando pre.png" alt="instrucciones provisionales del mando"
+        srcset="">
       <!-- iconos -->
-       <img id="icoArrow" src="./img/icons/PLACEHOLDER_arrow.png" alt="arrow" srcset="">
-       <img id="icoValid" src="./img/icons/PLACEHOLDER_valid.png" alt="valid" srcset="">
-       <img id="icoLight" src="./img/icons/PLACEHOLDER_light.png" alt="light" srcset="">
+      <img id="icoArrow" src="./img/icons/PLACEHOLDER_arrow.png" alt="arrow" srcset="">
+      <img id="icoValid" src="./img/icons/PLACEHOLDER_valid.png" alt="valid" srcset="">
+      <img id="icoLight" src="./img/icons/PLACEHOLDER_light.png" alt="light" srcset="">
 
 
       <!-- audios -->
@@ -131,51 +134,54 @@
 
     <!-- ESCENA ACTIVA -->
     <a-entity id="sceneContainer" scene-manager></a-entity>
-    
+
     <!-- suelo-->
-     <a-box id="suelo" mixin="static-mixin" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10"
-    visible="false" ammo-shape="type: box"></a-box>
-    
+    <a-box id="suelo" mixin="static-mixin" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10"
+      visible="false" ammo-shape="type: box"></a-box>
+
 
     <!-- paredes limite -->
     <a-entity id="globalDeathBarriers" position="0 0 0">
-    <!-- Suelo -->
-    <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -70 0" rotation="-90 0 0" width="140"
+      <!-- Suelo -->
+      <a-box id="bottomDeathBarrier" mixin="death-barrier-mixin" position="0 -70 0" rotation="-90 0 0" width="140"
         height="140" depth="20"></a-box>
-    <!-- Techo -->
-    <a-box id="topDeathBarrier" mixin="death-barrier-mixin" position="0 70 0" rotation="90 0 0" width="140" height="140"
-        depth="20"></a-box>
-    <!-- Pared trasera (z positiva) -->
-    <a-box id="backDeathBarrier" mixin="death-barrier-mixin" position="0 0 70" rotation="0 0 0" width="140" height="140"
-        depth="20"></a-box>
-    <!-- Pared delantera (z negativa) -->
-    <a-box id="frontDeathBarrier" mixin="death-barrier-mixin" position="0 0 -70" rotation="0 180 0" width="140"
+      <!-- Techo -->
+      <a-box id="topDeathBarrier" mixin="death-barrier-mixin" position="0 70 0" rotation="90 0 0" width="140"
         height="140" depth="20"></a-box>
-    <!-- Pared izquierda (x negativa) -->
-    <a-box id="leftDeathBarrier" mixin="death-barrier-mixin" position="-70 0 0" rotation="0 90 0" width="140"
+      <!-- Pared trasera (z positiva) -->
+      <a-box id="backDeathBarrier" mixin="death-barrier-mixin" position="0 0 70" rotation="0 0 0" width="140"
         height="140" depth="20"></a-box>
-    <!-- Pared derecha (x positiva) -->
-    <a-box id="rightDeathBarrier" mixin="death-barrier-mixin" position="70 0 0" rotation="0 -90 0" width="140"
+      <!-- Pared delantera (z negativa) -->
+      <a-box id="frontDeathBarrier" mixin="death-barrier-mixin" position="0 0 -70" rotation="0 180 0" width="140"
         height="140" depth="20"></a-box>
-</a-entity>
-  
+      <!-- Pared izquierda (x negativa) -->
+      <a-box id="leftDeathBarrier" mixin="death-barrier-mixin" position="-70 0 0" rotation="0 90 0" width="140"
+        height="140" depth="20"></a-box>
+      <!-- Pared derecha (x positiva) -->
+      <a-box id="rightDeathBarrier" mixin="death-barrier-mixin" position="70 0 0" rotation="0 -90 0" width="140"
+        height="140" depth="20"></a-box>
+    </a-entity>
+
   </a-scene>
 
 
   <script>
-      function updateInput(e) {
-        e.preventDefault()
-        var code = parseInt(e.detail.code)
-        console.log(code);
-        var event = document.createEvent("HTMLEvents");
-        event.initEvent("a-keyboard-updater", true, true);
-        event.eventName = "a-keyboard-updater";
-        event.detail = e.detail
-        document.dispatchEvent(event);
-        
+    function updateInput(e) {
+      console.log(e);
+      
+      var code = parseInt(e.keyCode)
+      console.log(code);
+      if (code === 120) {
+        LOGGER.downloadJSON();
       }
-      //document.addEventListener('a-keyboard-update', updateInput)
-    </script>
+      /*var event = document.createEvent("HTMLEvents");
+      event.initEvent("a-keyboard-updater", true, true);
+      event.eventName = "a-keyboard-updater";
+      event.detail = e.detail
+      document.dispatchEvent(event);*/
+    }
+    document.addEventListener('keydown', updateInput, {passive : true})
+  </script>
 
   <script>
     (function () {
@@ -192,7 +198,7 @@
       el.addEventListener('body-loaded', applyFriction);
       applyFriction();
     })();
-  </script>  
+  </script>
 
   <script>
     (function () {
