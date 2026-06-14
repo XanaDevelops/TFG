@@ -38,8 +38,8 @@ AFRAME.registerComponent('shadow-selector', {
             if (this.currentIndex < 0) this.currentIndex += this.shadows.length
             if (this.currentIndex >= this.shadows.length) this.currentIndex = 0
             this.updateMaterial()
-            console.log(this.currentIndex);
 
+            LOGGER.logShadowSel(this.el.id, this.currentIndex)
         }
 
         this.el.addEventListener('move-shadow', this.moveDisplay)

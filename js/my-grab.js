@@ -84,14 +84,19 @@ AFRAME.registerComponent('my-grab', {
         this._onRayIntersection = (e) => {
             const hitEl = e.detail.els[0];
             if (hitEl && hitEl !== this._rayHoverEl) {
+                //necesario?
                 if (this._rayHoverEl) this._rayHoverEl.emit('mouseleave', { cursorEl: this.el }, false);
+                
                 this._rayHoverEl = hitEl;
                 this._rayHoverEl.emit('mouseenter', { cursorEl: this.el }, false);
+                LOGGER.logStartPoint(this._rayHoverEl.id, this.el.id)
             }
             if (this._cfg.allowRayGrab && !this.targetEl_ray && !this.grabbedEl) {
                 if (!hitEl.classList.contains("grabbable"))
                     return
                 this.targetEl_ray = hitEl;
+                LOGGER.logStartPoint(this.targetEl_ray.id, this.el.id)
+
                 console.log(`[my-grab:${this.el.id}] RAY: targetEl -> `, this.targetEl_ray.id);
             }
         };
@@ -106,6 +111,7 @@ AFRAME.registerComponent('my-grab', {
             //}
             if (this._rayHoverEl) {
                 this._rayHoverEl.emit('mouseleave', { cursorEl: this.el }, false);
+                LOGGER.logEndPoint(this._rayHoverEl.id, this.el.id)
             }
             this._rayHoverEl = null;
             this.targetEl_ray = null;

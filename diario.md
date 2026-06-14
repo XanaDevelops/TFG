@@ -376,6 +376,12 @@ Mitja:
 
 Implementando el LOGGER, este genera un JSON al pulsar F9 (al menos mientras hago pruebas)
 
-Se ha colocado las llamadas pertinentes en los diferentes scripts, a la espera de algunos TODOs que requieren las gafas para comprobarlo...
+Se ha colocado las llamadas pertinentes en los diferentes scripts, a la espera de algunos TODOs que requieren las gaJuan Miguel Ribera Puchadesfas para comprobarlo...
 
 nota: desacoplar base-button i physic-button
+
+## 14/06
+
+Se ha añadido más logs al LOGGER, además de avanzar en la memoria
+
+Hay un bug donde girar la plataforma hace que la figura superior se desalinee, investigar

@@ -224,6 +224,24 @@ AFRAME.registerSystem('logger', {
   },
 
   /**
+   * Registra que el jugador marcó un punto de inicio sobre un elemento.
+   * @param {string} idEl  — ID del elemento sobre el que se marca el punto
+   * @param {string} idHand — Mano usada ('left' | 'right')
+   */
+  logStartPoint(idEl, idHand) {
+    this._push(this._entry('START_POINT', { idEl, idHand }));
+  },
+
+  /**
+   * Registra que el jugador marcó un punto de fin sobre un elemento.
+   * @param {string} idEl  — ID del elemento sobre el que se marca el punto
+   * @param {string} idHand — Mano usada ('left' | 'right')
+   */
+  logEndPoint(idEl, idHand) {
+    this._push(this._entry('END_POINT', { idEl, idHand }));
+  },
+
+  /**
    * Registra la presión de un botón en la escena (y si se activó mediante rayo).
    * @param {string}  idBtn
    * @param {string}  idHand
@@ -247,7 +265,7 @@ AFRAME.registerSystem('logger', {
    * @param {number} idShadow — Índice numérico de la sombra elegida
    */
   logShadowSel(idSel, idShadow) {
-    this._push(this._entry('SHADOW_SEL', { idSel, idShadow: Number(idShadow) }));
+    this._push(this._entry('SHADOW_SEL', { idSel, idShadow }));
   },
 
   /**
@@ -270,7 +288,7 @@ AFRAME.registerSystem('logger', {
    * @param {number} idScene — Índice de la escena destino
    */
   logSceneChange(idScene) {
-    this._push(this._entry('SCENE_CHANGE', { idScene: Number(idScene) }));
+    this._push(this._entry('SCENE_CHANGE', { idScene }));
   },
 
   /**
