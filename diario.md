@@ -385,3 +385,8 @@ nota: desacoplar base-button i physic-button
 Se ha añadido más logs al LOGGER, además de avanzar en la memoria
 
 Hay un bug donde girar la plataforma hace que la figura superior se desalinee, investigar
+
+## 15/06
+
+Arreglado bugs al loggear, nulls y duplicidades en el registro.
+

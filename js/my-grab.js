@@ -83,22 +83,26 @@ AFRAME.registerComponent('my-grab', {
         this._rayHoverEl = null;
         this._onRayIntersection = (e) => {
             const hitEl = e.detail.els[0];
+            if (hitEl){
+                LOGGER.logStartPoint(hitEl.id, this.el.id)
+            }
             if (hitEl && hitEl !== this._rayHoverEl) {
                 //necesario?
                 if (this._rayHoverEl) this._rayHoverEl.emit('mouseleave', { cursorEl: this.el }, false);
                 
                 this._rayHoverEl = hitEl;
                 this._rayHoverEl.emit('mouseenter', { cursorEl: this.el }, false);
-                LOGGER.logStartPoint(this._rayHoverEl.id, this.el.id)
+                //LOGGER.logStartPoint(this._rayHoverEl.id, this.el.id)
             }
             if (this._cfg.allowRayGrab && !this.targetEl_ray && !this.grabbedEl) {
                 if (!hitEl.classList.contains("grabbable"))
                     return
                 this.targetEl_ray = hitEl;
-                LOGGER.logStartPoint(this.targetEl_ray.id, this.el.id)
 
                 console.log(`[my-grab:${this.el.id}] RAY: targetEl -> `, this.targetEl_ray.id);
             }
+
+            
         };
         this.el.addEventListener('raycaster-intersection', this._onRayIntersection);
 
@@ -142,9 +146,11 @@ AFRAME.registerComponent('my-grab', {
                 this.activeTrack = null;
             }
             if (this.grabbedEl && this.activeConstraintId) {
+                
+                LOGGER.logUngrab(this.grabbedEl.id, this.el.id)
                 this.delConstraint()
 
-                LOGGER.logUngrab(this.grabbedEl.id, this.el.id)
+                
             }
         };
         this.el.addEventListener('gripup', this._onGripUp);
@@ -162,7 +168,7 @@ AFRAME.registerComponent('my-grab', {
                 this.activeTrack = this.grabbedEl;
                 this.delConstraint();
 
-                LOGGER.logPull(this.grabbedEl.id, this.el.id)
+                LOGGER.logPull(this.activeTrack.id, this.el.id)
                 console.log(`[my-grab:${this.el.id}]: grabbedEL tracked:`);
             }
         };
