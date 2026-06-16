@@ -74,7 +74,7 @@
       <!-- la mayor chapuza del mundo, pero funciona (aparentemente)-->
     </a-mixin>
     <a-mixin id="dyn-body"
-      ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 1; activationState: disableDeactivation"></a-mixin>
+      ammo-body="type: dynamic; collisionFilterGroup: 1; collisionFilterMask: 65533; activationState: disableDeactivation"></a-mixin>
     <a-mixin id="grabbable-base" mixin="base-object, dyn-body" grab-fix interact-glow shadow>
     </a-mixin>
     <a-mixin id="grabbable-mixin" mixin="grabbable-base" ammo-shape="type: hull; margin: 0.01" obb-collider></a-mixin>
