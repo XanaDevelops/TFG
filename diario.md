@@ -390,3 +390,8 @@ Hay un bug donde girar la plataforma hace que la figura superior se desalinee, i
 
 Arreglado bugs al loggear, nulls y duplicidades en el registro.
 
+## 16/07
+
+Implementado en el portatil (Ubuntu) un modelo agente local (Qwen3-Coder-Next-UD-Q2_K_XL), lento, y no el mejor del mundo, pero puede ser util para refactorizaciones sencillas (y muy guiadas), a nivel de proyecto. Capaz pruebo otros modelos a ver si alguno rinde mejor, pero tampoco le quiero dedicar tanto tiempo, es más tener un plan B cuando se acaban el plan gratuito de las principales IAs, si es que es necesario usarlo.
+
+Por otro lado, se ha cambiado a usar constraints para la plataforma y el objeto que se encuentra sobre, además, ahora la plataforma y el proyector no colisionan entre sí, pero sí con el resto
