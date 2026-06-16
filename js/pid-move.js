@@ -12,7 +12,7 @@ AFRAME.registerComponent('pid-move', {
     // Ganancia del seguidor de rotación (rad/s por radián de error).
     followRotationStrength: { type: 'number', default: 3 },
     // Clamp de velocidad angular total.
-    maxAngularSpeed: { type: 'number', default: 6 },
+    maxAngularSpeed: { type: 'number', default: 7 },
 
     // Vectores para limitar los ejes de movimiento y rotación (por defecto permiten todos)
     linearFactor: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
@@ -201,7 +201,7 @@ AFRAME.registerComponent('pid-move', {
     // Corrección hacia la trayectoria (control P en velocidad).
     this._err.copy(this.targetPosition).sub(this._pos);
 
-    if (this._err.length() < 0.05) {
+    if (this._err.length() < 0.0005) {
       if (!this._posEndFired) {
         this._posEndFired = true;
         this.el.emit('pid-move-end');
@@ -252,7 +252,7 @@ AFRAME.registerComponent('pid-move', {
       this._axis.set(0, 0, 0);
     }
 
-    if (angle < 0.02) {
+    if (angle < 0.00002) {
       if (!this._rotEndFired) {
         this._rotEndFired = true;
         this.el.emit('pid-rotate-end');
