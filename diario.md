@@ -399,6 +399,7 @@ Por otro lado, se ha cambiado a usar constraints para la plataforma y el objeto 
 
 ## 17/06
 
-Revisar bug colisión plataforma
+Revisar bug colisión plataforma (solo windows/chrome??)
 
-Empezar a desarrollar el SQL y backend (PHP)
+Implementado un modelo SQL y un pequeño backend para controlar las figuras y sombras.
+Se tendria que dockerizar y implementar una persistencia de logs
