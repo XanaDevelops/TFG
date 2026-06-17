@@ -10,8 +10,8 @@
 <!-- TODO: hacer template-->
 <a-entity id="projector" shadow="receive: true; cast: false" class="collidable" shadow="cast: false" projector-controller>
     <!-- modelo projector -->
-    <a-entity id="modeloProyector" gltf-model="#proyector" mixin="static-mixin"
-        ammo-body="collisionFilterGroup: 4; collisionFilterMask: 65529">
+    <a-entity id="modeloProyector" gltf-model="#proyector" mixin="static-mixin" class="collidable"
+        ammo-body="collisionFilterGroup: 4; collisionFilterMask: 65531">
     </a-entity>
     <!-- TODO: hacer template del pack de botones-->
     <a-entity id="panelControlProyector" position="-0.486 0.905 0.486" rotation="0 45 50">
