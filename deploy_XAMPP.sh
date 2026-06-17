@@ -1,10 +1,10 @@
 #!/bin/sh
 
-SERVER_PATH="/var/www/html"
+SERVER_PATH="/opt/lampp/htdocs/"
 
-eval "$(ssh-agent -s)"
-echo "$SERVER_PATH"
-git pull
+#eval "$(ssh-agent -s)"
+#echo "$SERVER_PATH"
+#git pull
 
 sudo -S rsync -a --delete --mkpath \
 	--include='/img/***' \
