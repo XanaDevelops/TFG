@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: tfg-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: FIGURES
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./model/model.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./model/dades.sql:/docker-entrypoint-initdb.d/02-data.sql
+    networks:
+      - tfg-network
+
+networks:
+  tfg-network:
+    driver: bridge
