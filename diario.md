@@ -403,3 +403,11 @@ Revisar bug colisión plataforma (solo windows/chrome??)
 
 Implementado un modelo SQL y un pequeño backend para controlar las figuras y sombras.
 Se tendria que dockerizar y implementar una persistencia de logs
+
+## 18/6
+
+Se ha dockerizado el mysql, se ha añadido 2 endpoint nuevos:
+- uno para obtener las figuras por clase
+- y otro para guardar en el server los logs (no funciona)
+
+Arreglado un bug de codigo en deshuso que causaba una desconfiguración en las fisicas de la plataforma
