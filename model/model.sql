@@ -5,10 +5,16 @@ COLLATE utf8mb4_unicode_ci;
 USE FIGURES;
 
 CREATE TABLE OMBRA (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT PRIMARY KEY,
     meshID VARCHAR(16) NOT NULL,
     imgID VARCHAR(16) NOT NULL,
     nom VARCHAR(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE CLASSE (
+    id INT PRIMARY KEY,
+    nom VARCHAR(32) NOT NULL,
+    descripcio VARCHAR(100) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE FIGURA (
@@ -19,7 +25,17 @@ CREATE TABLE FIGURA (
     alzada INT NOT NULL,
     planta INT NOT NULL,
     perfil INT NOT NULL,
+    idClasse INT NOT NULL,
     CONSTRAINT fk_alzada FOREIGN KEY (alzada) REFERENCES OMBRA(id),
     CONSTRAINT fk_planta FOREIGN KEY (planta) REFERENCES OMBRA(id),
-    CONSTRAINT fk_perfil FOREIGN KEY (perfil) REFERENCES OMBRA(id)
+    CONSTRAINT fk_perfil FOREIGN KEY (perfil) REFERENCES OMBRA(id),
+    CONSTRAINT fk_classe FOREIGN KEY (idClasse) REFERENCES CLASSE(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE R_CLASSE_FIGURA (
+    idClasse INT NOT NULL,
+    idFigura INT NOT NULL,
+    PRIMARY KEY (idClasse, idFigura),
+    CONSTRAINT fk_r_classe_figura_classe FOREIGN KEY (idClasse) REFERENCES CLASSE(id),
+    CONSTRAINT fk_r_classe_figura_figura FOREIGN KEY (idFigura) REFERENCES FIGURA(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

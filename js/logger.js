@@ -16,7 +16,7 @@
  * }
  */
 
-var LOGGER 
+var LOGGER
 AFRAME.registerSystem('logger', {
 
   // ─── A-Frame lifecycle ─────────────────────────────────────────────────────
@@ -293,6 +293,7 @@ AFRAME.registerSystem('logger', {
 
   /**
    * Descarga el JSON de sesión completo como archivo .json mediante el diálogo del navegador.
+   * Además guarda el log en el servidor en la carpeta /logs.
    * El nombre incluye el usuario y la marca de tiempo de descarga.
    */
   downloadJSON() {
@@ -316,7 +317,36 @@ AFRAME.registerSystem('logger', {
     document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
 
+    // Guardar también en el servidor
+    this._saveToServer(filename, payload);
+
     console.log(`[LOGGER] Archivo descargado: ${filename}`);
+  },
+
+  /**
+   * Guarda el log en el servidor en la carpeta /logs mediante una llamada POST.
+   * @param {string} filename Nombre del archivo
+   * @param {string} content Contenido del archivo (JSON)
+   */
+  _saveToServer(filename, content) {
+    fetch('backend.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'saveLog',
+        filename: filename,
+        content: content
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('[LOGGER] Log guardado en servidor:', data);
+    })
+    .catch(error => {
+      console.error('[LOGGER] Error al guardar log en servidor:', error);
+    });
   },
 
 });
