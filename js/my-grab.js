@@ -24,6 +24,11 @@ AFRAME.registerComponent('my-grab', {
             type: 'lock'
         });
 
+        // Add log-spatial component to track the grabbed object's spatial info
+        if (!this.grabbedEl.components['log-spatial']) {
+          this.grabbedEl.setAttribute('log-spatial', {});
+        }
+
         console.log(`[my-grab:${this.id}] grab -> ${this.grabbedEl.id} ${this.activeConstraintId}`);
 
     },
@@ -32,6 +37,11 @@ AFRAME.registerComponent('my-grab', {
         if (!this.grabbedEl || !this.activeConstraintId) return;
 
         this.grabbedEl.removeAttribute(this.activeConstraintId);
+
+        // Remove log-spatial component when object is ungrabbed
+        if (this.grabbedEl.components['log-spatial']) {
+            this.grabbedEl.removeAttribute('log-spatial');
+        }
 
         // Restaurar el estado de activación normal para que pueda volver a dormir si cae al suelo
         if (this.grabbedEl.components['ammo-body']) {

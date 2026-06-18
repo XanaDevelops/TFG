@@ -90,14 +90,14 @@ AFRAME.registerSystem('logger', {
   },
 
   /**
-   * Lee posición de #player y rotación de #camera en el momento de la llamada.
+   * Lee posición de #player y rotación de #player en el momento de la llamada.
    * Si los elementos no están disponibles, devuelve null en cada campo.
    * @returns {{ position: Object|null, rotation: Object|null }}
    */
   _playerContext() {
     return {
       position: this._vec3(this._playerEl?.object3D?.position),
-      rotation: this._euler(this._cameraEl?.object3D?.rotation),
+      rotation: this._quaternion(this._playerEl?.object3D?.quaternion),
     };
   },
 
@@ -193,6 +193,31 @@ AFRAME.registerSystem('logger', {
     this._data.classes.push(classEntry);
     this._currentClass = classEntry;       // los _push() futuros irán aquí
     console.log(`[LOGGER] Clase '${idClass}' iniciada (total: ${this._data.classes.length}).`);
+  },
+
+  /**
+   * Registra la posición y rotación espacial de un elemento.
+   * @param {string} idEl    — ID del elemento
+   * @param {THREE.Vector3} position — Posición global del elemento
+   * @param {THREE.Quaternion} rotation — Rotación global del elemento (Quaternion)
+   */
+  logSpatialInfo(idEl, position, rotation) {
+    const serializedPosition = this._vec3(position);
+    const serializedRotation = this._quaternion(rotation);
+    this._push(this._entry('SPATIAL_INFO', { idEl, position: serializedPosition, rotation: serializedRotation }));
+  },
+
+  /**
+   * Serializa un THREE.Quaternion a objeto plano {x,y,z,w} redondeado a 4 decimales.
+   */
+  _quaternion(q) {
+    if (!q) return null;
+    return {
+      x: parseFloat(q.x.toFixed(4)),
+      y: parseFloat(q.y.toFixed(4)),
+      z: parseFloat(q.z.toFixed(4)),
+      w: parseFloat(q.w.toFixed(4)),
+    };
   },
 
   /**

@@ -109,6 +109,11 @@ AFRAME.registerComponent('projector-platform', {
       type: 'lock'
     });
 
+    // Add log-spatial component to track the constrained object's spatial info (delta mode)
+    if (!this.detectedEl.components['log-spatial']) {
+      this.detectedEl.setAttribute('log-spatial', { mode: 'delta' });
+    }
+
     console.log(`[projector-platform] setConstraint -> ${this.detectedEl.id} ${this.activeConstraintId}`);
 
     // Wake up the physics body to ensure it stays synchronized
@@ -123,6 +128,11 @@ AFRAME.registerComponent('projector-platform', {
 
     // Remove the constraint attribute from the detected object
     this.detectedEl.removeAttribute(this.activeConstraintId);
+
+    // Remove log-spatial component when object is freed
+    if (this.detectedEl.components['log-spatial']) {
+      this.detectedEl.removeAttribute('log-spatial');
+    }
 
     // Restore normal activation state
     if (this.detectedEl.components['ammo-body']) {
@@ -143,7 +153,6 @@ AFRAME.registerComponent('projector-platform', {
         return;
       }
       console.log("[projector-platform]: recolocating: ", this.detectedEl);
-      this.el.setAttribute('ammo-body', { collisionFilterGroup: 4, collisionFilterMask: 4 })
       const worldPos = new THREE.Vector3();
       this.detectedEl.object3D.getWorldPosition(worldPos);
 
@@ -176,8 +185,6 @@ AFRAME.registerComponent('projector-platform', {
 
       const ending = () => {
         this.detectedEl.removeAttribute('pid-move');
-        this.el.setAttribute('ammo-body', { collisionFilterGroup: 1, collisionFilterMask: 1 })
-
         // Set constraint to keep object attached to platform
         this.setConstraint();
 

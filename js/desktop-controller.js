@@ -26,6 +26,10 @@ AFRAME.registerComponent('desktop-controller', {
           this.prevAmmoType = ammo.data.type;
           this.grabbedEl.setAttribute('ammo-body', 'type', 'kinematic');
         }
+        // Add log-spatial component to track the grabbed object
+        if (this.grabbedEl && !this.grabbedEl.components['log-spatial']) {
+          this.grabbedEl.setAttribute('log-spatial', { mode: 'delta' });
+        }
       };
 
       this.onRaycasterIntersection = (e) => {
@@ -43,6 +47,10 @@ AFRAME.registerComponent('desktop-controller', {
         const ammo = this.grabbedEl.components['ammo-body'];
         if (ammo) {
           this.grabbedEl.setAttribute('ammo-body', 'type', this.prevAmmoType || 'dynamic');
+        }
+        // Remove log-spatial component when object is ungrabbed
+        if (this.grabbedEl.components['log-spatial']) {
+          this.grabbedEl.removeAttribute('log-spatial');
         }
         this.grabbedEl = null;
         this.prevAmmoType = null;
