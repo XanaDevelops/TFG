@@ -118,7 +118,7 @@ function getAllShadows() {
         return [];
     }
     
-    $stmt = $conn->prepare("SELECT meshID, imgID FROM OMBRA");
+    $stmt = $conn->prepare("SELECT nom, meshID, imgID FROM OMBRA");
     $stmt->execute();
     
     $result = $stmt->get_result();
@@ -128,6 +128,7 @@ function getAllShadows() {
         $index = 0;
         while ($row = $result->fetch_assoc()) {
             $shadows[$index] = [
+                'nom' => $row['nom'],
                 'meshID' => $row['meshID'],
                 'imgID' => $row['imgID']
             ];

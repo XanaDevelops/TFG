@@ -4,12 +4,12 @@ USE FIGURES;
 INSERT INTO OMBRA (id, meshID, imgID, nom) VALUES
 (0, 'foratCercle', 'shadowCircle', 'Cercle'),
 (1, 'foratQuadrat', 'shadowSquare', 'Quadrat'),
-(2, 'foratEquilater', 'shadowTriangle', 'Equilàter');
+(2, 'foratEquilater', 'shadowTriangle', 'Equilàter TROLL');
 
 -- Insert CLASSE records (0-indexed)
 INSERT INTO CLASSE (id, nom, descripcio) VALUES
 (0, 'Formes Bàsiques', 'Classes per a les formes geomètriques bàsiques'),
-(1, 'Figures Triformes', 'Classes per a figures combinades');
+(1, 'Figures Triformes', 'Classes per a figures combinades HOLA');
 
 -- Insert FIGURA triforma with references to the shadows
 INSERT INTO FIGURA (id, meshID, nom, descript, alzada, planta, perfil, idClasse) VALUES

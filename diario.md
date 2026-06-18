@@ -410,4 +410,6 @@ Se ha dockerizado el mysql, se ha añadido 2 endpoint nuevos:
 - uno para obtener las figuras por clase
 - y otro para guardar en el server los logs (no funciona)
 
-Arreglado un bug de codigo en deshuso que causaba una desconfiguración en las fisicas de la plataforma
+Arreglado un bug de codigo en deshuso que causaba una desconfiguración en las fisicas de la plataforma.
+
+Tambien corregido errores de forma (forzar UTF-8 y tamaños VARCHAR)
