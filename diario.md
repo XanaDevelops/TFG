@@ -413,3 +413,7 @@ Se ha dockerizado el mysql, se ha añadido 2 endpoint nuevos:
 Arreglado un bug de codigo en deshuso que causaba una desconfiguración en las fisicas de la plataforma.
 
 Tambien corregido errores de forma (forzar UTF-8 y tamaños VARCHAR)
+
+## 19/06
+
+Arreglado el bug que arreglé ayer para Windows, lo que tiene que ntfs no tenga permisos unix al pasar al docker y mysql ignore el archivo por ser demasiado permisivo...

@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   mysql:
-    image: mysql:8.0
+    build: ./mysql
     container_name: tfg-mysql
     restart: always
     environment:
@@ -11,7 +9,6 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql/charset.cnf:/etc/mysql/conf.d/charset.cnf:ro
       - ./model/model.sql:/docker-entrypoint-initdb.d/01-schema.sql
       - ./model/dades.sql:/docker-entrypoint-initdb.d/02-data.sql
     networks:

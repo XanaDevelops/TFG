@@ -240,7 +240,7 @@ function processRequest() {
     }
     
     // No valid parameter found
-    sendJsonResponse(['error' => 'Invalid request. Use ?figura=<meshID>, ?shadows, or ?figuresForClasse=<idClasse>'], 400);
+    sendJsonResponse(['error' => 'Invalid request. Use ?figura=<meshID>, ?shadows, or ?figuresForClasse=<idClasse> áéíóú'], 400);
 }
 
 // Process the request

@@ -4,7 +4,7 @@ USE FIGURES;
 INSERT INTO OMBRA (id, meshID, imgID, nom) VALUES
 (0, 'foratCercle', 'shadowCircle', 'Cercle'),
 (1, 'foratQuadrat', 'shadowSquare', 'Quadrat'),
-(2, 'foratEquilater', 'shadowTriangle', 'Equilàter TROLL');
+(2, 'foratEquilater', 'shadowTriangle', 'Equilàter');
 
 -- Insert CLASSE records (0-indexed)
 INSERT INTO CLASSE (id, nom, descripcio) VALUES
