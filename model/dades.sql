@@ -9,7 +9,7 @@ INSERT INTO OMBRA (id, meshID, imgID, nom) VALUES
 -- Insert CLASSE records (0-indexed)
 INSERT INTO CLASSE (id, nom, descripcio) VALUES
 (0, 'Formes Bàsiques', 'Classes per a les formes geomètriques bàsiques'),
-(1, 'Figures Triformes', 'Classes per a figures combinades HOLA');
+(1, 'Figures Triformes', 'Classes per a figures combinades');
 
 -- Insert FIGURA triforma with references to the shadows
 INSERT INTO FIGURA (id, meshID, nom, descript, alzada, planta, perfil, idClasse) VALUES
