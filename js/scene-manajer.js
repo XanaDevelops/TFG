@@ -38,12 +38,3 @@ AFRAME.registerComponent('scene-manager', {
         // Do something on every scene tick or frame.
     }
 });
-
-
-AFRAME.registerComponent("borrar", {
-    init: function () {
-        setTimeout(() => {
-            document.getElementById("sceneContainer").components["scene-manager"].loadScene(1)
-        }, 0);
-    }
-})

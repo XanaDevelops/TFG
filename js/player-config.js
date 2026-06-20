@@ -1,86 +1,73 @@
+// System that manages player configuration
 AFRAME.registerSystem('player-config', {
     schema: {
         
     },
 
     init: function () {
-      this.player = null;
+        this.player = null;
 
-      this.allowMovement = true;
-      this.allowGrab = true;
-      this.allowRayGrab = true;
-      this.allowRayTrack = true;
-      this.showAsHands = true;
-      this.spawnPos = { x: 0, y: 0, z: 0 };
-      this._pendingConfig = null;
-      this._onSceneLoaded = null;
-    
-        // Do something when component first attached.
+        this.allowMovement = true;
+        this.allowGrab = true;
+        this.allowRayGrab = true;
+        this.allowRayTrack = true;
+        this.showAsHands = true;
+        this.spawnPos = { x: 0, y: 0, z: 0 };
     },
 
-    pause: function () {
-      // Do something when component's data is updated.
-    },
-
-    play: function () {
-      // Do something the component or its entity is detached.
-    },
-
-    tick: function (time, timeDelta) {
-      // Do something on every scene tick or frame.
+    registerPlayer: function (el) {
+        this.player = el;
+        this._apply()
     },
 
     updatePlayerConfig: function (aMove, aGrab, aRGrab, aRtrack, aHands, spawnPos) {
-      if (!this.sceneEl.hasLoaded) {
-        this._pendingConfig = { aMove, aGrab, aRGrab, aRtrack, aHands, spawnPos };
-        if (!this._onSceneLoaded) {
-          this._onSceneLoaded = () => {
-            this.player = document.querySelector('#player');
-            if (this._pendingConfig) {
-              this._applyConfig(this._pendingConfig);
-              this._pendingConfig = null;
-            }
-          };
-          this.sceneEl.addEventListener('loaded', this._onSceneLoaded, { once: true });
-        }
-        return;
-      }
+        this.allowMovement = aMove;
+        this.allowGrab = aGrab;
+        this.allowRayGrab = aRGrab;
+        this.allowRayTrack = aRtrack;
+        this.showAsHands = aHands;
+        this.spawnPos = spawnPos;
+        console.log("[player-config]: updated");
 
-      this.player = document.querySelector('#player');
-      this._applyConfig({ aMove, aGrab, aRGrab, aRtrack, aHands, spawnPos });
+        this._apply()
+
+        
     },
 
-    _applyConfig: function (cfg) {
-      this.allowMovement = cfg.aMove;
-      this.allowGrab = cfg.aGrab;
-      this.allowRayGrab = cfg.aRGrab;
-      this.allowRayTrack = cfg.aRtrack;
-      this.showAsHands = cfg.aHands;
-      this.spawnPos = cfg.spawnPos;
+    _apply: function () {
+        if (this.player) {
+            this.player.setAttribute('movement-controls', 'enabled', this.allowMovement);
+            this.player.setAttribute('position', this.spawnPos);
 
-      this.player.setAttribute('movement-controls', 'enabled', cfg.aMove);
-      this.player.setAttribute('position', cfg.spawnPos);
+            console.log("[player-config]: applyied");
+
+        }
     }
-})
+});
 
-//Ajusta las capacidades del usuario al entrar en una escena
+// Component that adjusts user capabilities when entering a scene
 AFRAME.registerComponent('player-config', {
     schema: {
-        allowMovement :{type: "boolean", default: true},
-        allowGrab :{type: "boolean", default: true},
-        allowRayGrab :{type: "boolean", default: true},
-        allowRayTrack :{type: "boolean", default: true},
-        showAsHands :{type: "boolean", default: true}, //No implementado (por ahora)
-        spawnPos :{type: "vec3", default: {x: 0, y:0, z: 0}},
+        allowMovement: { type: 'boolean', default: true },
+        allowGrab: { type: 'boolean', default: true },
+        allowRayGrab: { type: 'boolean', default: true },
+        allowRayTrack: { type: 'boolean', default: true },
+        showAsHands: { type: 'boolean', default: true },
+        spawnPos: { type: 'vec3', default: { x: 0, y: 0, z: 0 } },
+        
+        registerMode: { type: 'boolean', default: false }
     },
 
     init: function () {
-      // Do something when component first attached.
-      this.update()
+        if (this.data.registerMode) {
+            this.system.registerPlayer(this.el);
+            console.log("[player-config]: registered");
+
+        }
+        this.update();
     },
 
     update: function () {
-      // Do something when component's data is updated.
         this.system.updatePlayerConfig(
             this.data.allowMovement,
             this.data.allowGrab,
@@ -89,14 +76,13 @@ AFRAME.registerComponent('player-config', {
             this.data.showAsHands,
             this.data.spawnPos
         );
-
     },
 
     remove: function () {
-      // Do something the component or its entity is detached.
+        // Do something the component or its entity is detached.
     },
 
     tick: function (time, timeDelta) {
-      // Do something on every scene tick or frame.
+        // Do something on every scene tick or frame.
     }
 });

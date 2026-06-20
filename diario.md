@@ -417,3 +417,15 @@ Tambien corregido errores de forma (forzar UTF-8 y tamaños VARCHAR)
 ## 19/06
 
 Arreglado el bug que arreglé ayer para Windows, lo que tiene que ntfs no tenga permisos unix al pasar al docker y mysql ignore el archivo por ser demasiado permisivo...
+
+player-config ahora está en conjunción con un sistema, se ha limpiado la forma de operar y obtener el elemento jugador.
+
+Por alguna razón hacer lo mismo con scene-manager petaba aframe silenciosamente.
+
+Dejado por hacer:
+- Acabar de configurar las clases en base al backend.
+- Realizar validación sombras.
+- Pasar a siguiente clase
+- Checkear logs JSON
+- Mirar objetos en campo visión.
+- Memoria....

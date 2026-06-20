@@ -1,20 +1,34 @@
+// System that reads data from backend at init
+AFRAME.registerSystem('shadow-selector', {
+    init: function () {
+        // Fetch all shadows from backend
+        fetch('./backend.php?shadows')
+            .then(response => response.json())
+            .then(shadows => {
+                console.log('All shadows from system:', shadows);
+                this.shadows = shadows;
+                console.log('Shadows loaded in system:', this.shadows);
+            })
+            .catch(error => {
+                console.error('Error fetching shadows:', error);
+            });
+    }
+});
+
+// Component that accesses the system for shadows
 AFRAME.registerComponent('shadow-selector', {
     schema: {
         id: { type: "int" }
     },
 
     init: function () {
-        // Fetch all shadows from backend
-        fetch('./backend.php?shadows')
-            .then(response => response.json())
-            .then(shadows => {
-                console.log('All shadows:', shadows);
-                this.shadows = shadows;
-                console.log('Shadows loaded:', this.shadows);
-            })
-            .catch(error => {
-                console.error('Error fetching shadows:', error);
-            });
+        // Get shadows from system (same name - direct access via this.system)
+        this.shadows = this.system.shadows || [
+            "",
+            "./img/icons/PLACEHOLDER_circle.png",
+            "./img/icons/PLACEHOLDER_square.png",
+            "./img/icons/PLACEHOLDER_triangle.png"
+        ];
 
         // por id
         this.colors = [
@@ -24,13 +38,6 @@ AFRAME.registerComponent('shadow-selector', {
         ]
 
         this.currentIndex = 0
-
-        this.shadows = [
-            "",
-            "./img/icons/PLACEHOLDER_circle.png",
-            "./img/icons/PLACEHOLDER_square.png",
-            "./img/icons/PLACEHOLDER_triangle.png"
-        ]
 
         //configurar display 
         this.display = document.createElement('a-plane')
