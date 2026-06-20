@@ -5,7 +5,6 @@ AFRAME.registerSystem('shadow-selector', {
         fetch('./backend.php?shadows')
             .then(response => response.json())
             .then(shadows => {
-                console.log('All shadows from system:', shadows);
                 this.shadows = shadows;
                 console.log('Shadows loaded in system:', this.shadows);
             })
@@ -22,14 +21,10 @@ AFRAME.registerComponent('shadow-selector', {
     },
 
     init: function () {
-        // Get shadows from system (same name - direct access via this.system)
-        this.shadows = this.system.shadows || [
-            "",
-            "./img/icons/PLACEHOLDER_circle.png",
-            "./img/icons/PLACEHOLDER_square.png",
-            "./img/icons/PLACEHOLDER_triangle.png"
-        ];
-
+        // Get only the imgIDs from system shadows (in order)
+        this.shadows = this.system.shadows.map(s => s.imgID)
+        console.log("COMPONENT: ", this.shadows);
+        
         // por id
         this.colors = [
             "#E76B82", //alzada

@@ -433,5 +433,16 @@ Dejado por hacer:
 
 ## 20/06
 
-Creado normas de agente
+Creado normas de agente (aunque no me haga especialente caso...)
 
+Se realiza la validación de figuras (en base a la db, hay que cambiar los paràmetros)
+Tambien se ha cambiado a un sistema scene-manager y se ha cimentado el cambio de clase.
+
+
+Dejado por hacer:
+- Acabar de configurar las clases en base al backend. (comprobar)
+- Realizar validación sombras. (ajustar valores)
+- Pasar a siguiente clase (comprobar)
+- Checkear logs JSON
+- Mirar objetos en campo visión.
+- Memoria.... (ayuda)
