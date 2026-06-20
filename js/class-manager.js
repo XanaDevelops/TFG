@@ -4,5 +4,8 @@ AFRAME.registerComponent('class-manager', {
         this.el.addEventListener('template-loaded', (e) => {
             console.log("loaded template", e.detail);
         });
+
+        console.log("class ID: ", this.el.sceneEl.systems['scene-manager'].activeClass);
+        
     }
 });

@@ -3,7 +3,8 @@ AFRAME.registerComponent('ui-button', {
         text: {type: "string", default: "ui-button"},
         icon: { type: 'string', default: '' },
         size: {type: "vec2", default: {x: 1, y: 0.5}},
-        changeScene: {type: "int", default: -1}
+        changeScene: {type: "int", default: -1},
+        changeClass: {type: "int", default: -1}
     },
 
     init: function () {
@@ -28,7 +29,10 @@ AFRAME.registerComponent('ui-button', {
 
 
       this.onClick = () => {
-        if (this.data.changeScene != -1){
+        if (this.data.changeClass != -1){
+            AFRAME.changeClass(this.data.changeClass)
+        }
+        else if (this.data.changeScene != -1){
             AFRAME.changeScene(this.data.changeScene)
         }
       }

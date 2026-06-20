@@ -70,7 +70,7 @@
     renderer="highRefreshRate: true"
     physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 40; maxSubSteps: 8"
     obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false" online-scene 
-    player-config
+    player-config scene-manager
     shadow audio-fix>
     <a-mixin id="base-object" shadow></a-mixin>
     <a-mixin id="hand-mixin" mixin="base-object"
@@ -143,7 +143,7 @@
     <a-entity template="src: templates/player.html"></a-entity>
 
     <!-- ESCENA ACTIVA -->
-    <a-entity id="sceneContainer" scene-manager></a-entity>
+    <a-entity id="sceneContainer"></a-entity>
 
     <!-- suelo-->
     <a-box id="suelo" mixin="static-mixin" position="0 -5 0" rotation="-90 0 0" width="100" height="100" depth="10"
@@ -253,12 +253,14 @@
       sceneEl.addEventListener('enter-vr', onEnterVr);
     })();
   </script>
-
+<!--
   <script>
     AFRAME.changeScene = function (index) {
       document.getElementById("sceneContainer").components["scene-manager"].loadScene(index)
     }
   </script>
+  -->
+
 </body>
 
 </html>

@@ -429,3 +429,9 @@ Dejado por hacer:
 - Checkear logs JSON
 - Mirar objetos en campo visión.
 - Memoria....
+
+
+## 20/06
+
+Creado normas de agente
+
