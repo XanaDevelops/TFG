@@ -189,6 +189,10 @@ AFRAME.registerComponent('projector-platform', {
         this.setConstraint();
 
         setTimeout(() => {
+          // Emit reset-detected-figure event
+          if (this.detectedEl) {
+            this.el.emit('reset-detected-figure')
+          }
           resolve()
         }, 1000)
       }

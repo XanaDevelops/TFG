@@ -437,7 +437,7 @@ Creado normas de agente (aunque no me haga especialente caso...)
 
 Se realiza la validación de figuras (en base a la db, hay que cambiar los paràmetros)
 Tambien se ha cambiado a un sistema scene-manager y se ha cimentado el cambio de clase.
-
+Además, ahora el material cambia al rotar la figura (revisar el contraint si se deshace y no se vuelve a hacer hasta sacar y entrar la figura)
 
 Dejado por hacer:
 - Acabar de configurar las clases en base al backend. (comprobar)

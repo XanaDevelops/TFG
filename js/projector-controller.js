@@ -8,11 +8,15 @@ AFRAME.registerComponent('projector-controller',{
         // Get projector mesh reference
         this.projectorMesh = document.getElementById("modeloProyector").object3D
         
+        // Array of material copies (index = original position)
+        this.materialCopies = []
+        
         // Platform rotation flag - toggles when platform is rotated (flips alzada/perfil)
         this.platformFlipped = false
         this.handlePlatformRotation = () => {
             this.platformFlipped = !this.platformFlipped
             console.log("[projector-controller] Platform flipped:", this.platformFlipped)
+            this.swapMaterials()
         }
 
         this.loadFromTemplates = () => {
@@ -111,43 +115,36 @@ AFRAME.registerComponent('projector-controller',{
         this.el.addEventListener('toggle-light', this.toggleLight)
         this.el.addEventListener('validate-shadows', this.validate)
         this.el.addEventListener('rotate-platform', this.handlePlatformRotation)
+        this.el.addEventListener('reset-detected-figure', () => {
+            console.log("[projector-controller] Reset detected figure - resetting projection swap")
+            this.platformFlipped = false
+            this.swapMaterials()
+        })
 
-        // Investigate projector mesh materials
-        this.logProjectorMaterials()
+        // Get projector mesh materials
+        this.el.addEventListener('model-loaded', () => {
+            this.getProjectorMaterials()
+        })
     },
 
     remove: function() {
         this.el.removeEventListener('rotate-platform', this.handlePlatformRotation)
+        this.el.removeEventListener('reset-detected-figure', () => {
+            console.log("[projector-controller] Reset detected figure - resetting projection swap")
+            this.platformFlipped = false
+        })
+        this.el.removeEventListener('model-loaded', () => {
+            this.getProjectorMaterials()
+        })
         this.projectorMesh = null
+        this.materialCopies = []
     },
 
     /**
-     * Logs the materials present in the projector mesh and demonstrates
-     * how to change materials dynamically.
-     * 
-     * In Three.js/GLTF models, each mesh can have materials:
-     * - Single material: mesh.material
-     * - Multiple materials: mesh.materials (array)
-     * 
-     * To change materials dynamically:
-     * ```javascript
-     * // Get the mesh
-     * const mesh = document.getElementById("modeloProyector").getObject3D('mesh')
-     * 
-     * // For meshes with materials array
-     * if (mesh.materials) {
-     *     mesh.materials[0] = newMaterial
-     * }
-     * // For meshes with single material
-     * else if (mesh.material) {
-     *     mesh.material = newMaterial
-     * }
-     * 
-     * // For GLTF models, materials are typically accessed via:
-     * // mesh.children[0].material (if it's a Group with children)
-     * // or mesh.materials[0] for the first material
+     * Accesses materials from mesh.children[0].children[0].children[i].material (for i 0..3)
+     * Stores copies for projection swapping
      */
-    logProjectorMaterials: function() {
+    getProjectorMaterials: function() {
         const mesh = this.projectorMesh
         
         if (!mesh) {
@@ -155,53 +152,64 @@ AFRAME.registerComponent('projector-controller',{
             return
         }
 
-        console.log("[projector-controller] Projector mesh structure:")
-        console.log("  Mesh type:", mesh.type)
-        console.log("  Mesh name:", mesh.name || "unnamed")
+        // Access materials from mesh.children[0].children[0].children[i].material (for i 0..3)
+        console.log("0", mesh);
+        console.log("1", mesh.children.length);
+        console.log("2", mesh.children[0].children.length);
+        console.log("3", mesh.children[0].children[0].children.length);
 
-        const materialsFound = []
-
-        // Traverse the mesh hierarchy to find all materials
-        mesh.traverse((node) => {
-            if (node.isMesh) {
-                console.log(`[projector-controller] Found mesh: ${node.name || "unnamed"}`)
-                
-                // Check for materials array (GLTF format)
-                if (node.materials && node.materials.length > 0) {
-                    node.materials.forEach((mat, idx) => {
-                        console.log(`  Material ${idx}:`, {
-                            name: mat.name || "unnamed",
-                            color: mat.color ? mat.color.toString() : "no color",
-                            type: mat.type,
-                            transparent: mat.transparent,
-                            opacity: mat.opacity
-                        })
-                        materialsFound.push({ mesh: node.name, material: mat })
-                    })
-                }
-                // Check for single material property
-                else if (node.material) {
-                    console.log(`  Material:`, {
-                        name: node.material.name || "unnamed",
-                        color: node.material.color ? node.material.color.toString() : "no color",
-                        type: node.material.type,
-                        transparent: node.material.transparent,
-                        opacity: node.material.opacity
-                    })
-                    materialsFound.push({ mesh: node.name, material: node.material })
+        
+        
+        if (mesh.children[0].children[0].children) {
+            const targetMesh = mesh.children[0].children[0]
+            
+            for (let i = 0; i < 4; i++) {
+                const childMesh = targetMesh.children[i]
+                if (childMesh.isMesh && childMesh.material) {
+                    console.log(`[projector-controller] Material ${i}: found ${childMesh.material.name || "unnamed"}`)
+                    
+                    // Create new material and copy original material info
+                    const newMaterial = new THREE.MeshStandardMaterial()
+                    newMaterial.copy(childMesh.material)
+                    
+                    this.materialCopies.push(newMaterial)
                 }
             }
-        })
+        } else{
+            console.warn("asdasdas");
+            
+        }
+    },
 
-        console.log(`[projector-controller] Total materials found: ${materialsFound.length}`)
-        
-        // Demonstrate how to change a material dynamically
-        console.log("[projector-controller] To change materials dynamically:")
-        console.log("  // Create new material")
-        console.log("  const newMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 })")
-        console.log("  // Apply to mesh (single material)")
-        console.log("  mesh.material = newMaterial")
-        console.log("  // Or for materials array")
-        console.log("  mesh.materials[0] = newMaterial")
+    /**
+     * Swaps materials 1 and 3 when projections are swapped (alzada ↔ perfil)
+     * Copies material from array to mesh materials
+     */
+    swapMaterials: function() {
+        if (this.materialCopies.length < 4) {
+            console.warn("[projector-controller] Not enough materials to swap")
+            return
+        }
+
+        const mesh = this.projectorMesh
+        if (!mesh || !mesh.children || !mesh.children[0] || !mesh.children[0].children || !mesh.children[0].children[0]) {
+            console.warn("[projector-controller] Mesh structure not found")
+            return
+        }
+
+        const targetMesh = mesh.children[0].children[0]
+
+        if (this.platformFlipped) {
+            // Platform flipped: swap material 1 (alzada) with material 3 (perfil)
+            console.log("[projector-controller] Swapping materials: alzada ↔ perfil")
+            targetMesh.children[1].material.copy(this.materialCopies[3])
+            targetMesh.children[3].material.copy(this.materialCopies[1])
+        } else {
+            // Platform not flipped: restore original materials
+            console.log("[projector-controller] Restoring original materials")
+            targetMesh.children[1].material.copy(this.materialCopies[1])
+            targetMesh.children[3].material.copy(this.materialCopies[3])
+        }
     }
+
 })

@@ -33,9 +33,7 @@ AFRAME.registerComponent('base-button', {
       }
     }
 
-    this.onClick = (e) => {
-      console.log(e);
-      
+    this.onClick = (e) => {      
       if (this._isPaused) {
         console.warn("ui-button click ignored: scene is paused")
         return
