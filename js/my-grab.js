@@ -73,6 +73,8 @@ AFRAME.registerComponent('my-grab', {
         this._onHit = (e) => {
             if (!this._cfg.allowGrab) return;
             const hitEl = e.detail.el;
+            if (!this.grabFilter(hitEl)) return
+
             if (!this.targetEl && !this.grabbedEl) {
                 this.targetEl = hitEl;
                 console.log(`[my-grab:${this.el.id}] targetEl -> `, this.targetEl.id);
@@ -83,6 +85,8 @@ AFRAME.registerComponent('my-grab', {
         this._onHitEnd = (e) => {
             if (!this._cfg.allowGrab) return;
             const hitEl = e.detail.el;
+            if(!this.grabFilter(hitEl)) return
+            
             if (this.targetEl === hitEl) {
                 this.targetEl = null;
                 console.log(`[my-grab:${this.el.id}] targetEl -> NULL`);
@@ -185,6 +189,10 @@ AFRAME.registerComponent('my-grab', {
         this.el.addEventListener('triggerdown', this._onTriggerDown);
 
 
+    },
+
+    grabFilter: function(hitEl){
+        return hitEl.classList.contains("grabbable")
     },
 
     manualAnim: function (timeDelta) {

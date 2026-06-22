@@ -446,3 +446,8 @@ Dejado por hacer:
 - Checkear logs JSON
 - Mirar objetos en campo visión.
 - Memoria.... (ayuda)
+
+
+## 22/06
+
+Arreglado bug filtro de agarre

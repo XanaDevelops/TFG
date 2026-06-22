@@ -74,6 +74,10 @@ AFRAME.registerComponent('projector-platform', {
     this.enterEnt = (e) => {
       let hitEl = e.detail && e.detail.withEl
 
+      //filtrar
+
+      if(this.filterEl(hitEl)) return
+
       if (!this.detectedEl) {
         this.detectedEl = hitEl
       }
@@ -82,6 +86,8 @@ AFRAME.registerComponent('projector-platform', {
 
     this.exitEl = (e) => {
       let hitEl = e.detail && e.detail.withEl
+
+      if(this.filterEl(hitEl)) return
 
       console.log("[platform]: salir: ", hitEl);
       if (this.detectedEl == hitEl) {
@@ -94,6 +100,11 @@ AFRAME.registerComponent('projector-platform', {
 
     this.detector.addEventListener("obbcollisionstarted", this.enterEnt)
     this.detector.addEventListener("obbcollisionended", this.exitEl)
+  },
+
+  // true si no se debe procesar
+  filterEl: function(hitEl) {
+    return hitEl.classList.contains("hand-collider")
   },
 
   // Create a constraint between the platform and the detected object
