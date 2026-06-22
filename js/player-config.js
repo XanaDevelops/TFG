@@ -39,7 +39,7 @@ AFRAME.registerSystem('player-config', {
             this.player.setAttribute('movement-controls', 'enabled', this.allowMovement);
             this.player.setAttribute('position', this.spawnPos);
 
-            console.log("[player-config]: applyied");
+            console.log("[player-config]: applyied", this.spawnPos);
 
         }
     }

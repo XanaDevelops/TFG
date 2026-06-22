@@ -69,7 +69,7 @@
   <a-scene id="mainScene" stats
     environment="preset: contact; shadow: true; shadowSize:10; lightPosition: 0 10 1; seed:666; playArea:1"
     renderer="highRefreshRate: true"
-    physics="driver: ammo; debug: false; debugDrawMode: 1; iterations: 40; maxSubSteps: 8"
+    physics="driver: ammo; debug: true; debugDrawMode: 1; iterations: 40; maxSubSteps: 8"
     obb-collider="showColliders: false" keyboard-shortcuts="enterVR: false" online-scene 
     player-config scene-manager
     shadow audio-fix>
@@ -103,9 +103,20 @@
     <a-mixin id="pbtn-icon" position="0 0.55 0" rotation="-90 -90 0"></a-mixin>
 
     <a-assets>
+      <!-- figuras (para evitar problemas de escala)-->
+      <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
+      <a-asset-item id="cube" src="files/cube.glb"></a-asset-item>
+      <a-asset-item id="sphere" src="files/sphere.glb"></a-asset-item>
+      <a-asset-item id="tetra" src="files/tetra.glb"></a-asset-item>
+      <a-asset-item id="piramid" src="files/piramid.glb"></a-asset-item>
+      <a-asset-item id="cone" src="files/cone.glb"></a-asset-item>
+      <a-asset-item id="prism" src="files/prism.glb"></a-asset-item>
+      <a-asset-item id="cylinder" src="files/cylinder.glb"></a-asset-item>
+      <a-asset-item id="plus" src="files/plus.glb"></a-asset-item>
+      <a-asset-item id="L" src="files/L.glb"></a-asset-item>
+
       <!-- modelos -->
       <a-asset-item id="reset" src="files/reset.glb"></a-asset-item>
-      <a-asset-item id="tap" src="files/tap.glb"></a-asset-item>
       <a-asset-item id="foratCercle" src="files/forat_cercle.glb"></a-asset-item>
       <a-asset-item id="foratEquilater" src="files/forat_equilater.glb"></a-asset-item>
       <a-asset-item id="foratIsosceles" src="files/forat_isosceles.glb"></a-asset-item>

@@ -451,3 +451,4 @@ Dejado por hacer:
 ## 22/06
 
 Arreglado bug filtro de agarre
+Creado modelos de figuras para las diferentes clases.
