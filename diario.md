@@ -452,3 +452,5 @@ Dejado por hacer:
 
 Arreglado bug filtro de agarre
 Creado modelos de figuras para las diferentes clases.
+
+Configurado DB

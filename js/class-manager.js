@@ -5,7 +5,24 @@ AFRAME.registerComponent('class-manager', {
             console.log("loaded template", e.detail);
         });
 
-        console.log("class ID: ", this.el.sceneEl.systems['scene-manager'].activeClass);
+        const classID = this.el.sceneEl.systems['scene-manager'].activeClass;
+        console.log("class ID: ", classID);
         
+        // Fetch figures for current class from backend
+        fetch(`backend.php?figuresForClasse=${classID}`)
+            .then(response => response.json())
+            .then(figures => {
+                console.log(`Figures for class ${classID}:`, figures);
+                
+                // Store figures data for use by other components
+                this.figures = figures;
+                
+                // Trigger a custom event when figures are loaded
+                this.el.emit('figures-loaded', { figures: figures, classID: classID });
+            })
+            .catch(error => {
+                console.error(`Error fetching figures for class ${classID}:`, error);
+                this.el.emit('figures-error', { error: error.message, classID: classID });
+            });
     }
 });
