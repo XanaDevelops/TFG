@@ -1,0 +1,27 @@
+<!-- Player entity configured for login scene (no movement, grab, or ray capabilities) -->
+<a-entity id="loginPlayer" position="0 0 0" player-config="allowMovement: false; allowGrab: false; allowRayGrab: false; allowRayTrack: false"></a-entity>
+
+<!-- Panel A: Contains keyboard -->
+<a-plane id="panelA" width="4" height="3.5" position="-1.96066 1.77713 -1.53698" rotation="0 15 0" material="color: #888888; opacity: 0.7; transparent: true">
+    <!-- Title text at top -->
+    <a-text id="panelATitle" text="value: Qui ets?; width: 6.13" position="0 1.43642 0" value="Teclado" align="center" width="3"></a-text>
+    
+    <!-- Keyboard input display (white panel with typed text) -->
+    <a-plane id="keyboardDisplayBg" width="2" height="0.8" position="0 0.87966 0.01233" material="color: #ffffff; opacity: 1"></a-plane>
+    <a-text id="textoTeclado" position="-0.60753 1.11229 0.01251" value="Escriu: " font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false" keyboard-text>
+        <a-entity id="loginKeyboard" position="-1.08922 -0.65931 0.052" scale="6 6 3" a-keyboard="font: fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json"></a-entity>
+    </a-text>
+
+</a-plane>
+
+<!-- Panel B: Contains buttons -->
+<a-plane id="panelB" geometry="height: 2; width: 2.5" width="2" height="3" position="1.21253 1.91924 -1.69709" rotation="0 -15 0" material="color: #888888; opacity: 0.7; transparent: true">
+        <!-- IZQ button -->
+    <a-entity id="btnIzq" position="-0.64131 0.17634 0.01" ui-button="text: IZQ;"></a-entity>
+    
+    <!-- DER button -->
+    <a-entity id="btnDer" position="0.56643 0.17965 0.01" ui-button="text: DER;"></a-entity>
+    
+    <!-- ENTRAR button -->
+    <a-entity id="btnEntrar" position="0 -0.4846 0.01" ui-button="text: ENTRAR; changeScene: 0"></a-entity>
+</a-entity>

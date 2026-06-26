@@ -10,8 +10,9 @@ AFRAME.registerSystem('scene-manager', {
             "scenes/mainScene.html",
             "scenes/mainClasse.html",
             "scenes/mainLoading.html",
+            "scenes/mainLogin.html",
         ]
-        this.currentScene = 0
+        this.currentScene = 4
         this.activeClass = -1
 
         this.sceneContainer = document.querySelector("#sceneContainer")
@@ -23,7 +24,10 @@ AFRAME.registerSystem('scene-manager', {
 
     loadScene: function (index) {
         this.currentScene = index
+        console.log("[scene-manager: loading: ", this.scenes[this.currentScene]);
         this.sceneContainer.setAttribute("template", { "src": this.scenes[this.currentScene] })
+        
+        
         LOGGER.logSceneChange(index)
 
         // TODO: ESTO ES DE PRUEBA!!
