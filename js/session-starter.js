@@ -1,24 +1,17 @@
 AFRAME.registerComponent('session-starter', {
     init: function () {
-        //this.el.addEventListener('loaded', () => {
-
-        
-        // Store references to toggle buttons and text component
         this.toggleBtnIzq = document.querySelector('#btnIzq')
         this.toggleBtnDer = document.querySelector('#btnDer')
         this.textEl = document.querySelector('#textoTecladoLogin')
 
-        // Store original clickAction
-        const originalClickAction = this.el.components['ui-button'].data.clickAction
-        
-        // Define our custom click handler
-        this.customClickAction = function() {         
-            // Read toggle button states and text
-            const isLHand = this.toggleBtnIzq.components['toggle-button'].isActive
-            const isRHand = this.toggleBtnDer.components['toggle-button'].isActive
-            const text = this.textEl.components['text'].data.value
+        var btnEntrar = document.querySelector('#btnEntrar')
+        var originalClickAction = btnEntrar.components['ui-button'].data.clickAction
 
-            // Register new user with LOGGER
+        this.customClickAction = function() {
+            var isLHand = this.toggleBtnIzq.components['toggle-button'].isActive
+            var isRHand = this.toggleBtnDer.components['toggle-button'].isActive
+            var text = this.textEl.components['text'].data.value
+
             LOGGER.loginUser(text, isLHand, isRHand)
             LOGGER.startSession()
             LOGGER.enterClass("-1")
@@ -28,8 +21,6 @@ AFRAME.registerComponent('session-starter', {
             }
         }
 
-        // Set the custom clickAction
-        this.el.components['base-button'].data.clickAction = this.customClickAction.bind(this)
-        //})
+        btnEntrar.components['ui-button'].clickAction = this.customClickAction.bind(this)
     }
 })

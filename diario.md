@@ -471,3 +471,5 @@ Cuidado con aframe-watcher y IDs duplicados entre diferentes escenas, afectará 
 ## 28/06
 
 Añadido toggle-button, mano dominante en logger y session-starter, que controla el "inicio" de sesion.
+
+Refactorizado el codigo de los botones, por ahora pulsar con desktop no funciona en los fisicos
