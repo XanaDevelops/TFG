@@ -141,8 +141,10 @@ AFRAME.registerSystem('logger', {
    * Crea (o reinicia) el JSON de sesión. Si no se provee username, usa "@XANA".
    * Debe llamarse antes que cualquier otro método.
    * @param {string} [username]
+   * @param {boolean} [isLHand=false]
+   * @param {boolean} [isRHand=false]
    */
-  loginUser(username) {
+  loginUser(username, isLHand = false, isRHand = false) {
     const resolved = username || '@XANA';
 
     if (!username) {
@@ -155,6 +157,8 @@ AFRAME.registerSystem('logger', {
       username    : resolved,
       loginTime   : this._now(),
       sessionStart: null,
+      isLHand     : isLHand,
+      isRHand     : isRHand,
       classes     : [],
     };
     console.log(`[LOGGER] Usuario '${resolved}' registrado. JSON de sesión creado.`);

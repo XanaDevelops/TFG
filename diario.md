@@ -466,3 +466,8 @@ Además, se ha implementado que el texto de un teclado filtre por id a que tecla
 Tambien de paso se ha refactorizado el codigo del teclado para evitar duplicidad de codigo, y acomodar que envie su id para el otro componente.
 
 Cuidado con aframe-watcher y IDs duplicados entre diferentes escenas, afectará a ambos!
+
+
+## 28/06
+
+Añadido toggle-button, mano dominante en logger y session-starter, que controla el "inicio" de sesion.

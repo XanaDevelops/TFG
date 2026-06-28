@@ -17,11 +17,11 @@
 <!-- Panel B: Contains buttons -->
 <a-plane id="panelB" geometry="height: 2; width: 2.5" width="2" height="3" position="1.21253 1.91924 -1.69709" rotation="0 -15 0" material="color: #888888; opacity: 0.7; transparent: true">
         <!-- IZQ button -->
-    <a-entity id="btnIzq" position="-0.64131 0.17634 0.01" ui-button="text: IZQ;"></a-entity>
+    <a-entity id="btnIzq" position="-0.64131 0.17634 0.01" toggle-button="text: IZQ;"></a-entity>
     
     <!-- DER button -->
-    <a-entity id="btnDer" position="0.56643 0.17965 0.01" ui-button="text: DER;"></a-entity>
+    <a-entity id="btnDer" position="0.56643 0.17965 0.01" toggle-button="text: DER;"></a-entity>
     
     <!-- ENTRAR button -->
-    <a-entity id="btnEntrar" position="0 -0.4846 0.01" ui-button="text: ENTRAR; changeScene: 0"></a-entity>
+    <a-entity id="btnEntrar" position="0 -0.4846 0.01" ui-button="text: ENTRAR; changeScene: 0" session-starter></a-entity>
 </a-entity>

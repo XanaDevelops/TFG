@@ -14,7 +14,7 @@ AFRAME.registerComponent('keyboard-text', {
             }
             
             var code = parseInt(e.detail.code)
-            console.log(code);
+            //console.log(code);
             
             switch (code) {
                 case 8:

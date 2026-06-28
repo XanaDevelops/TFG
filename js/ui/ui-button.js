@@ -4,7 +4,7 @@ AFRAME.registerComponent('ui-button', {
         icon: { type: 'string', default: '' },
         size: {type: "vec2", default: {x: 1, y: 0.5}},
         changeScene: {type: "int", default: -1},
-        changeClass: {type: "int", default: -1}
+        changeClass: {type: "int", default: -1},
     },
 
     init: function () {

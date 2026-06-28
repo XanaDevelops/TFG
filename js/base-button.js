@@ -7,7 +7,7 @@ AFRAME.registerComponent('base-button', {
     allowRay: { type: 'boolean', default: true },
     text: { type: "string", default: "base-button" },
     icon: { type: 'string', default: '' },
-    clickAction: {}
+    clickAction: {} //uso interno
   },
 
   init: function () {
