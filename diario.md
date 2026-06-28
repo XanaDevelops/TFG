@@ -454,3 +454,15 @@ Arreglado bug filtro de agarre
 Creado modelos de figuras para las diferentes clases.
 
 Configurado DB
+
+## 26/06
+Añadido pantalla de login, aunque la estructura es provisional.
+
+## 27/06
+Mejorado la pantalla de login.
+
+Además, se ha implementado que el texto de un teclado filtre por id a que teclado quiere escuchar
+(aunque como no deberia haber más de un teclado por escena pues xd)
+Tambien de paso se ha refactorizado el codigo del teclado para evitar duplicidad de codigo, y acomodar que envie su id para el otro componente.
+
+Cuidado con aframe-watcher y IDs duplicados entre diferentes escenas, afectará a ambos!

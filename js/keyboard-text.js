@@ -1,6 +1,6 @@
 AFRAME.registerComponent('keyboard-text', {
     schema: {
-
+        keyboardID: {type: 'string', default: ""}
     },
 
     init: function () {
@@ -8,6 +8,11 @@ AFRAME.registerComponent('keyboard-text', {
 
         // Do something when component first attached.
         this._onKeyboardUpdate = (e) => {
+            // If keyboardID is set, check if the event's detail.id matches
+            if (this.data.keyboardID && e.detail.id !== this.data.keyboardID) {
+                return;
+            }
+            
             var code = parseInt(e.detail.code)
             console.log(code);
             
