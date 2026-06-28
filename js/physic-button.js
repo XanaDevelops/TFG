@@ -12,6 +12,7 @@ AFRAME.registerComponent('physic-button', {
 
     init: function () {
         this._isPaused = false;
+        this._isHovered = false;
         this._pressedByHand = false;
         this._targetEl = null;
         this._clickTimeout = null;
@@ -37,8 +38,7 @@ AFRAME.registerComponent('physic-button', {
             if (this._clickTimeout) clearTimeout(this._clickTimeout);
             this._clickTimeout = setTimeout(() => {
                 this._restorePosition();
-                var baseButton = this.el.components['base-button'];
-                var nextColor = (baseButton && baseButton._isHovered) ? baseButton.data.hoverColor : this.data.primaryColor;
+                var nextColor = this._isHovered ? this.data.primaryColor : this.data.primaryColor;
                 this.el.setAttribute("material", "color", nextColor);
                 this._clickTimeout = null;
             }, 120);
@@ -77,23 +77,11 @@ AFRAME.registerComponent('physic-button', {
             if (this._clickTimeout) clearTimeout(this._clickTimeout);
             this._clickTimeout = setTimeout(() => {
                 this._restorePosition();
-                var baseButton = this.el.components['base-button'];
-                var nextColor = (baseButton && baseButton._isHovered) ? baseButton.data.hoverColor : this.data.primaryColor;
+                var nextColor = this._isHovered ? this.data.primaryColor : this.data.primaryColor;
                 this.el.setAttribute("material", "color", nextColor);
                 this._clickTimeout = null;
             }, 120);
         };
-
-        setTimeout(() => {
-            this.el.setAttribute("base-button", {
-                enabled: this.data.enabled,
-                primaryColor: this.data.primaryColor,
-                pressedColor: this.data.pressedColor,
-                allowRay: this.data.allowRay,
-                text: '',
-                clickAction: this.onClick
-            });
-        }, 0);
 
         if (!this.el.hasAttribute('obb-collider')) {
             this.el.setAttribute('obb-collider', '');
@@ -103,6 +91,23 @@ AFRAME.registerComponent('physic-button', {
         this.el.addEventListener('mouseup', this.onMouseUp);
         this.el.addEventListener('obbcollisionstarted', this.onObbStart);
         this.el.addEventListener('obbcollisionended', this.onObbEnd);
+        
+        this.onRayIntersection = (e) => {
+            if (!this._canInteractRay()) return;
+            const intersections = (e.detail && e.detail.intersections) || [];
+            const hit = intersections.find((i) => i.object && i.object.el === this.el);
+            if (hit) {
+                this._isHovered = true;
+            }
+        };
+        
+        this.onRayIntersectionCleared = () => {
+            if (!this._canInteractRay()) return;
+            this._isHovered = false;
+        };
+        
+        this.el.addEventListener('raycaster-intersection', this.onRayIntersection);
+        this.el.addEventListener('raycaster-intersection-cleared', this.onRayIntersectionCleared);
     },
 
     update: function (oldData) {
@@ -144,6 +149,8 @@ AFRAME.registerComponent('physic-button', {
         this.el.removeEventListener('mouseup', this.onMouseUp);
         this.el.removeEventListener('obbcollisionstarted', this.onObbStart);
         this.el.removeEventListener('obbcollisionended', this.onObbEnd);
+        this.el.removeEventListener('raycaster-intersection', this.onRayIntersection);
+        this.el.removeEventListener('raycaster-intersection-cleared', this.onRayIntersectionCleared);
 
         if (this._clickTimeout) {
             clearTimeout(this._clickTimeout);
@@ -155,14 +162,9 @@ AFRAME.registerComponent('physic-button', {
             this._obbContactTimer = null;
         }
 
-        if (this._iconEl && this._iconEl.parentNode) {
-            this._iconEl.parentNode.removeChild(this._iconEl);
-        }
-
         this.el.removeAttribute('interact-glow');
         this._restorePosition();
         this._applyMaterial();
-        this._iconEl = null;
         this._targetEl = null;
     },
 
@@ -199,7 +201,6 @@ AFRAME.registerComponent('physic-button', {
             }
         }
 
-        // mirar de usar entity.emit()?
         var evt = new CustomEvent(this.data.event, {
             detail: detail,
             bubbles: true
@@ -223,8 +224,7 @@ AFRAME.registerComponent('physic-button', {
         if (this._clickTimeout) clearTimeout(this._clickTimeout);
         this._clickTimeout = setTimeout(() => {
             this._restorePosition();
-            var baseButton = this.el.components['base-button'];
-            var nextColor = (baseButton && baseButton._isHovered) ? baseButton.data.hoverColor : this.data.primaryColor;
+            var nextColor = this._isHovered ? this.data.primaryColor : this.data.primaryColor;
             this.el.setAttribute("material", "color", nextColor);
             this._clickTimeout = null;
         }, 120);
