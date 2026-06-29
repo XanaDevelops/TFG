@@ -22,6 +22,9 @@ AFRAME.registerComponent('physic-button', {
         this._basePosY = this.el.object3D.position.y;
         this._pressDepth = this.data.pressDepth;
 
+
+        this.el.classList.add("collidable")
+
         this._applyMaterial();
         this._resolveTarget();
 
@@ -45,13 +48,16 @@ AFRAME.registerComponent('physic-button', {
         };
 
         this.onClick = () => {
+            console.log("canInteract");
             if (!this._canInteractRay()) return;
+            console.log("canInteract YES");
             this._flashPressPosition();
             this._sendEvent();
         };
 
         this.onObbStart = (e) => {
             if (!this._canInteractHand(e)) return;
+
             if (this._pressedByHand) return;
             if (this._handCooldown) return;
 
@@ -91,7 +97,8 @@ AFRAME.registerComponent('physic-button', {
         this.el.addEventListener('mouseup', this.onMouseUp);
         this.el.addEventListener('obbcollisionstarted', this.onObbStart);
         this.el.addEventListener('obbcollisionended', this.onObbEnd);
-        
+        this.el.addEventListener("click", this.onClick)
+
         this.onRayIntersection = (e) => {
             if (!this._canInteractRay()) return;
             const intersections = (e.detail && e.detail.intersections) || [];
@@ -147,6 +154,7 @@ AFRAME.registerComponent('physic-button', {
     remove: function () {
         this.el.removeEventListener('mousedown', this.onMouseDown);
         this.el.removeEventListener('mouseup', this.onMouseUp);
+        this.el.removeEventListener("click", this.onClick)
         this.el.removeEventListener('obbcollisionstarted', this.onObbStart);
         this.el.removeEventListener('obbcollisionended', this.onObbEnd);
         this.el.removeEventListener('raycaster-intersection', this.onRayIntersection);
@@ -190,6 +198,8 @@ AFRAME.registerComponent('physic-button', {
     },
 
     _sendEvent: function () {
+        console.log("sending: ", this.data.event);
+        
         if (!this.data.event) return;
 
         var detail = null;
