@@ -74,9 +74,9 @@ AFRAME.registerComponent('projector-controller',{
 
                     // Get current selections
                     const current = {
-                        alzada: this.selectors[2], // Alzada is at index 2 in selectors array
-                        planta: this.selectors[1], // Planta is at index 1
-                        perfil: this.selectors[0]  // Perfil is at index 0
+                        alzada: this.selectors[2], // Alzada is at index 2 in selectors array (amarillo)
+                        planta: this.selectors[1], // Planta is at index 1 (verde)
+                        perfil: this.selectors[0]  // Perfil is at index 0 ()
                     }
 
                     // Check if platform is flipped (each rotation swaps alzada and perfil)
@@ -92,7 +92,7 @@ AFRAME.registerComponent('projector-controller',{
                     
                     plantaOK = current.planta === expected.planta
 
-                    console.log(`[projector-controller] Validation - Alzada: ${alzadaOK} (${current.alzada} vs ${expected.alzada}), Planta: ${plantaOK} (${current.planta} vs ${expected.planta}), Perfil: ${perfilOK} (${current.perfil} vs ${expected.perfil})`)
+                    console.log(`[projector-controller] Validation - Alzada: ${alzadaOK} (R:${current.alzada} vs E:${expected.alzada}), Planta: ${plantaOK} (R:${current.planta} vs E:${expected.planta}), Perfil: ${perfilOK} (R:${current.perfil} vs E:${expected.perfil})`)
                     
                     this.emitValidation(alzadaOK && plantaOK && perfilOK)
                 })
