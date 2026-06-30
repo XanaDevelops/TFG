@@ -3,7 +3,7 @@ AFRAME.registerComponent('figure-spawner', {
         figureId: { type: 'string' },
         spawnPos: { type: 'vec3', default: { x: 0, y: 0, z: 0 } },
         spawnRot: { type: 'vec3', default: { x: 0, y: 0, z: 0 } },
-        maxEnt: { type: 'number', default: 10 }
+        maxEnt: { type: 'number', default: 50 }
     },
 
     init: function () {
