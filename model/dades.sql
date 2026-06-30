@@ -6,8 +6,8 @@ INSERT INTO OMBRA (id, nom, meshID, imgID) VALUES
 (1, 'Cercle', '#foratCercle', '#shadowCircle'),
 (2, 'Quadrat', '#foratQuadrat', '#shadowSquare'),
 (3, 'Equilàter', '#foratEquilater', '#shadowTriangle'),
-(4, '#T', '#T', '#shadowT'), -- TODO: foratT
-(5, '#V', '#V', '#shadowV'); -- TODO: foratV
+(4, '#T', '#T', '#shadowT'), 
+(5, '#V', '#V', '#shadowV'); 
 
 -- Insert CLASSE records (0-indexed)
 INSERT INTO CLASSE (id, nom, descripcio) VALUES
@@ -29,7 +29,7 @@ INSERT INTO FIGURA (id, meshID, nom, descript, alzada, planta, perfil, idClasse)
 (6, '#prism', 'Prism', 'Forma prismàtica', 2, 2, 2, 0),
 (7, '#cylinder', 'Cylinder', 'Forma cilíndrica', 2, 1, 1, 0),
 (8, '#plus', 'Plus', 'Figura amb forma de plus', 2, 2, 2, 0),
-(9, '#L', 'L', 'Figura amb forma de L', -1, 2, 2, 0), -- TODO: si se implementa, crear su sombra
+(9, '#L', 'L', 'Figura amb forma de L', 0, 2, 2, 0), 
 (10, '#T', 'T', 'Figura amb forma de T', 4, 2, 2, 0),
 (11, '#V', 'V', 'Figura amb forma de V', 5, 2, 2, 0);
 

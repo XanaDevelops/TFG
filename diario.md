@@ -484,3 +484,5 @@ Añadidas más sombras en SVG, añadidas figuras y ajustado valores SQL
 Importado nuevas figuras (FALTAN SU VARIANTE forat_X)
 
 Preguntar si se quiere "L" (problema simetria!)
+
+Implementado spawn de figuras, lo que peta cosa mala si se hacen muchas de golpe?!??!?
