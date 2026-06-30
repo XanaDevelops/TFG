@@ -24,5 +24,31 @@ AFRAME.registerComponent('class-manager', {
                 console.error(`Error fetching figures for class ${classID}:`, error);
                 this.el.emit('figures-error', { error: error.message, classID: classID });
             });
+
+        this.validationListener = (e) => {
+            const meshID = e.detail.meshID;
+            console.log(`[class-manager] Validation OK for meshID: ${meshID}`);
+
+            // Remove figure with matching meshID from figures array
+            const index = this.figures.findIndex(f => f.id === meshID);
+            if (index !== -1) {
+                this.figures.splice(index, 1);
+                console.log(`[class-manager] Removed figure ${meshID}, remaining: ${this.figures.length}`);
+            }
+
+            // Log when figures array becomes empty
+            if (this.figures.length === 0) {
+                console.log("[class-manager] All figures validated - figures array is empty");
+            }
+        }
+
+        // Listen for validation-ok event to remove validated figures
+        this.el.addEventListener('validation-ok', this.validationListener);
+    },
+
+    remove: function() {
+        this.el.removeEventListener('validation-ok', this.validationListener)
     }
+
+
 });

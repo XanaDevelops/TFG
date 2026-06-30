@@ -92,6 +92,7 @@ AFRAME.registerComponent('projector-platform', {
       console.log("[platform]: salir: ", hitEl);
       if (this.detectedEl == hitEl) {
         this.delConstraint()
+        this.detectedEl = null
       }
     }
 

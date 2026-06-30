@@ -54,6 +54,9 @@ AFRAME.registerComponent('projector-controller',{
             let meshID = detectedEl.getAttribute('figure-id') ||
                         detectedEl.id.replace('e', '').replace('Forat', 'forat')
             
+            // Store current detected element for use in emitValidation
+            this.currentDetectedEl = detectedEl
+            
             console.log("[projector-controller] Validating meshID:", meshID, "from element:", detectedEl.id)
             
             fetch(`./backend.php?figura=${encodeURIComponent(meshID)}`)
@@ -61,7 +64,7 @@ AFRAME.registerComponent('projector-controller',{
                 .then(data => {
                     if (data.error) {
                         console.error("[projector-controller] Error fetching figura:", data.error)
-                        this.emitValidation(false)
+                        this.emitValidation(false, meshID)
                         return
                     }
 
@@ -94,18 +97,36 @@ AFRAME.registerComponent('projector-controller',{
 
                     console.log(`[projector-controller] Validation - Alzada: ${alzadaOK} (R:${current.alzada} vs E:${expected.alzada}), Planta: ${plantaOK} (R:${current.planta} vs E:${expected.planta}), Perfil: ${perfilOK} (R:${current.perfil} vs E:${expected.perfil})`)
                     
-                    this.emitValidation(alzadaOK && plantaOK && perfilOK)
+                    this.emitValidation(alzadaOK && plantaOK && perfilOK, meshID)
                 })
                 .catch(error => {
                     console.error("[projector-controller] Error during validation:", error)
-                    this.emitValidation(false)
+                    this.emitValidation(false, meshID)
                 })
         }
 
-        this.emitValidation = (isValid) => {
+        this.emitValidation = (isValid, meshID) => {
             if (isValid) {
                 console.log("[projector-controller] Validation passed")
-                this.el.emit('validation-ok')
+                this.el.emit('validation-ok', { meshID: meshID }, true)
+                
+                // Make figure disappear after 1 second
+                setTimeout(() => {
+                    if (this.currentDetectedEl) {
+                        console.log("[projector-controller] Removing validated figure:", this.currentDetectedEl.id)
+                        if (this.currentDetectedEl.parentNode) {
+                            this.currentDetectedEl.parentNode.removeChild(this.currentDetectedEl)
+                        }
+                        
+                        // Move platform to placePos if not already there
+                        const platformEl = document.getElementById("platProyector")
+                        const platformComponent = platformEl?.components?.['projector-platform']
+                        if (platformComponent && platformComponent.isInRest) {
+                            console.log("[projector-controller] Moving platform to placePos")
+                            platformEl.emit('toggle-position')
+                        }
+                    }
+                }, 1000)
             } else {
                 console.log("[projector-controller] Validation failed")
                 this.el.emit('validation-fail')
