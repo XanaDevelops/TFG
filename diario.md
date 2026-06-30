@@ -477,3 +477,10 @@ Refactorizado el codigo de los botones, por ahora pulsar con desktop no funciona
 ## 29/06
 
 Añadidas más sombras en SVG, añadidas figuras y ajustado valores SQL
+
+
+## 30/06 
+
+Importado nuevas figuras (FALTAN SU VARIANTE forat_X)
+
+Preguntar si se quiere "L" (problema simetria!)
