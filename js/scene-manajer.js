@@ -11,6 +11,7 @@ AFRAME.registerSystem('scene-manager', {
             "scenes/mainClasse.html",
             "scenes/mainLoading.html",
             "scenes/mainLogin.html",
+            "scenes/tutorial_0.html",
         ]
         this.currentScene = 4
         this.activeClass = -1
@@ -20,6 +21,7 @@ AFRAME.registerSystem('scene-manager', {
 
         AFRAME.changeScene = this.loadScene.bind(this)
         AFRAME.changeClass = this.loadClass.bind(this)
+        AFRAME.changeNextClass = this.loadNextClass.bind(this)
     },
 
     loadScene: function (index) {
