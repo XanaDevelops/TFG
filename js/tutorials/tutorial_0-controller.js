@@ -23,24 +23,20 @@ AFRAME.registerComponent('tutorial-0', {
     },
 
     advanceState: function () {
+        this.actionTextEl.setAttribute('value', this.textStates[this.tutorialState]);
         switch (this.tutorialState) {
             case 0:
-                this.actionTextEl.setAttribute('value', this.textStates[0]);
+                
                 break;
             case 1:
-                this.actionTextEl.setAttribute('value', this.textStates[1]);
                 break;
             case 2:
-                this.actionTextEl.setAttribute('value', this.textStates[2]);
                 break;
             case 3:
-                this.actionTextEl.setAttribute('value', this.textStates[3]);
                 break;
             case 4:
-                this.actionTextEl.setAttribute('value', this.textStates[4]);
                 break;
             case 5:
-                this.actionTextEl.setAttribute('value', this.textStates[5]);
                 break;
             default:
                 break;
