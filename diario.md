@@ -490,3 +490,8 @@ Implementado spawn de figuras, lo que peta cosa mala si se hacen muchas de golpe
 Solución: petaba porque el limite de 10 figuras por spawner probocaba que se eliminaran las primeras figuras, por lo que causaba referencias nulas por grab-fix u otros componentes 🤦 (lo he puesto yo, no hay IA en el diario)
 
 Para usar eventos entre hermanos, escuchar desde la escena
+
+
+## 1/07
+
+Acabada primera pasada en la modificación de la memoria en base a las recomendaciones recibidas, principalemente las de forma y sugerencias de parrafos directos.
