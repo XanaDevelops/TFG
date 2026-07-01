@@ -488,3 +488,5 @@ Preguntar si se quiere "L" (problema simetria!)
 Implementado spawn de figuras, lo que peta cosa mala si se hacen muchas de golpe?!??!?
 
 Solución: petaba porque el limite de 10 figuras por spawner probocaba que se eliminaran las primeras figuras, por lo que causaba referencias nulas por grab-fix u otros componentes 🤦 (lo he puesto yo, no hay IA en el diario)
+
+Para usar eventos entre hermanos, escuchar desde la escena

@@ -43,11 +43,11 @@ AFRAME.registerComponent('class-manager', {
         }
 
         // Listen for validation-ok event to remove validated figures
-        this.el.addEventListener('validation-ok', this.validationListener);
+        this.el.sceneEl.addEventListener('validation-ok', this.validationListener);
     },
 
     remove: function() {
-        this.el.removeEventListener('validation-ok', this.validationListener)
+        this.el.sceneEl.removeEventListener('validation-ok', this.validationListener)
     }
 
 
