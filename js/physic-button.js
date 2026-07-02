@@ -48,9 +48,7 @@ AFRAME.registerComponent('physic-button', {
         };
 
         this.onClick = () => {
-            console.log("canInteract");
             if (!this._canInteractRay()) return;
-            console.log("canInteract YES");
             this._flashPressPosition();
             this._sendEvent();
         };

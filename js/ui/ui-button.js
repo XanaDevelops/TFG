@@ -5,7 +5,8 @@ AFRAME.registerComponent('ui-button', {
         size: {type: "vec2", default: {x: 1, y: 0.5}},
         changeScene: {type: "int", default: -1},
         changeClass: {type: "int", default: -1},
-        sendEvent: {type: "string", default: ''}
+        sendEvent: {type: "string", default: ''},
+        textSize: {type: "int", default: 4}
     },
 
     init: function () {
@@ -76,7 +77,7 @@ AFRAME.registerComponent('ui-button', {
                 font: "fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json",
                 shader: "msdf",
                 negate: false,
-                width: 4,
+                width: this.data.textSize,
             })
             this.el.appendChild(textEl)
         }

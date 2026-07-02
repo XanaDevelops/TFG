@@ -10,6 +10,7 @@ AFRAME.registerComponent('tutorial-platform', {
             if (!colliderEl || !colliderEl.classList || colliderEl.id !== 'playerOBB') return;
             this.el.emit('tuto-player-hit', {});
             this.el.parentEl.removeChild(this.el)
+
         });
     },
 

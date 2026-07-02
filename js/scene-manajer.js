@@ -12,6 +12,7 @@ AFRAME.registerSystem('scene-manager', {
             "scenes/mainLoading.html",
             "scenes/mainLogin.html",
             "scenes/tutorial_0.html",
+            "scenes/mainVictory.html"
         ]
         this.currentScene = 4
         this.activeClass = -1
@@ -32,7 +33,6 @@ AFRAME.registerSystem('scene-manager', {
         
         LOGGER.logSceneChange(index)
 
-        // TODO: ESTO ES DE PRUEBA!!
         if (index == 2) {
             LOGGER.enterClass(index)
         }
@@ -40,6 +40,12 @@ AFRAME.registerSystem('scene-manager', {
 
     loadClass: function (index) {
         this.activeClass = index
+
+        if (index >= 5){
+            this.loadScene(6)
+            return
+        }
+
         if (this.currentScene == 2){
             this.loadScene(3)
         }

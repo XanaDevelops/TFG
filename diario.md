@@ -306,9 +306,9 @@ Más iconos y funcionalidad de encender y apagar la luz
 
 ## 8/6
 Los hex de los colores son: (mantener orden en donde aplique!)
-- perfil #E7CF6FFF
+- alzada #E7CF6FFF
 - planta #5DE761FF
-- alzada #E76B82FF
+- perfil #E76B82FF
 
 Seguramente puede haber error si se tiene en cuenta el alfa (FF)
 
@@ -497,3 +497,8 @@ Para usar eventos entre hermanos, escuchar desde la escena
 Acabada primera pasada en la modificación de la memoria en base a las recomendaciones recibidas, principalemente las de forma y sugerencias de parrafos directos.
 
 Se ha avanzado con el tutorial (hasta fase 2 incluida)
+
+## 2/07
+
+Se ha acabado el loop de la didactica, aplicando interfaces y control del estado de la clase.
+Se ha añadido la pantalla de fin de las clases

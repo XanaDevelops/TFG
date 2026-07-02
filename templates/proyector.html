@@ -1,0 +1,71 @@
+<!-- modelo projector -->
+    <a-entity id="modeloProyector" gltf-model="#proyector" mixin="static-mixin" class="collidable"
+        ammo-body="collisionFilterGroup: 4; collisionFilterMask: 65531">
+    </a-entity>
+    <!-- TODO: hacer template del pack de botones-->
+    <a-entity id="panelControlProyector" position="-0.486 0.905 0.486" rotation="0 45 50">
+        <a-entity id="selectorSombraPerfil" position="0 0 -0.69645"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="Perfil" data-index="1">
+        </a-entity>
+        <a-entity id="selectorSombraPlanta" position="0 0 -0.29057"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="Planta" data-index="2">
+        </a-entity>
+        <a-entity id="selectorSombraAlzada" position="0 0 0.11512"
+            template="src: templates/shadowSelector.html; type: handlebars" data-id="Alzada" data-index="0">
+        </a-entity>
+
+        <a-entity id="botonesRot" position="0 -0.00562 0.4864">
+            <a-cylinder id="btnRotLeft" position="0.01651 0 -0.07965" scale="0.05 0.04 0.05"
+                physic-button="target: platProyector; event: rotate-platform; args: -90"></a-cylinder>
+            <a-cylinder id="btnRotRight" position="0.0175 0 0.08292" scale="0.05 0.04 0.05"
+                physic-button="target: platProyector; event: rotate-platform; args: 90"></a-cylinder>
+            <a-cylinder id="btnPlatMove" position="0.11179 0 0" scale="0.05 0.04 0.05"
+                physic-button="target: platProyector; event: toggle-position"></a-cylinder>
+            <a-cylinder id="btnRotDown" position="-0.07788 0 0" scale="0.05 0.04 0.05"
+                physic-button></a-cylinder>
+        </a-entity>
+
+        <a-entity id="botonesPrincipal" position="0 0 0.74721">
+            <a-box id="btnValidar" position="0.11245 0 0.02095" scale="0.15 0.04 0.15"
+                physic-button="target: projector; event: validate-shadows">
+                <a-image src="#icoValid" mixin="pbtn-icon"></a-image>
+            </a-box>
+            <a-box id="btnLuz" position="-0.04982 0 0.02145" scale="0.15 0.04 0.15"
+                physic-button="target: projector; event: toggle-light">
+                <a-image src="#icoLight" mixin="pbtn-icon"></a-image>
+            </a-box>
+        </a-entity>
+
+    </a-entity>
+
+    <!-- plataforma proyector -->
+    <a-cylinder id="platProyector" material="color: #e79523" scale="0.25 0.05 0.25" position="0 1.20 0"
+        ammo-body="type: dynamic; collisionFilterGroup: 8; collisionFilterMask: 65529; activationState: disableDeactivation"
+        ammo-shape="type: hull; margin: 0.01"
+        projector-platform
+        no-grav>
+    </a-cylinder>
+
+    <!-- luces -->
+    <a-entity id="shadowLights">
+        <a-light id="lightAlzada"
+            mixin="luz-proyector"
+            light="; penumbra: 0; decay: 0; distance: 2.3"
+            orthographic-shadow-camera
+            position="0 1.39718 0.95">
+        </a-light>
+
+        <a-light id="lightPlanta" rotation="0 -90 0"
+            mixin="luz-proyector"
+            light="; distance: 2.3"
+            orthographic-shadow-camera
+            position="-0.95 1.397 0">
+        </a-light>
+        
+        <a-light id="lightPerfil" rotation="90 0 0"
+            mixin="luz-proyector"
+            light="; distance: 3"
+            orthographic-shadow-camera
+            position="0 0.15166 0">
+        </a-light>
+    </a-entity>

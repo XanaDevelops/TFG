@@ -2,14 +2,14 @@
 <a-entity id="panelTutoriel0" position="-0.82127 2.15682 -2.44723">
     <a-plane id="panelTutoriel0Bg" width="2.2" height="1.8" position="1.04178 -0.5 -0.01" material="color: #888888; opacity: 0.8; transparent: true"></a-plane>
     <!-- se renderiza raro...-->
-    <a-text id="titulo" text="anchor: center; align: center; tabSize: 4; width: 5" position="0.95918 0.18643 0" value="Tutorial" 
-        font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false"></a-text>
+    <a-text id="tituloTutorial" text="anchor: center; align: center; tabSize: 4; width: 5" position="0.95918 0.18643 0" value="Tutorial" 
+        mixin="mixin-texto"></a-text>
     <a-text id="actionText" position="0 -0.1 0" value="alça les dues mans" 
         font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false"></a-text>
     <a-text id="bActionText" position="0 -0.32622 0" value="" 
         font="fonts/roboto/Roboto-VariableFont_wdth,wght-msdf.json" shader="msdf" negate="false"></a-text>
 
-
+     <a-entity id="btnTutoSortir" position="1.84207 -1.14801 0.01" ui-button="text: SORTIR; changeScene: 0; size: 0.5 0.35; textSize: 3"></a-entity>
 </a-entity>
 
 

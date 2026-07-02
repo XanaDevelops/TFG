@@ -138,7 +138,7 @@ AFRAME.registerComponent('tutorial-0', {
             platform.setAttribute('rotation', '0 0 0');
             platform.setAttribute('color', '#FFD700');
             platform.setAttribute('tutorial-platform', '');
-            this.sceneEl.appendChild(platform);
+            this.el.appendChild(platform);
         };
 
         for (let i = 0; i < this.platformsRemaining; i++) {
@@ -211,7 +211,7 @@ AFRAME.registerComponent('tutorial-0', {
                 text: 'Target'
             });
             
-            this.sceneEl.appendChild(button);
+            this.el.appendChild(button);
         };
         
         // Spawn 3 buttons
