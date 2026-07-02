@@ -5,6 +5,7 @@ AFRAME.registerComponent('ui-button', {
         size: {type: "vec2", default: {x: 1, y: 0.5}},
         changeScene: {type: "int", default: -1},
         changeClass: {type: "int", default: -1},
+        sendEvent: {type: "string", default: ''}
     },
 
     init: function () {
@@ -39,8 +40,9 @@ AFRAME.registerComponent('ui-button', {
             else if (this.data.changeScene != -1){
                 AFRAME.changeScene(this.data.changeScene)
             }
-            if(this.clickAction && this.clickAction instanceof Function){
-                this.clickAction()
+            
+            if (this.data.sendEvent !== '') {
+                this.el.emit(this.data.sendEvent, {el: this.el})
             }
         }
 

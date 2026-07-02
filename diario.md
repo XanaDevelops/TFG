@@ -495,3 +495,5 @@ Para usar eventos entre hermanos, escuchar desde la escena
 ## 1/07
 
 Acabada primera pasada en la modificación de la memoria en base a las recomendaciones recibidas, principalemente las de forma y sugerencias de parrafos directos.
+
+Se ha avanzado con el tutorial (hasta fase 2 incluida)
