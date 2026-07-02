@@ -1,31 +1,60 @@
 AFRAME.registerComponent('debug-control', {
-    schema: { type: 'boolean', default: false},
+  schema: {
+    debug: { type: 'boolean', default: false }
+  },
 
-    init: function () {
-      // Do something when component first attached.
-      // Handler para abuttondown: alternar visibilidad de #debugHud
-        this._onAButtonDown = () => {
-            const hud = document.querySelector('#debugHud');
-            if (hud && this.data.debug) {
-                const isVisible = hud.getAttribute('visible');
-                hud.setAttribute('visible', !isVisible);
-            }
-        };
-        this.el.addEventListener('abuttondown', this._onAButtonDown);
-    },
+  init: function () {
+    this._onAButtonDown = () => {
+      const isDebug = this.data.debug;
+      const hud = document.querySelector('#debugHud');
 
-    update: function () {
-      // Do something when component's data is updated.
-    },
-
-    remove: function () {
-      if (this._onAButtonDown) {
-        this.el.removeEventListener('abuttondown', this._onAButtonDown);
-        this._onAButtonDown = null;
+      if (hud && isDebug) {
+        const isVisible = hud.getAttribute('visible');
+        hud.setAttribute('visible', !isVisible);
       }
-    },
+    };
 
-    tick: function (time, timeDelta) {
-      // Do something on every scene tick or frame.
+    this._onYButtonDown = () => {
+      const sceneEl = this.el.sceneEl;
+
+      if (sceneEl) {
+        if (!sceneEl.components.screenshot) {
+          sceneEl.setAttribute('screenshot', {
+            width: 1920,
+            height: 1080
+          });
+        } else {
+          const screenshotComp = sceneEl.components.screenshot;
+          if (screenshotComp.data.width !== 1920 || screenshotComp.data.height !== 1080) {
+            screenshotComp.el.setAttribute('screenshot', {
+              width: 1920,
+              height: 1080
+            });
+          }
+        }
+      }
+
+      if (sceneEl && sceneEl.components.screenshot) {
+        sceneEl.components.screenshot.capture('perspective');
+      }
+    };
+
+    this.el.addEventListener('abuttondown', this._onAButtonDown);
+    this.el.addEventListener('ybuttondown', this._onYButtonDown);
+  },
+
+  update: function () {},
+
+  remove: function () {
+    if (this._onAButtonDown) {
+      this.el.removeEventListener('abuttondown', this._onAButtonDown);
+      this._onAButtonDown = null;
     }
+    if (this._onYButtonDown) {
+      this.el.removeEventListener('ybuttondown', this._onYButtonDown);
+      this._onYButtonDown = null;
+    }
+  },
+
+  tick: function (time, timeDelta) {}
 });
