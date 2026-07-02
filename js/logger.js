@@ -369,8 +369,11 @@ AFRAME.registerSystem('logger', {
         content: content
       })
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(async response => {
+      const body = await response.text();
+      let data;
+      try { data = JSON.parse(body); } catch(e){ console.error('[LOGGER] Respuesta no JSON:', body); throw e; }
+      if(!response.ok || !data.success){ throw new Error(data.message || 'Error al guardar log'); }
       console.log('[LOGGER] Log guardado en servidor:', data);
     })
     .catch(error => {

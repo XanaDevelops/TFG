@@ -163,10 +163,13 @@ function saveLogToFile($filename, $content) {
     
     // Create logs directory if it doesn't exist
     if (!is_dir($logsDir)) {
-        mkdir($logsDir, 0755, true);
+        if (!mkdir($logsDir,0755,true) && !is_dir($logsDir)) {
+            return ['success'=>false,'message'=>'Unable to create logs directory'];
+        }
     }
-    
-    $filepath = $logsDir . '/' . $filename;
+    $filename=basename($filename);
+    $filename=preg_replace('/[^A-Za-z0-9._-]/','_',$filename);
+    $filepath=$logsDir.DIRECTORY_SEPARATOR.$filename;
     
     // Write content to file
     $result = file_put_contents($filepath, $content);
@@ -191,9 +194,13 @@ function saveLogToFile($filename, $content) {
 function processRequest() {
     // Handle POST requests for saving logs
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_SERVER['HTTP_CONTENT_TYPE']) && strpos($_SERVER['HTTP_CONTENT_TYPE'], 'application/json') !== false) {
+        if (strpos(($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json') !== false) {
             $rawInput = file_get_contents('php://input');
             $data = json_decode($rawInput, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                sendJsonResponse(['success'=>false,'message'=>'Invalid JSON'],400);
+                return;
+            }
             
             if (isset($data['action']) && $data['action'] === 'saveLog' && isset($data['filename']) && isset($data['content'])) {
                 $response = saveLogToFile($data['filename'], $data['content']);
