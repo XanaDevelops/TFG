@@ -88,7 +88,7 @@ AFRAME.registerComponent('projector-platform', {
   },
 
   filterEl: function(hitEl) {
-    return hitEl.classList.contains("hand-collider")
+    return !hitEl.classList.contains("grabbable")
   },
 
   setConstraint: function () {
