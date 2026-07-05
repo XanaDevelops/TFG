@@ -172,7 +172,7 @@ AFRAME.registerComponent('my-grab', {
 
         this._onTriggerDown = () => {
             if (this._rayHoverEl) {
-                this._rayHoverEl.emit('click', { cursorEl: this.el }, false);
+                this._rayHoverEl.emit('click', { cursorEl: this.el });
             }
             if (!this._cfg.allowRayTrack) return;
             if (this.grabbedEl) {
