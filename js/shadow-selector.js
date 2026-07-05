@@ -27,9 +27,10 @@ AFRAME.registerComponent('shadow-selector', {
         
         // por id
         this.colors = [
-            "#E76B82", //alzada
-            "#E7CF6F", //perfil
-            "#5DE761" //planta
+            "#E7CF6F", // alzada
+            "#5DE761", // planta 
+            "#E76B82", // perfil
+            
         ]
 
         this.currentIndex = 0

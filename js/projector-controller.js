@@ -11,7 +11,9 @@ AFRAME.registerComponent('projector-controller',{
         }
 
         this.loadFromTemplates = () => {
-            this.selectors = ["Perfil", "Planta", "Alzada"].map((x) => {
+            this.selectors = [ "Alzada", "Planta","Perfil"].map((x) => {
+                console.log(x);
+                
                 return document.getElementById("btnShadow"+x).components['shadow-selector'].currentIndex
             })
         }
@@ -51,10 +53,13 @@ AFRAME.registerComponent('projector-controller',{
                     }
 
                     const current = {
-                        alzada: this.selectors[2], 
+                        alzada: this.selectors[0], 
                         planta: this.selectors[1], 
-                        perfil: this.selectors[0]  
+                        perfil: this.selectors[2]  
                     }
+
+                    console.log("E vs C", expected.alzada, current.alzada, expected.planta, current.planta, expected.perfil, current.perfil);
+                    
 
                     let alzadaOK, perfilOK, plantaOK
 
