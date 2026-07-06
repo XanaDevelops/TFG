@@ -3,7 +3,7 @@ AFRAME.registerComponent('projector-platform', {
 
   init: function () {
     this.restPos = new THREE.Vector3(0, 1.1, 0)
-    this.placePos = new THREE.Vector3(-1, 1.1, 0.5)
+    this.placePos = new THREE.Vector3(-1.54, 1.1, -0.3)
 
     this.rot = new THREE.Euler(0, 0, 0, 'XYZ')
     this.quaternion = new THREE.Quaternion()
@@ -85,6 +85,8 @@ AFRAME.registerComponent('projector-platform', {
 
     this.detector.addEventListener("obbcollisionstarted", this.enterEnt)
     this.detector.addEventListener("obbcollisionended", this.exitEl)
+
+    this.togglePos()
   },
 
   filterEl: function(hitEl) {

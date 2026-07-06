@@ -25,7 +25,7 @@ INSERT INTO FIGURA (id, meshID, nom, descript, alzada, planta, perfil) VALUES
 (0, '#tap', 'Triforma', 'Combinació de les tres formes geomètriques', 2, 1, 3),
 (1, '#cube', 'Cub', 'Forma bàsica cúbica', 2, 2, 2),
 (2, '#sphere', 'Esfera', 'Forma bàsica esfèrica', 1, 1, 1),
-(3, '#tetra', 'Tetrahedre', 'Forma bàsica tetraèdrica', 3, 3, 3),
+(3, '#tetra', 'Tetraedre', 'Forma bàsica tetraèdrica', 3, 3, 3),
 (4, '#piramid', 'Piràmide', 'Forma piramidal', 3, 2, 3),
 (5, '#cone', 'Con', 'Forma cònica', 3, 1, 3),
 (6, '#prism', 'Prisma', 'Forma prismàtica', 6, 2, 6),

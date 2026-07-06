@@ -4,6 +4,8 @@ AFRAME.registerComponent('projector-controller',{
     init: function () {
         this.materialCopies = []
         this.platformFlipped = false
+        this.originalLightColors = []
+        this.flashInterval = null
 
         this.handlePlatformRotation = () => {
             this.platformFlipped = !this.platformFlipped
@@ -21,6 +23,37 @@ AFRAME.registerComponent('projector-controller',{
         this.toggleLight = () =>{
             this.lights.setAttribute('visible', !this.lights.getAttribute('visible'))
             LOGGER.logToggleLights(this.lights.getAttribute('visible'))
+        }
+
+        this.flashLights = (color, duration) => {
+            if (!this.lights) return
+            
+            clearTimeout(this.flashInterval)
+            
+            const lights = this.lights.querySelectorAll('a-light')
+            
+            lights.forEach((light, index) => {
+                const lightEl = light.getObject3D('light')
+                if (lightEl && lightEl.color) {
+                    if (this.originalLightColors[index] === undefined) {
+                        this.originalLightColors[index] = lightEl.color.getHex()
+                    }
+                    lightEl.color.set(color)
+                    lightEl.needsUpdate = true
+                }
+            })
+
+            this.flashInterval = setTimeout(() => {
+                lights.forEach((light, index) => {
+                    const lightEl = light.getObject3D('light')
+                    if (lightEl && lightEl.color && this.originalLightColors[index] !== undefined) {
+                        lightEl.color.set(this.originalLightColors[index])
+                        lightEl.needsUpdate = true
+                    }
+                })
+                this.originalLightColors = []
+                this.flashInterval = null
+            }, duration)
         }
 
         this.validate = () => {
@@ -81,8 +114,12 @@ AFRAME.registerComponent('projector-controller',{
         }
 
         this.emitValidation = (isValid, meshID) => {
+            clearTimeout(this.flashInterval)
+            
             if (isValid) {
                 this.el.emit('validation-ok', { meshID: meshID }, true)
+                
+                this.flashLights(0x00ff00, 2000)
                 
                 setTimeout(() => {
                     if (this.currentDetectedEl) {
@@ -99,6 +136,8 @@ AFRAME.registerComponent('projector-controller',{
                 }, 1000)
             } else {
                 this.el.emit('validation-fail', { meshID: meshID }, true)
+                
+                this.flashLights(0xff0000, 2000)
             }
         }
 
@@ -122,6 +161,9 @@ AFRAME.registerComponent('projector-controller',{
     },
 
     remove: function() {
+        if (this.flashInterval) {
+            clearTimeout(this.flashInterval)
+        }
         this.el.removeEventListener('rotate-platform', this.handlePlatformRotation)
         this.el.removeEventListener('reset-detected-figure', () => {
             this.platformFlipped = false
