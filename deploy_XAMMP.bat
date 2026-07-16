@@ -44,6 +44,9 @@ if %ERRORLEVEL% NEQ 0 set "FAILED=1"
 copy /Y "backend.php" "%SERVER_PATH%\backend.php" >nul
 if %ERRORLEVEL% NEQ 0 set "FAILED=1"
 
+copy /Y "backend.php" "%SERVER_PATH%\config.php" >nul
+if %ERRORLEVEL% NEQ 0 set "FAILED=1"
+
 if "%FAILED%"=="0" (
 	echo deploy ok
 ) else (

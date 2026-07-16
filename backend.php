@@ -11,12 +11,18 @@ error_reporting(E_ALL);
  * - GET /backend.php?figuresForClasse=<idClasse> - Returns figures for a classe
  */
 
+if (!file_exists('config.php')){
+    die("ERROR: falta copiar config.php.template a config.php");
+}
+
+$config = require 'config.php';
+
 // Database configuration
-define('DB_HOST', '127.0.0.1');
-define('DB_PORT', 3306);
-define('DB_USER', 'root');
-define('DB_PASSWORD', 'root');
-define('DB_NAME', 'FIGURES');
+define('DB_HOST', $config['db_host']);
+define('DB_PORT', $config['db_port']);
+define('DB_USER', $config['db_user']);
+define('DB_PASSWORD', $config['db_pass']);
+define('DB_NAME', $config['db_name']);
 
 /**
  * Get database connection

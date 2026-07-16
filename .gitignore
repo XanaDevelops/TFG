@@ -145,3 +145,5 @@ vite.config.ts.timestamp-*
 
 
 memoria/
+
+config.php

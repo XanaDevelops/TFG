@@ -14,6 +14,7 @@ sudo -S rsync -a --delete --mkpath \
 	--include='/snd/***' \
 	--include='/index.html' \
 	--include='/backend.php' \
+	--include='config.php' \
 	--include='/scenes/***' \
 	--include='/templates/***' \
 	--exclude='*' \
