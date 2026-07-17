@@ -39,7 +39,6 @@ AFRAME.registerComponent('projector-platform', {
         this.recolocate(this.placePos).then(() => {
           this.el.setAttribute('pid-move', {linearFactor: {x:1, y:1, z:1}})
           this.pid.targetPosition.copy(this.restPos)
-          this.el.addEventListener('pid-move-end', () => {this.recolocate(this.restPos)}, {once: true})
         })
       } else {
         this.delConstraint()  

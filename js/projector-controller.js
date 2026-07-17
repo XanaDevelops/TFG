@@ -123,12 +123,17 @@ AFRAME.registerComponent('projector-controller',{
                 
                 setTimeout(() => {
                     if (this.currentDetectedEl) {
+                        const platformEl = document.getElementById("platProyector")
+                        const platformComponent = platformEl?.components?.['projector-platform']
+
+                        if (platformComponent) {
+                            platformComponent.delConstraint()
+                        }
+
                         if (this.currentDetectedEl.parentNode) {
                             this.currentDetectedEl.parentNode.removeChild(this.currentDetectedEl)
                         }
-                        
-                        const platformEl = document.getElementById("platProyector")
-                        const platformComponent = platformEl?.components?.['projector-platform']
+
                         if (platformComponent && platformComponent.isInRest) {
                             platformEl.emit('toggle-position')
                         }
@@ -210,4 +215,4 @@ AFRAME.registerComponent('projector-controller',{
             targetMesh.children[3].material.copy(this.materialCopies[3])
         }
     }
-})
+})  
