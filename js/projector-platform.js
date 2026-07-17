@@ -127,34 +127,35 @@ AFRAME.registerComponent('projector-platform', {
 
   recolocate: function (target) {
     return new Promise((resolve) => {
-      if (!this.detectedEl) {
+      const el = this.detectedEl
+      if (!el) {
         resolve();
         return;
       }
       
       const worldPos = new THREE.Vector3();
-      this.detectedEl.object3D.getWorldPosition(worldPos);
+      el.object3D.getWorldPosition(worldPos);
 
       const obbSize = new THREE.Vector3()
-      this.detectedEl.components['obb-collider'].obb.getSize(obbSize)
+      el.components['obb-collider'].obb.getSize(obbSize)
 
       const targetWorldPos = new THREE.Vector3(target.x, worldPos.y + (obbSize.y * 0.4 * 1) + 0.0, target.z)
       const targetLocalPos = targetWorldPos.clone();
-      if (this.detectedEl.object3D.parent) {
-        this.detectedEl.object3D.parent.worldToLocal(targetLocalPos);
+      if (el.object3D.parent) {
+        el.object3D.parent.worldToLocal(targetLocalPos);
       }
 
       const parentWorldQuat = new THREE.Quaternion();
-      if (this.detectedEl.object3D.parent) {
-        this.detectedEl.object3D.parent.getWorldQuaternion(parentWorldQuat);
+      if (el.object3D.parent) {
+        el.object3D.parent.getWorldQuaternion(parentWorldQuat);
       }
       const targetLocalQuat = parentWorldQuat.invert();
 
-      if (!this.detectedEl.components['pid-move']) {
-        this.detectedEl.setAttribute('pid-move', '');
+      if (!el.components['pid-move']) {
+        el.setAttribute('pid-move', '');
       }
 
-      const pid = this.detectedEl.components['pid-move'];
+      const pid = el.components['pid-move'];
       pid.targetPosition.copy(targetLocalPos);
       pid.targetRotation.copy(targetLocalQuat);
 
@@ -162,11 +163,14 @@ AFRAME.registerComponent('projector-platform', {
       let rotDone = false;
 
       const ending = () => {
-        this.detectedEl.removeAttribute('pid-move');
-        this.setConstraint();
+        el.removeAttribute('pid-move');
+
+        if (this.detectedEl === el) {
+          this.setConstraint();
+        }
 
         setTimeout(() => {
-          if (this.detectedEl) {
+          if (this.detectedEl === el) {
             this.el.emit('reset-detected-figure')
           }
           resolve()
@@ -187,8 +191,8 @@ AFRAME.registerComponent('projector-platform', {
         }
       };
 
-      this.detectedEl.addEventListener('pid-move-end', onPosEnd, { once: true });
-      this.detectedEl.addEventListener('pid-rotate-end', onRotEnd, { once: true });
+      el.addEventListener('pid-move-end', onPosEnd, { once: true });
+      el.addEventListener('pid-rotate-end', onRotEnd, { once: true });
     });
   },
 
