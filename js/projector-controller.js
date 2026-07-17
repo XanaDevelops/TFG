@@ -128,6 +128,9 @@ AFRAME.registerComponent('projector-controller',{
 
                         if (platformComponent) {
                             platformComponent.delConstraint()
+                            if (platformComponent.detectedEl === this.currentDetectedEl) {
+                                platformComponent.detectedEl = null
+                            }
                         }
 
                         if (this.currentDetectedEl.parentNode) {
@@ -215,4 +218,4 @@ AFRAME.registerComponent('projector-controller',{
             targetMesh.children[3].material.copy(this.materialCopies[3])
         }
     }
-})  
+})

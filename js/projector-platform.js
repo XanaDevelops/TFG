@@ -120,7 +120,6 @@ AFRAME.registerComponent('projector-platform', {
       this.detectedEl.removeAttribute('log-spatial');
     }
 
-    this.detectedEl = null;
     this.activeConstraintId = null;
     
     //this.el.emit('figure-detected', { meshID: null }, true);
