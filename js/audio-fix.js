@@ -36,13 +36,15 @@ AFRAME.registerComponent('audio-fix', {
   remove: function () {
     this._removeGestureListeners();
     this.el.removeEventListener('loaded', this._onSceneLoaded);
+    this._stopRescan();
+    this._managed.clear();
+  },
 
+  _stopRescan: function () {
     if (this._intervalId != null) {
       clearInterval(this._intervalId);
       this._intervalId = null;
     }
-
-    this._managed.clear();
   },
 
   _log: function () {
@@ -104,6 +106,12 @@ AFRAME.registerComponent('audio-fix', {
       this._applyFixes();
       this._startAll();
     }
+
+    // Trabajo hecho: a partir de aquí el propio componente `sound` de A-Frame
+    // reproduce el autoplay de cualquier entidad nueva sin ayuda. Si seguimos
+    // haciendo polling, cualquier sonido que un cambio de escena pause a medio
+    // destruir (p.ej. el easter egg al salir de mainScene) se relanza solo.
+    this._stopRescan();
   },
 
   _autostartIfAlreadyUnlocked: function () {
@@ -114,6 +122,8 @@ AFRAME.registerComponent('audio-fix', {
     this._unlocked = true;
     this._removeGestureListeners();
     if (this.data.autoStartOnUnlock) this._startAll();
+
+    this._stopRescan();
   },
 
   _startRescan: function () {
