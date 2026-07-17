@@ -6,8 +6,8 @@ AFRAME.registerComponent('tutorial-0', {
             "Alça les dues mans",
             "Moute als requadres",
             "Selecciona els objectius",
-            "Agafa i mou el cub",
-            "El projector",
+            //"Agafa i mou el cub",
+            //"El projector",
             "Has acabat el tutorial"
         ];
 
